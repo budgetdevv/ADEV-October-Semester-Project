@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Restaurants</title>
+    <script type="module" src="../Scripts/RestaurantDetails.js"></script>
+</head>
+
+<body>
+    <form>
+        <label for="Name">Name</label><br/>
+        <input id="Name" /><br/><br/>
+
+        <label for="Address">Address</label><br/>
+        <input id="Address" /><br/><br/>
+
+        <label for="Description">Description</label><br/>
+        <input id="Description" /><br/><br/>
+
+        <label for="Rating">Rating</label><br/>
+        <input id="Rating" type="number" min=0 max=5 step="0.1" /><br/><br/>
+
+        <label for="CuisineType">Cuisine Type</label><br/>
+        <input id="CuisineType" /><br/><br/>
+
+        <label for="OpeningDate">Opening Date</label><br/>
+        <input id="OpeningDate" type="date" /><br/><br/>
+
+        <label for="ImageURL">Image URL</label><br/>
+        <input id="ImageURL" /><br/><br/>
+
+        <button type="button" onclick="location.href='Restaurant.html'">Back</button>
+
+        <!--Submit button's onclick attribute will be patched-->
+        <button id="SubmitButton" type="button">Submit</button>
+    </form>
+</body>
+</html>
