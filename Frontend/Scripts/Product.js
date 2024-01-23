@@ -21,21 +21,23 @@ function renderProducts(products)
     // fullRows + 1, as we include that one row that is not full
     for (let i = 0; i < products.length; i++)
     {
-        const PRODUCT = new Product(products[i++]);
+        const PRODUCT = new Product(products[i]);
 
         const ID = PRODUCT.id;
 
-        listBody += `<li class="product">
-                        <h4>${PRODUCT.name}</h4>
-                        <img src="${PRODUCT.picture}" alt="Stock Product Image" width=${IMAGE_WIDTH} height=${IMAGE_HEIGHT} /><br/>
-                        <button type="button" onClick="location.href = '/ProductDetails.html?ID=${ID}'">Details</button>
-                        <button type="button" onclick="onDelete(${ID})">Delete!!!</button>
-                     </li>`
+        listBody += `<div class="product">
+                        <img class="product_image" src="${PRODUCT.picture}" alt="Stock Product Image" /><br/>
+                        <div class="product_descriptor">
+                            <label class="product_label">${PRODUCT.name}</label>
+                            <button class="product_buttons" type="button" onClick="location.href = '/ProductDetails.html?ID=${ID}'">Details</button>
+                            <button class="product_buttons" type="button" onclick="onDelete(${ID})">Delete!!!</button>
+                        </div>
+                     </div>`
     }
 
-    const HTML = `<ul class="product_container">
+    const HTML = `<div class="product_container">
                      ${listBody}
-                  </ul>`;
+                  </div>`;
 
     let div = document.getElementById(PRODUCT_LIST_ID);
 
