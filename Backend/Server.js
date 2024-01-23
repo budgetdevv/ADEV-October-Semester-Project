@@ -15,27 +15,28 @@ import { promises as file } from "fs";
 export { file };
 import { Product } from "../Common/Data_Structures/Product.js";
 export { Product };
+import { PRODUCTS_ROUTE_NAME, CATEGORIES_ROUTE_NAME, RESET_ROUTE } from "../Common/Constants.js";
 
 const constructDBPromise = Database.constructDB();
 export const dbs = await constructDBPromise;
 const db_global = dbs.global_database;
 
+// Constants
 constructDBPromise.then(async function()
 {
     // Load our routes!
-    const { ROUTE_NAME: products_route_name, app: products_app } = await import("./Routes/Products.js");
+    const { app: products_app } = await import("./Routes/Products.js");
     // noinspection JSCheckFunctionSignatures
-    app.use(products_route_name, products_app);
+    app.use(PRODUCTS_ROUTE_NAME, products_app);
 
-    const { ROUTE_NAME: categories_route_name, app: categories_app } = await import("./Routes/Categories.js");
+    const { app: categories_app } = await import("./Routes/Categories.js");
     // noinspection JSCheckFunctionSignatures
-    app.use(categories_route_name, categories_app);
+    app.use(CATEGORIES_ROUTE_NAME, categories_app);
 });
 
 // Constants
-const ROUTE_NAME = "/", // VERY IMPORTANT: THE PRECEDING SLASH IS IMPORTANT!!!
-      PATH_TO_RESET_SQL = "./project_sql.sql",
-      PAGES_DIRECTORY = "/Frontend/Pages";
+export const PATH_TO_RESET_SQL = "./project_sql.sql",
+             PAGES_DIRECTORY = "/Frontend/Pages";
 
 // Setup code
 export const app = express();
@@ -84,7 +85,7 @@ app.route("").get(async function (req, resp)
 });
 
 // Reset
-app.route(`${ROUTE_NAME}/reset`).post(async function (req, resp)
+app.route(RESET_ROUTE).post(async function (req, resp)
 {
     const QUERY = await file.readFile(PATH_TO_RESET_SQL, 'utf8');
 

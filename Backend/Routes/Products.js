@@ -1,12 +1,11 @@
 import { express, dbs, file, Product, tryQueryDB } from "../Server.js";
-import { DB_TABLE_NAME as CATEGORY_DB_TABLE_NAME } from "./Categories.js";
 
 export const app = express.Router();
 const db = dbs.main_database;
 
 // Constants
-export const ROUTE_NAME = "/products", // VERY IMPORTANT: THE PRECEDING SLASH IS IMPORTANT!!!
-             DB_TABLE_NAME = "product";
+import { PRODUCTS_TABLE_NAME as DB_TABLE_NAME, CATEGORIES_ROUTE_NAME as CATEGORY_DB_TABLE_NAME } from "../../Common/Constants.js";
+
 
 // GET WITH ID
 app.route("/:id").get(async function(req, resp)

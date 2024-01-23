@@ -1,10 +1,8 @@
 import { Product } from "/Common/Data_Structures/Product.js";
+import { PRODUCTS_ROUTE_NAME as ROUTE_NAME, RESET_ROUTE } from "/Common/Constants.js"
 
-const ROUTE_NAME = "/restaurants",
-      RESET_ROUTE_NAME = `${ROUTE_NAME}/reset`,
-      RESTAURANT_LIST_ID = "restaurant_list",
-      RESTAURANT_PAGE_URL = "./Product.html",
-      MAX_RESTAURANTS_PER_ROW = 2,
+const PRODUCT_LIST_ID = "product_list",
+      MAX_PRODUCTS_PER_ROW = 2,
       IMAGE_WIDTH = 150,
       IMAGE_HEIGHT = 150;
 
@@ -14,16 +12,16 @@ async function onLoad()
 {
     const RESPONSE = await fetch(ROUTE_NAME);
 
-    renderRestaurants(JSON.parse(await RESPONSE.text()));
+    renderProducts(JSON.parse(await RESPONSE.text()));
 }
 
-function renderRestaurants(restaurants)
+function renderProducts(restaurants)
 {
     const RESTAURANT_COUNT = restaurants.length;
 
-    const FULL_ROWS = Math.floor(RESTAURANT_COUNT / MAX_RESTAURANTS_PER_ROW);
+    const FULL_ROWS = Math.floor(RESTAURANT_COUNT / MAX_PRODUCTS_PER_ROW);
 
-    const REM = RESTAURANT_COUNT - (FULL_ROWS * MAX_RESTAURANTS_PER_ROW);
+    const REM = RESTAURANT_COUNT - (FULL_ROWS * MAX_PRODUCTS_PER_ROW);
 
     const PARTIAL_ROWS = (REM !== 0) ? 1 : 0;
 
@@ -36,16 +34,16 @@ function renderRestaurants(restaurants)
     {
         let tableData = "";
 
-        let rowRestaurantCount = (rowNumber <= FULL_ROWS) ? MAX_RESTAURANTS_PER_ROW : REM;
+        let rowRestaurantCount = (rowNumber <= FULL_ROWS) ? MAX_PRODUCTS_PER_ROW : REM;
 
         for (let restaurantNum = 1; restaurantNum <= rowRestaurantCount; restaurantNum++)
         {
-            let restaurant = new Product(restaurants[restaurantIndex++]);
+            const PRODUCT = new Product(restaurants[restaurantIndex++]);
 
             tableData += `<td>
-                            <h4>${restaurant.name}</h4>
-                            <img src="${restaurant.picture}" width=${IMAGE_WIDTH} height=${IMAGE_HEIGHT} /><br/>
-                            <a href="./RestaurantDetails.html?ID=${restaurant.id}">
+                            <h4>${PRODUCT.name}</h4>
+                            <img src="${PRODUCT.picture}" width=${IMAGE_WIDTH} height=${IMAGE_HEIGHT} /><br/>
+                            <a href="./ProductDetails.html?ID=${PRODUCT.id}">
                                 <button type="button">Details</button>
                             </a>
                           <td>`
@@ -54,13 +52,13 @@ function renderRestaurants(restaurants)
         tableBody += `<tr>${tableData}</tr>`;
     }
 
-    const HTML = `<div id = ${RESTAURANT_LIST_ID}>
+    const HTML = `<div id = ${PRODUCT_LIST_ID}>
                     <table>
                         <tbody>${tableBody}</tbody>
                     </table>
                   </div>`;
 
-    let div = document.getElementById(RESTAURANT_LIST_ID);
+    let div = document.getElementById(PRODUCT_LIST_ID);
 
     div.innerHTML = HTML;
 }
@@ -80,13 +78,13 @@ async function onAdd()
         body: JSON.stringify(RESTAURANT)
     });
 
-    alert(`New restaurant created! ID: ${await RESPONSE.text()}`);
+    alert(`New product created! ID: ${await RESPONSE.text()}`);
     let _ = onLoad();
 }
 
 async function onReset()
 {
-    const RESPONSE = await fetch(RESET_ROUTE_NAME,
+    const RESPONSE = await fetch(RESET_ROUTE,
     {
             method: "POST"
     });

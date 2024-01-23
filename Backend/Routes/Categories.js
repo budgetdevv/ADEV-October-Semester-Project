@@ -4,8 +4,8 @@ export const app = express.Router();
 const db = dbs.main_database;
 
 // Constants
-export const ROUTE_NAME = "/categories", // VERY IMPORTANT: THE PRECEDING SLASH IS IMPORTANT!!!
-             DB_TABLE_NAME = "category";
+import { CATEGORIES_TABLE_NAME as DB_TABLE_NAME } from "../../Common/Constants.js";
+export { DB_TABLE_NAME }
 
 // GET WITH ID
 app.route("/:id").get(async function (req, resp)
