@@ -2,9 +2,8 @@ import { Product } from "/Common/Data_Structures/Product.js";
 import { PRODUCTS_ROUTE_NAME as ROUTE_NAME, RESET_ROUTE } from "/Common/Constants.js"
 
 const PRODUCT_LIST_ID = "product_list",
-      MAX_PRODUCTS_PER_ROW = 2,
-      IMAGE_WIDTH = 150,
-      IMAGE_HEIGHT = 150;
+      IMAGE_WIDTH = 250,
+      IMAGE_HEIGHT = 250;
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
@@ -15,56 +14,34 @@ async function onLoad()
     renderProducts(JSON.parse(await RESPONSE.text()));
 }
 
-function renderProducts(restaurants)
+function renderProducts(products)
 {
-    const RESTAURANT_COUNT = restaurants.length;
-
-    const FULL_ROWS = Math.floor(RESTAURANT_COUNT / MAX_PRODUCTS_PER_ROW);
-
-    const REM = RESTAURANT_COUNT - (FULL_ROWS * MAX_PRODUCTS_PER_ROW);
-
-    const PARTIAL_ROWS = (REM !== 0) ? 1 : 0;
-
-    let tableBody = "";
-
-    let restaurantIndex = 0;
+    let listBody = "";
 
     // fullRows + 1, as we include that one row that is not full
-    for (let rowNumber = 1; rowNumber <= (FULL_ROWS + PARTIAL_ROWS); rowNumber++)
+    for (let i = 0; i < products.length; i++)
     {
-        let tableData = "";
+        const PRODUCT = new Product(products[i++]);
 
-        let rowRestaurantCount = (rowNumber <= FULL_ROWS) ? MAX_PRODUCTS_PER_ROW : REM;
+        const ID = PRODUCT.id;
 
-        for (let restaurantNum = 1; restaurantNum <= rowRestaurantCount; restaurantNum++)
-        {
-            const PRODUCT = new Product(restaurants[restaurantIndex++]);
-
-            const ID = PRODUCT.id;
-
-            tableData += `<td>
-                            <h4>${PRODUCT.name}</h4>
-                            <img src="${PRODUCT.picture}" alt="Stock Product Image" width=${IMAGE_WIDTH} height=${IMAGE_HEIGHT} /><br/>
-     
-                            <button type="button" onclick="location.href = '/ProductDetails.html?ID=${ID}'">Details</button>
-                            &nbsp&nbsp&nbsp&nbsp&nbsp
-                            <button type="button" onclick="onDelete(${ID})">Delete!!!</button>
-                          <td>`
-        }
-
-        tableBody += `<tr>${tableData}</tr>`;
+        listBody += `<li class="product">
+                        <h4>${PRODUCT.name}</h4>
+                        <img src="${PRODUCT.picture}" alt="Stock Product Image" width=${IMAGE_WIDTH} height=${IMAGE_HEIGHT} /><br/>
+                        <button type="button" onClick="location.href = '/ProductDetails.html?ID=${ID}'">Details</button>
+                        <button type="button" onclick="onDelete(${ID})">Delete!!!</button>
+                     </li>`
     }
 
-    const HTML = `<div id = ${PRODUCT_LIST_ID}>
-                    <table>
-                        <tbody>${tableBody}</tbody>
-                    </table>
-                  </div>`;
+    const HTML = `<ul class="product_container">
+                     ${listBody}
+                  </ul>`;
 
     let div = document.getElementById(PRODUCT_LIST_ID);
 
     div.innerHTML = HTML;
 }
+
 
 // Export function(s). This is required if we treat this .js as a module.
 window.onReset = onReset;
