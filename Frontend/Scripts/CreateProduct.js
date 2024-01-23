@@ -15,5 +15,5 @@ async function onCreate()
         });
 
     alert(`New product created! ID: ${await RESPONSE.text()}`);
-    location.href = "../Pages/Product.html"
+    location.href = "/Product.html"
 }
