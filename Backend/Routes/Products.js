@@ -49,8 +49,6 @@ app.route("").get(async function (req, resp)
     const QUERY = `SELECT ${DB_TABLE_NAME}.*, ${CATEGORY_DB_TABLE_NAME}.name AS category_name FROM ${DB_TABLE_NAME}
                    JOIN ${CATEGORY_DB_TABLE_NAME} ON ${CATEGORY_DB_TABLE_NAME}.id = category_id`;
 
-    console.log(QUERY);
-
     const RESULT = await tryQueryDB(db, QUERY);
 
     const ERROR = RESULT.error;
