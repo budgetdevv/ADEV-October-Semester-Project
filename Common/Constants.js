@@ -3,3 +3,5 @@ export const PRODUCTS_ROUTE_NAME = "/products",
              CATEGORIES_ROUTE_NAME = "/categories",
              CATEGORIES_TABLE_NAME = "category",
              RESET_ROUTE = `/reset`;
+
+export const JSON_HEADER = { "Content-Type": "application/json" };

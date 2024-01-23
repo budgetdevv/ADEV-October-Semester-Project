@@ -40,12 +40,15 @@ function renderProducts(restaurants)
         {
             const PRODUCT = new Product(restaurants[restaurantIndex++]);
 
+            const ID = PRODUCT.id;
+
             tableData += `<td>
                             <h4>${PRODUCT.name}</h4>
-                            <img src="${PRODUCT.picture}" width=${IMAGE_WIDTH} height=${IMAGE_HEIGHT} /><br/>
-                            <a href="./ProductDetails.html?ID=${PRODUCT.id}">
-                                <button type="button">Details</button>
-                            </a>
+                            <img src="${PRODUCT.picture}" alt="Stock Product Image" width=${IMAGE_WIDTH} height=${IMAGE_HEIGHT} /><br/>
+     
+                            <button type="button" onclick="location.href = '/ProductDetails.html?ID=${ID}'">Details</button>
+                            &nbsp&nbsp&nbsp&nbsp&nbsp
+                            <button type="button" onclick="onDelete(${ID})">Delete!!!</button>
                           <td>`
         }
 
@@ -65,6 +68,7 @@ function renderProducts(restaurants)
 
 // Export function(s). This is required if we treat this .js as a module.
 window.onReset = onReset;
+window.onDelete = onDelete;
 
 async function onReset()
 {
@@ -75,4 +79,20 @@ async function onReset()
 
     alert(`Database has been reset! \n\n${await RESPONSE.text()}`);
     let _ = onLoad();
+}
+
+async function onDelete(productID)
+{
+    const RESPONSE = await fetch(`${ROUTE_NAME}/${productID}`,
+    {
+        method: "DELETE"
+    });
+
+    let text = await RESPONSE.text();
+
+    text = `${(RESPONSE.status === 200) ? "Product Deleted!" : "An error occurred!"}\n\n${text}`;
+
+    alert(text);
+
+    const _ = onLoad();
 }

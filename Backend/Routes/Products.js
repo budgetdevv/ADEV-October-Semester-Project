@@ -149,7 +149,7 @@ app.route("").post(async function (req, resp)
 });
 
 // DELETE
-app.route("").delete(async function (req, resp)
+app.route("/:id").delete(async function (req, resp)
 {
     const ROUTE_PARAMS = req.params;
 
