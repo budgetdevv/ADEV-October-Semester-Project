@@ -13,8 +13,8 @@ app.route("/:id").get(async function(req, resp)
     const URL_PARAMS = req.params;
 
     const QUERY = `SELECT ${DB_TABLE_NAME}.*, ${CATEGORY_DB_TABLE_NAME}.name AS category_name FROM ${DB_TABLE_NAME}
-                   JOIN ${CATEGORY_DB_TABLE_NAME} ON ${CATEGORY_DB_TABLE_NAME}.name = category_id
-                   WHERE id = ${URL_PARAMS.id}`;
+                   JOIN ${CATEGORY_DB_TABLE_NAME} ON ${CATEGORY_DB_TABLE_NAME}.id = category_id
+                   WHERE ${DB_TABLE_NAME}.id = ${URL_PARAMS.id}`;
 
     const RESULT = await tryQueryDB(db, QUERY);
 
@@ -47,7 +47,7 @@ app.route("/:id").get(async function(req, resp)
 app.route("").get(async function (req, resp)
 {
     const QUERY = `SELECT ${DB_TABLE_NAME}.*, ${CATEGORY_DB_TABLE_NAME}.name AS category_name FROM ${DB_TABLE_NAME}
-                   JOIN ${CATEGORY_DB_TABLE_NAME} ON ${CATEGORY_DB_TABLE_NAME}.id = category_id`;
+                   JOIN ${CATEGORY_DB_TABLE_NAME} ON ${CATEGORY_DB_TABLE_NAME}.id = ${DB_TABLE_NAME}.category_id`;
 
     const RESULT = await tryQueryDB(db, QUERY);
 
@@ -69,7 +69,7 @@ app.route("").get(async function (req, resp)
 // UPDATE
 app.route("").put(async function (req, resp)
 {
-    let restaurant = new Product(req.body);
+    let product = new Product(req.body);
 
     const QUERY = `UPDATE ${DB_TABLE_NAME}
                    SET
@@ -77,17 +77,15 @@ app.route("").put(async function (req, resp)
                    description = ?,
                    price = ?,
                    category_id = ?,
-                   category_name = ?,
                    picture = ?
                    WHERE id = ?`
 
-    const PARAMS = [restaurant.name,
-                    restaurant.description,
-                    restaurant.price,
-                    restaurant.category_id,
-                    restaurant.category_name,
-                    restaurant.picture,
-                    restaurant.id];
+    const PARAMS = [product.name,
+                    product.description,
+                    product.price,
+                    product.category_id,
+                    product.picture,
+                    product.id];
 
     const RESULT = await tryQueryDB(db, QUERY, PARAMS);
 
@@ -119,7 +117,7 @@ app.route("").put(async function (req, resp)
 // CREATE
 app.route("").post(async function (req, resp)
 {
-    let restaurant = new Product(req.body);
+    let product = new Product(req.body);
 
     // id is auto-increment
     const QUERY = `INSERT INTO ${DB_TABLE_NAME}
@@ -127,11 +125,11 @@ app.route("").post(async function (req, resp)
                    VALUES
                    (?, ?, ?, ?, ?)`;
 
-    const PARAMS = [restaurant.name,
-                    restaurant.description,
-                    restaurant.price,
-                    restaurant.category_id,
-                    restaurant.picture];
+    const PARAMS = [product.name,
+                    product.description,
+                    product.price,
+                    product.category_id,
+                    product.picture];
 
     const RESULT = await tryQueryDB(db, QUERY, PARAMS);
 

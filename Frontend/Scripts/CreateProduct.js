@@ -5,13 +5,13 @@ import { Product } from "../../Common/Data_Structures/Product.js";
 window.onCreate = onCreate;
 async function onCreate()
 {
-    const RESTAURANT = Product.getDefault(document.getElementById("image_url").value);
+    const PRODUCT = Product.getDefault(document.getElementById("image_url").value);
 
     const RESPONSE = await fetch(ROUTE_NAME,
         {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(RESTAURANT)
+            body: JSON.stringify(PRODUCT)
         });
 
     alert(`New product created! ID: ${await RESPONSE.text()}`);
