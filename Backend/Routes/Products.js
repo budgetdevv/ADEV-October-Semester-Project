@@ -4,7 +4,7 @@ export const app = express.Router();
 const db = dbs.main_database;
 
 // Constants
-import { PRODUCTS_TABLE_NAME as DB_TABLE_NAME, CATEGORIES_ROUTE_NAME as CATEGORY_DB_TABLE_NAME } from "../../Common/Constants.js";
+import { PRODUCTS_TABLE_NAME as DB_TABLE_NAME, CATEGORIES_TABLE_NAME as CATEGORY_DB_TABLE_NAME } from "../../Common/Constants.js";
 
 
 // GET WITH ID
@@ -12,7 +12,7 @@ app.route("/:id").get(async function(req, resp)
 {
     const URL_PARAMS = req.params;
 
-    const QUERY = `SELECT *, ${CATEGORY_DB_TABLE_NAME}.name AS category_name FROM ${DB_TABLE_NAME}
+    const QUERY = `SELECT ${DB_TABLE_NAME}.*, ${CATEGORY_DB_TABLE_NAME}.name AS category_name FROM ${DB_TABLE_NAME}
                    JOIN ${CATEGORY_DB_TABLE_NAME} ON ${CATEGORY_DB_TABLE_NAME}.name = category_id
                    WHERE id = ${URL_PARAMS.id}`;
 
@@ -46,8 +46,8 @@ app.route("/:id").get(async function(req, resp)
 // GET ALL
 app.route("").get(async function (req, resp)
 {
-    const QUERY = `SELECT *, ${CATEGORY_DB_TABLE_NAME}.name AS category_name FROM ${DB_TABLE_NAME}
-                   JOIN ${CATEGORY_DB_TABLE_NAME} ON ${CATEGORY_DB_TABLE_NAME}.name = category_id`;
+    const QUERY = `SELECT ${DB_TABLE_NAME}.*, ${CATEGORY_DB_TABLE_NAME}.name AS category_name FROM ${DB_TABLE_NAME}
+                   JOIN ${CATEGORY_DB_TABLE_NAME} ON ${CATEGORY_DB_TABLE_NAME}.id = category_id`;
 
     console.log(QUERY);
 

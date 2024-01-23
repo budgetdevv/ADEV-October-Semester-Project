@@ -13,14 +13,15 @@ export class Product
         Object.assign(this, jsonObject);
     }
 
-    static getDefault()
+    static getDefault(picture_url)
     {
         let product = new Product();
 
         product.name = "New Product";
         product.description = "( Insert description here )";
         product.price = product.category_id = 0;
-        product.picture = "https://dramscotland.co.uk/wp-content/uploads/2021/08/Gordon-Ramsay-.jpg";
+        product.category_id = 1;
+        product.picture = picture_url;
 
         return product;
     }

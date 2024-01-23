@@ -63,24 +63,8 @@ function renderProducts(restaurants)
     div.innerHTML = HTML;
 }
 
-// Export functions. This is required if we treat this .js as a module.
-window.onAdd = onAdd;
+// Export function(s). This is required if we treat this .js as a module.
 window.onReset = onReset;
-
-async function onAdd()
-{
-    const RESTAURANT = Product.getDefault();
-
-    const RESPONSE = await fetch(ROUTE_NAME,
-    {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(RESTAURANT)
-    });
-
-    alert(`New product created! ID: ${await RESPONSE.text()}`);
-    let _ = onLoad();
-}
 
 async function onReset()
 {
