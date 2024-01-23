@@ -1,4 +1,4 @@
-import {Restaurant} from "../../Common/Data_Structures/Restaurant.js";
+import {Product} from "../../Common/Data_Structures/Product.js";
 
 const ROUTE_NAME = "/restaurants",
       NAME_ID = "Name",
@@ -9,7 +9,7 @@ const ROUTE_NAME = "/restaurants",
       OPENING_DATE_ID = "OpeningDate",
       IMAGE_URL_ID = "ImageURL",
       SUBMIT_BUTTON_ID = "SubmitButton",
-      RESTAURANT_PAGE_URL = "./Restaurant.html";
+      RESTAURANT_PAGE_URL = "./Product.html";
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
@@ -21,7 +21,7 @@ async function onLoad()
 
     if (restaurantID == null)
     {
-        // If there's no ID, redirect back to Restaurant.html
+        // If there's no ID, redirect back to Product.html
         location.href = RESTAURANT_PAGE_URL
         return;
     }
@@ -40,7 +40,7 @@ async function onLoad()
         return;
     }
 
-    let restaurant = new Restaurant(JSON.parse(RESPONSE_TEXT));
+    let restaurant = new Product(JSON.parse(RESPONSE_TEXT));
 
     document.getElementById(NAME_ID).value = restaurant.name;
     document.getElementById(ADDRESS_ID).value = restaurant.address;
@@ -60,7 +60,7 @@ async function onLoad()
     let year = openingDate.getFullYear();
 
     document.getElementById(OPENING_DATE_ID).value = `${year}-${month}-${day}`;
-    document.getElementById(IMAGE_URL_ID).value = restaurant.image_url;
+    document.getElementById(IMAGE_URL_ID).value = restaurant.picture;
 }
 
 // Export this function. This is required if we treat this .js as a module.
@@ -69,7 +69,7 @@ window.onSubmit = onSubmit;
 async function onSubmit(restaurantID)
 {
     // Construct the restaurant object.
-    let restaurant = new Restaurant();
+    let restaurant = new Product();
 
     restaurant.id = restaurantID;
     restaurant.name = document.getElementById(NAME_ID).value;
@@ -78,7 +78,7 @@ async function onSubmit(restaurantID)
     restaurant.rating = document.getElementById(RATING_ID).value;
     restaurant.cuisine_type = document.getElementById(CUISINE_TYPE_ID).value;
     restaurant.opening_date = document.getElementById(OPENING_DATE_ID).value;
-    restaurant.image_url = document.getElementById(IMAGE_URL_ID).value;
+    restaurant.picture = document.getElementById(IMAGE_URL_ID).value;
 
     const RESPONSE = await fetch(ROUTE_NAME,
     {

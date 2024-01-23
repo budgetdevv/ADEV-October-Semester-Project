@@ -22,7 +22,7 @@ const DB_CONFIG_PATH = "../db_config.json";
 
 export class Database
 {
-    restaurants_database;
+    main_database;
     global_database;
 
     static async constructDB()
@@ -75,7 +75,7 @@ export class Database
         let db = new Database();
 
         db.global_database = global_connection;
-        db.restaurants_database = restaurant_connection;
+        db.main_database = restaurant_connection;
 
         // Test Connections
         await global_connection.connect();

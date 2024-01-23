@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `restaurant_review`.`RESTAURANT` (
   `rating` FLOAT(3,2) NULL DEFAULT NULL,
   `cuisine_type` VARCHAR(40) NULL DEFAULT NULL,
   `opening_date` DATE NULL DEFAULT NULL,
-  `image_url` VARCHAR(1000) NULL DEFAULT NULL, -- This is the new column for image URLs
+  `picture` VARCHAR(1000) NULL DEFAULT NULL, -- This is the new column for image URLs
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 1
@@ -69,13 +69,13 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- INSERT INTO `restaurant_review`.`RESTAURANT`
--- (`name`, `address`, `description`, `rating`, `cuisine_type`, `opening_date`, `image_url`) VALUES
+-- (`name`, `address`, `description`, `rating`, `cuisine_type`, `opening_date`, `picture`) VALUES
 -- ('Tasty Foods', '123 Flavor Street, Foodsville, FS', 'A delightful place for traditional dishes', 4.2, 'Traditional', '2010-06-15', 'images/tasty_food.png'),
 -- ('Pasta Paradise', '456 Noodle Road, Pastatown, PT', 'Authentic Italian pasta and gourmet experiences', 4.7, 'Italian', '2012-09-20', 'images/pasta_paradise.png'),
 -- ('Sushi Central', '789 Fish Lane, Sushiville, SV', 'Fresh sushi and Japanese cuisine', 4.9, 'Japanese', '2018-03-11', 'images/sushi_central.png');
 
 INSERT INTO `restaurant_review`.`RESTAURANT`
-(`name`, `address`, `description`, `rating`, `cuisine_type`, `opening_date`, `image_url`) VALUES
+(`name`, `address`, `description`, `rating`, `cuisine_type`, `opening_date`, `picture`) VALUES
 ('McDonalds', '51 Ang Mo Kio Avenue 3 #01-04, 569922', 'McDonald’s® Singapore offers a variety of fast food options, including the Sweet ‘N Sour Burger, and breakfast items.', 4.5, 'Fast Food', '1980-01-01', 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/McDonald%27s_logo.svg/1280px-McDonald%27s_logo.svg.png'),
 ('KFC', '23 Serangoon Central #B1-15 NEX, 556083', 'KFC Singapore offers a variety of meals including their signature Chickenjoys, Yumburgers, Champ hamburgers, and Jollibee Spaghetti meals.', 4.2, 'Fast Food', '1985-01-01', 'https://upload.wikimedia.org/wikipedia/sco/b/bf/KFC_logo.svg'),
 ('Jollibee', '10 Sinaran Drive #01-07/12 Square 2, 307506', 'Jollibee Singapore offers a variety of meals including Chickenjoy, Yumburgers, and Jollibee Spaghetti.', 4.0, 'Fast Food', '2014-01-01', 'https://i.pinimg.com/originals/87/d1/66/87d166c686ccca056ebcafba8ceae13f.jpg');

@@ -1,9 +1,9 @@
-import { Restaurant } from "/Common/Data_Structures/Restaurant.js";
+import { Product } from "/Common/Data_Structures/Product.js";
 
 const ROUTE_NAME = "/restaurants",
       RESET_ROUTE_NAME = `${ROUTE_NAME}/reset`,
       RESTAURANT_LIST_ID = "restaurant_list",
-      RESTAURANT_PAGE_URL = "./Restaurant.html",
+      RESTAURANT_PAGE_URL = "./Product.html",
       MAX_RESTAURANTS_PER_ROW = 2,
       IMAGE_WIDTH = 150,
       IMAGE_HEIGHT = 150;
@@ -40,11 +40,11 @@ function renderRestaurants(restaurants)
 
         for (let restaurantNum = 1; restaurantNum <= rowRestaurantCount; restaurantNum++)
         {
-            let restaurant = new Restaurant(restaurants[restaurantIndex++]);
+            let restaurant = new Product(restaurants[restaurantIndex++]);
 
             tableData += `<td>
                             <h4>${restaurant.name}</h4>
-                            <img src="${restaurant.image_url}" width=${IMAGE_WIDTH} height=${IMAGE_HEIGHT} /><br/>
+                            <img src="${restaurant.picture}" width=${IMAGE_WIDTH} height=${IMAGE_HEIGHT} /><br/>
                             <a href="./RestaurantDetails.html?ID=${restaurant.id}">
                                 <button type="button">Details</button>
                             </a>
@@ -71,7 +71,7 @@ window.onReset = onReset;
 
 async function onAdd()
 {
-    const RESTAURANT = Restaurant.getDefaultRestaurant();
+    const RESTAURANT = Product.getDefault();
 
     const RESPONSE = await fetch(ROUTE_NAME,
     {
