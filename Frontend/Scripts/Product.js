@@ -1,11 +1,22 @@
 import { Product } from "/Common/Data_Structures/Product.js";
-import { PRODUCTS_ROUTE_NAME as ROUTE_NAME, RESET_ROUTE } from "/Common/Constants.js"
+import { PRODUCTS_ROUTE_NAME as ROUTE_NAME, RESET_ROUTE, PRODUCT_IMAGE_ID, PLACEHOLDER_PRODUCT_IMAGE_URL, JSON_HEADER } from "/Common/Constants.js"
+import { Modal } from "./Modal.js";
 
 const PRODUCT_LIST_ID = "product_list",
       IMAGE_WIDTH = 250,
       IMAGE_HEIGHT = 250;
 
 document.addEventListener('DOMContentLoaded', onLoad);
+
+const CREATE_PRODUCT_MODAL = new Modal(
+    "create_product_modal",
+    "Create Product!",
+    `<label for="${PRODUCT_IMAGE_ID}">Image URL</label><br/>
+           <input id="${PRODUCT_IMAGE_ID}" type="text" value="${PLACEHOLDER_PRODUCT_IMAGE_URL}" />`,
+    "onCreateProductModalSubmit",
+    "onCreateProductModalCancel",
+    "onCreateProductModalCancel",
+    "Create!");
 
 async function onLoad()
 {
@@ -42,12 +53,12 @@ function renderProducts(products)
                                     </figure>
                                 </div>
                                 <header class="card-header">
-                                    <p class="card-header-title is-centered">
+                                    <p class="card-header-title is-centered truncate_text">
                                         ${PRODUCT.name}
                                     </p>
                                 </header>
                                 <div class="card-content">
-                                    <p class="content">
+                                    <p class="content truncate_text">
                                         ${PRODUCT.description}
                                     </p>
                                 </div>
@@ -78,6 +89,30 @@ function renderProducts(products)
 // Export function(s). This is required if we treat this .js as a module.
 window.onReset = onReset;
 window.onDelete = onDelete;
+window.onToggleProductModal = function() { CREATE_PRODUCT_MODAL.enable(); }
+
+window.onCreateProductModalSubmit = async function()
+{
+    const PRODUCT = Product.getDefault(document.getElementById(PRODUCT_IMAGE_ID).value);
+
+    const RESPONSE = await fetch(ROUTE_NAME,
+        {
+            method: "POST",
+            headers: JSON_HEADER,
+            body: JSON.stringify(PRODUCT)
+        });
+
+    alert(`New product created! ID: ${await RESPONSE.text()}`);
+
+    CREATE_PRODUCT_MODAL.disable();
+    let _ = onLoad();
+};
+
+window.onCreateProductModalCancel = function()
+{
+    CREATE_PRODUCT_MODAL.disable();
+};
+
 
 async function onReset()
 {

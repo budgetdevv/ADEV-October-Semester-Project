@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>Products</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <script type="module" src="../Scripts/Product.js"></script>
+    <link rel="stylesheet" href="../Style.css">
 </head>
 
 <body>
@@ -26,13 +26,13 @@
 
             <div id="navbar" class="navbar-menu">
                 <div class="navbar-start">
-                    <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-item has-dropdoswn is-hoverable">
                         <a class="navbar-link">
                             Options
                         </a>
 
                         <div class="navbar-dropdown">
-                            <a class="navbar-item" href="./CreateProduct.html">
+                            <a class="navbar-item" onclick="onToggleProductModal()">
                                 Create Product
                             </a>
                             <hr class="navbar-divider">
@@ -66,13 +66,13 @@
                         </figure>
                     </div>
                     <header class="card-header">
-                        <p class="card-header-title is-centered">
-                            Product Name
+                        <p class="card-header-title is-centered truncate_text">
+                            ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZz
                         </p>
                     </header>
                     <div class="card-content">
-                        <p class="content">
-                            Product Description
+                        <p class="content truncate_text">
+                            ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZz
                         </p>
                     </div>
                     <footer class="card-footer">
@@ -88,6 +88,8 @@
             </div>
         </div>
     </div>
+
+    <div id="create_product_modal"></div>
 </body>
 
 </html>

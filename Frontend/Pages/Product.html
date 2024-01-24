@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Products</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="../Style.css">
     <script type="module" src="../Scripts/Product.js"></script>
 </head>
 
@@ -26,13 +27,13 @@
 
             <div id="navbar" class="navbar-menu">
                 <div class="navbar-start">
-                    <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-item has-dropdoswn is-hoverable">
                         <a class="navbar-link">
                             Options
                         </a>
 
                         <div class="navbar-dropdown">
-                            <a class="navbar-item" href="./CreateProduct.html">
+                            <a class="navbar-item" onclick="onToggleProductModal()">
                                 Create Product
                             </a>
                             <hr class="navbar-divider">
@@ -59,6 +60,8 @@
     <div class="container px-6 py-6" id="product_list">
         <!--Will be patched by JS-->
     </div>
+
+    <div id="create_product_modal"></div>
 </body>
 
 </html>
