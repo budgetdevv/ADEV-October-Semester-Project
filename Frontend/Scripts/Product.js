@@ -58,7 +58,7 @@ function renderProducts(products)
                                     </p>
                                 </header>
                                 <div class="card-content">
-                                    <p class="content truncate_text">
+                                    <p class="content wrap_text truncate_text" onclick="onToggleFullDescription(this)">
                                         ${PRODUCT.description}
                                     </p>
                                 </div>
@@ -84,7 +84,6 @@ function renderProducts(products)
 
     div.innerHTML = HTML;
 }
-
 
 // Export function(s). This is required if we treat this .js as a module.
 window.onReset = onReset;
@@ -113,6 +112,28 @@ window.onCreateProductModalCancel = function()
     CREATE_PRODUCT_MODAL.disable();
 };
 
+window.onToggleFullDescription = function(descriptionElement)
+{
+    // alert(descriptionElement);
+
+    let classList = descriptionElement.classList;
+
+    const TRUNCATE_CLASS_NAME = "truncate_text";
+
+    const ENABLE = !classList.contains(TRUNCATE_CLASS_NAME);
+
+    // alert(ENABLE);
+
+    if (ENABLE)
+    {
+        classList.add(TRUNCATE_CLASS_NAME);
+    }
+
+    else
+    {
+        classList.remove(TRUNCATE_CLASS_NAME);
+    }
+}
 
 async function onReset()
 {

@@ -4,3 +4,8 @@
     overflow: hidden !important; /*Hide overflowing texts in label*/
     white-space: nowrap !important; /*Prevents labels like "ZZZZ ZZZZ ZZZZ" from making additional lines*/
 }
+
+.wrap_text
+{
+    overflow-wrap: break-word !important;
+}
