@@ -18,7 +18,7 @@ export class Product
         let product = new Product();
 
         product.name = "New Product";
-        product.description = "( Insert description here )";
+        product.description = "";
         product.price = product.category_id = 0;
         product.category_id = 1;
         product.picture = picture_url;

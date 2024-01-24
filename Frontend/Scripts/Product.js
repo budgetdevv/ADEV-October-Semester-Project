@@ -54,6 +54,12 @@ function renderProducts(products)
         //                 </div>
         //              </div>`
 
+        let productName = PRODUCT.name;
+        productName = (productName !== "") ? productName : "( No product name )";
+
+        let product_desc = PRODUCT.description;
+        product_desc = (product_desc !== "") ? product_desc : "( No product description )";
+
         cardBodies += `<div class="column is-one-third">
                             <div class="card">
                                 <div class="card-image">
@@ -63,12 +69,12 @@ function renderProducts(products)
                                 </div>
                                 <header class="card-header">
                                     <p class="card-header-title is-centered truncate_text">
-                                        ${PRODUCT.name}
+                                        ${productName}
                                     </p>
                                 </header>
                                 <div class="card-content">
                                     <p class="content wrap_text truncate_text" onclick="onToggleFullDescription(this)">
-                                        ${PRODUCT.description}
+                                        ${product_desc}
                                     </p>
                                 </div>
                                 <footer class="card-footer">
