@@ -6,7 +6,6 @@ const db = dbs.main_database;
 // Constants
 import { PRODUCTS_TABLE_NAME as DB_TABLE_NAME, CATEGORIES_TABLE_NAME as CATEGORY_DB_TABLE_NAME } from "../../Common/Constants.js";
 
-
 // GET WITH ID
 app.route("/:id").get(async function(req, resp)
 {
