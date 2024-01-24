@@ -1,8 +1,7 @@
 import { Product } from "../../Common/Data_Structures/Product.js";
-import { PRODUCTS_ROUTE_NAME, CATEGORIES_ROUTE_NAME } from "/Common/Constants.js"
+import {PRODUCTS_ROUTE_NAME, CATEGORIES_ROUTE_NAME, CATEGORY_ID, PRICE_ID} from "/Common/Constants.js"
 
 const SUBMIT_BUTTON_ID = "submit_button",
-      CATEGORY_ID = "category_id",
       PRODUCT_PAGE_URL = "../Pages/Product.html";
 
 document.addEventListener('DOMContentLoaded', onLoad);
@@ -51,38 +50,29 @@ async function onLoad()
             continue;
         }
 
-        if (fieldName !== CATEGORY_ID)
+        switch (fieldName)
         {
-            switch (typeof value)
-            {
-                case "string":
-                    break;
-                case "number":
-                    value = `${value}`;
-                    break;
-            }
+            // case PRICE_ID:
+            //     break;
+            case CATEGORY_ID:
+                response = await fetch(`${CATEGORIES_ROUTE_NAME}`);
+                responseText = await response.text();
 
-            element.value = value;
+                const CATEGORIES = JSON.parse(responseText);
+
+                let categorySelectorHTML = "";
+
+                for (let i = 0; i < CATEGORIES.length; i++)
+                {
+                    const CATEGORY = CATEGORIES[i];
+                    categorySelectorHTML += `<option value="${CATEGORY.id}">${CATEGORY.name}</option>`;
+                }
+
+                element.innerHTML = categorySelectorHTML;
+                break;
         }
 
-        else
-        {
-            response = await fetch(`${CATEGORIES_ROUTE_NAME}`);
-            responseText = await response.text();
-
-            const CATEGORIES = JSON.parse(responseText);
-
-            let categorySelectorHTML = "";
-
-            for (let i = 0; i < CATEGORIES.length; i++)
-            {
-                const CATEGORY = CATEGORIES[i];
-                categorySelectorHTML += `<option value="${CATEGORY.id}">${CATEGORY.name}</option>`;
-            }
-
-            element.innerHTML = categorySelectorHTML;
-            element.value = value;
-        }
+        element.value = value;
     }
 }
 
@@ -117,5 +107,10 @@ async function onSubmit(restaurantID)
     })
 
     alert(await RESPONSE.text());
-    location.href = PRODUCT_PAGE_URL;
+
+    // If success, return back to products page.
+    if (RESPONSE.status === 200)
+    {
+        location.href = PRODUCT_PAGE_URL;
+    }
 }

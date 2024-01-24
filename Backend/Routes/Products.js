@@ -74,6 +74,12 @@ app.route("").put(async function (req, resp)
 {
     let product = new Product(req.body);
 
+    if (product.price < 0)
+    {
+        resp.status(400).send("Product price may NOT be negative!");
+        return;
+    }
+
     const QUERY = `UPDATE ${DB_TABLE_NAME}
                    SET
                    name = ?,
