@@ -79,11 +79,6 @@ export async function tryQueryDB(db, query, parameters=null)
     return result;
 }
 
-app.route("").get(async function (req, resp)
-{
-    resp.json("Hi");
-});
-
 // Reset
 app.route(RESET_ROUTE).post(async function (req, resp)
 {
