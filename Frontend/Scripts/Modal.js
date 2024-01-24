@@ -17,8 +17,8 @@ export class Modal
                                 ${body}
                             </section>
                             <footer class="modal-card-foot">
-                                <button class="button is-success" onclick="${submitButtonCallbackName}()">${submitButtonName}</button>
-                                <button class="button" onclick="${cancelButtonCallbackName}()">${cancelButtonName}</button>
+                                <button class="button is-warning" onclick="${submitButtonCallbackName}()">${submitButtonName}</button>
+                                <button class="button is-danger" onclick="${cancelButtonCallbackName}()">${cancelButtonName}</button>
                             </footer>
                         </div>
                      </div>`;

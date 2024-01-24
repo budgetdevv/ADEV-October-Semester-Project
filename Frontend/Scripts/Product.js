@@ -11,8 +11,17 @@ document.addEventListener('DOMContentLoaded', onLoad);
 const CREATE_PRODUCT_MODAL = new Modal(
     "create_product_modal",
     "Create Product!",
-    `<label for="${PRODUCT_IMAGE_ID}">Image URL</label><br/>
-           <input id="${PRODUCT_IMAGE_ID}" type="text" value="${PLACEHOLDER_PRODUCT_IMAGE_URL}" />`,
+    // `<label for="${PRODUCT_IMAGE_ID}">Image URL</label><br/>
+    //        <input id="${PRODUCT_IMAGE_ID}" type="text" value="${PLACEHOLDER_PRODUCT_IMAGE_URL}" />`,
+    `<div class="field">
+                <label class="label" for="${PRODUCT_IMAGE_ID}">Image URL</label>
+                <div class="control has-icons-left">
+                    <span class="icon is-small is-left">
+                        <i class="fa-solid fa-paperclip"></i>
+                    </span>
+                    <input class="input is-warning" id="${PRODUCT_IMAGE_ID}" type="url" placeholder="Enter product's Image URL" value="${PLACEHOLDER_PRODUCT_IMAGE_URL}" />
+                </div>
+            </div>`,
     "onCreateProductModalSubmit",
     "onCreateProductModalCancel",
     "onCreateProductModalCancel",
