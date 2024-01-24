@@ -1,5 +1,5 @@
 import { Product } from "../../Common/Data_Structures/Product.js";
-import {PRODUCTS_ROUTE_NAME, CATEGORIES_ROUTE_NAME, CATEGORY_ID, PRICE_ID} from "/Common/Constants.js"
+import { PRODUCTS_ROUTE_NAME, CATEGORIES_ROUTE_NAME, CATEGORY_ID, JSON_HEADER } from "/Common/Constants.js"
 
 const SUBMIT_BUTTON_ID = "submit_button",
       PRODUCT_PAGE_URL = "../Pages/Product.html";
@@ -52,8 +52,6 @@ async function onLoad()
 
         switch (fieldName)
         {
-            // case PRICE_ID:
-            //     break;
             case CATEGORY_ID:
                 response = await fetch(`${CATEGORIES_ROUTE_NAME}`);
                 responseText = await response.text();
@@ -102,7 +100,7 @@ async function onSubmit(restaurantID)
     {
         method: "PUT",
         // REMEMBER TO SET REQUEST HEADER!!!
-        headers: { "Content-Type": "application/json" },
+        headers: JSON_HEADER,
         body: JSON.stringify(product)
     })
 

@@ -2,17 +2,13 @@ import { Product } from "/Common/Data_Structures/Product.js";
 import { PRODUCTS_ROUTE_NAME as ROUTE_NAME, RESET_ROUTE, PRODUCT_IMAGE_ID, PLACEHOLDER_PRODUCT_IMAGE_URL, JSON_HEADER } from "/Common/Constants.js"
 import { Modal } from "./Modal.js";
 
-const PRODUCT_LIST_ID = "product_list",
-      IMAGE_WIDTH = 250,
-      IMAGE_HEIGHT = 250;
+const PRODUCT_LIST_ID = "product_list";
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
 const CREATE_PRODUCT_MODAL = new Modal(
     "create_product_modal",
     "Create Product!",
-    // `<label for="${PRODUCT_IMAGE_ID}">Image URL</label><br/>
-    //        <input id="${PRODUCT_IMAGE_ID}" type="text" value="${PLACEHOLDER_PRODUCT_IMAGE_URL}" />`,
     `<div class="field">
                 <label class="label" for="${PRODUCT_IMAGE_ID}">Image URL</label>
                 <div class="control has-icons-left">
@@ -44,15 +40,6 @@ function renderProducts(products)
         const PRODUCT = new Product(products[i]);
 
         const ID = PRODUCT.id;
-
-        // cardBodies += `<div class="product">
-        //                 <img class="product_image" src="${PRODUCT.picture}" alt="Stock Product Image" /><br/>
-        //                 <div class="product_descriptor">
-        //                     <label class="product_label">${PRODUCT.name}</label>
-        //                     <button class="product_buttons" type="button" onClick="location.href = '/ProductDetails.html?ID=${ID}'">Details</button>
-        //                     <button class="product_buttons" type="button" onclick="onDelete(${ID})">Delete!!!</button>
-        //                 </div>
-        //              </div>`
 
         let productName = PRODUCT.name;
         productName = (productName !== "") ? productName : "( No product name )";
@@ -129,15 +116,11 @@ window.onCreateProductModalCancel = function()
 
 window.onToggleFullDescription = function(descriptionElement)
 {
-    // alert(descriptionElement);
-
     let classList = descriptionElement.classList;
 
     const TRUNCATE_CLASS_NAME = "truncate_text";
 
     const ENABLE = !classList.contains(TRUNCATE_CLASS_NAME);
-
-    // alert(ENABLE);
 
     if (ENABLE)
     {
