@@ -28,9 +28,9 @@ CREATE TABLE IF NOT EXISTS `e-commerce`.`category` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-INSERT INTO `e-commerce`.`category` (name) VALUES ('None');
-INSERT INTO `e-commerce`.`category` (name) VALUES ('Food');
-INSERT INTO `e-commerce`.`category` (name) VALUES ('Tech');
+INSERT INTO `e-commerce`.`category` (name) VALUES ("None");
+INSERT INTO `e-commerce`.`category` (name) VALUES ("Food");
+INSERT INTO `e-commerce`.`category` (name) VALUES ("Tech");
 
 -- -----------------------------------------------------
 -- Table `e-commerce`.`product`
@@ -51,6 +51,9 @@ CREATE TABLE IF NOT EXISTS `e-commerce`.`product` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+INSERT INTO `e-commerce`.`product`
+(name, description, price, category_id, picture)
+VALUES ("Chicken Rice", "Delicious chicken rice from flavors food canteen!", 6.00, 2, "/Frontend/Assets/ChickenRice.jpg");
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
