@@ -4,32 +4,102 @@
 <head>
     <meta charset="UTF-8">
     <title>Restaurants</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="../Style.css">
+    <script src="https://kit.fontawesome.com/10b93f2174.js" crossorigin="anonymous"></script>
     <script type="module" src="../Scripts/ProductDetails.js"></script>
 </head>
 
 <body>
-    <form>
-        <label for="name">Name</label><br/>
-        <input id="name"/><br/><br/>
+<section class="hero is-med is-warning">
+    <div class="hero-head">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="/Product.html">
+                    <img src="../Media/ABC2.png">
+                </a>
 
-        <label for="description">Description</label><br/>
-        <input id="description"/><br/><br/>
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+        </nav>
+    </div>
 
-        <label for="price">Price</label><br/>
-        <input id="price" type="number" min=0 step=0.1 /><br/><br/>
+    <div class="hero-body">
+        <p class="title">
+            Details & Edit
+        </p>
+        <p class="subtitle">
+            View and / or Edit details of product!
+        </p>
+    </div>
+</section>
 
-        <label for="category_id">Category</label><br/>
-        <select id="category_id">
-            <!--Contents will be patched by JS-->
-        </select><br/><br/>
+<div class="container px-6 py-6">
+    <div class="field">
+        <label class="label" for="name">Name</label>
+        <div class="control has-icons-left">
+            <span class="icon is-small is-left">
+                <i class="fa-solid fa-signature"></i>
+            </span>
+            <input class="input is-warning" id="name" type="text" placeholder="Enter product's name" />
+        </div>
+    </div>
 
-        <label for="picture">Image URL</label><br/>
-        <input id="picture"/><br/><br/>
+    <div class="field">
+        <label class="label" for="description">Description</label>
+        <div class="control">
+            <textarea class="textarea is-warning" id="description" type="text" placeholder="Enter product's description"></textarea>
+        </div>
+    </div>
 
-        <button type="button" onclick="location.href='Product.html'">Back</button>
+    <div class="field">
+        <label class="label" for="price">Price</label>
+        <div class="control has-icons-left">
+            <span class="icon is-small is-left">
+                <i class="fa-solid fa-dollar-sign"></i>
+            </span>
+            <input class="input is-warning" id="price" type="number" min=0 step=0.1 placeholder="Enter product's price" />
+        </div>
+    </div>
 
-        <!--Submit button's onclick attribute will be patched-->
-        <button id="submit_button" type="button">Submit</button>
-    </form>
+    <div class="field">
+        <label class="label" for="category_id">Category</label>
+        <div class="control has-icons-left">
+            <div class="select is-warning">
+                <span class="icon is-small is-left">
+                    <i class="fa-solid fa-list"></i>
+                </span>
+                <select id="category_id">
+                    <!--Contents will be patched by JS-->
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="picture">Image URL</label>
+        <div class="control has-icons-left">
+            <span class="icon is-small is-left">
+                <i class="fa-solid fa-paperclip"></i>
+            </span>
+            <input class="input is-warning" id="picture" type="url" placeholder="Enter product's Image URL" />
+        </div>
+    </div>
+
+    <div class="field is-grouped">
+        <div class="control">
+            <button class="button is-warning is-light" onclick="location.href='Product.html'">Back</button>
+        </div>
+
+        <div class="control">
+            <!--Submit button's onclick attribute will be patched-->
+            <button class="button is-warning" id="submit_button">Submit</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
