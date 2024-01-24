@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <script type="module" src="../Scripts/Product.js"></script>
+</head>
+
+<body>
+    <section class="hero is-med is-warning">
+        <div class="hero-head">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    <a class="navbar-item" href="https://bulma.io">
+                        <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+                    </a>
+
+                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+
+                <div id="navbar" class="navbar-menu">
+                    <div class="navbar-start">
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">
+                                Options
+                            </a>
+
+                            <div class="navbar-dropdown">
+                                <a class="navbar-item" href="./CreateProduct.html">
+                                    Create Product
+                                </a>
+                                <hr class="navbar-divider">
+                                <a class="navbar-item" onclick="onReset()">
+                                    Reset Database!!!
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="hero-body">
+            <p class="title">
+                Manage Products
+            </p>
+            <p class="subtitle">
+                View, Edit or Delete products!
+            </p>
+        </div>
+    </section>
+
+    <div class="container px-6 py-6">
+        <div class="columns is-multiline">
+            <div class="column is-one-third">
+                <div class="card">
+                    <div class="card-image">
+                        <figure class="image is-4by3">
+                            <img src="https://dramscotland.co.uk/wp-content/uploads/2021/08/Gordon-Ramsay-.jpg" alt="Placeholder image">
+                        </figure>
+                    </div>
+                    <header class="card-header">
+                        <p class="card-header-title is-centered">
+                            Product Name
+                        </p>
+                    </header>
+                    <div class="card-content">
+                        <p class="content">
+                            Product Description
+                        </p>
+                    </div>
+                    <footer class="card-footer">
+                        <button class="column is-half">Edit</button>
+                        <button class="column is-half">Delete</button>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
