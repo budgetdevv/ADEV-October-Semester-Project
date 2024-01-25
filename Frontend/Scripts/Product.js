@@ -41,10 +41,10 @@ function renderProducts(products)
         const ID = PRODUCT.id;
 
         let productName = PRODUCT.name;
-        productName = (productName !== "") ? productName : "( No product name )";
+        productName = (productName !== "") ? productName : "<b>( No product name )</b>";
 
         let product_desc = PRODUCT.description;
-        product_desc = (product_desc !== "") ? product_desc : "( No product description )";
+        product_desc = (product_desc !== "") ? product_desc : "<b>( No product description )</b>";
 
         cardBodies += `<div class="column is-one-third">
                             <div class="card">
