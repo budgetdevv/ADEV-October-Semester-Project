@@ -106,7 +106,7 @@ window.onCreateProductModalSubmit = async function()
     alert(`New product created! ID: ${await RESPONSE.text()}`);
 
     CREATE_PRODUCT_MODAL.disable();
-    let _ = onLoad();
+    const _ = onLoad();
 };
 
 window.onCreateProductModalCancel = function()
@@ -141,7 +141,7 @@ async function onReset()
     });
 
     alert(`Database has been reset! \n\n${await RESPONSE.text()}`);
-    let _ = onLoad();
+    const _ = onLoad();
 }
 
 async function onDelete(productID)

@@ -1,4 +1,4 @@
-import { express, dbs, file, Product, tryQueryDB } from "../Server.js";
+import { express, dbs, tryQueryDB } from "../Server.js";
 
 export const app = express.Router();
 const db = dbs.main_database;
@@ -24,9 +24,9 @@ app.route("/:id").get(async function (req, resp)
 
     if (!ERROR)
     {
-        const data = RESULT.data;
+        const DATA = RESULT.data;
 
-        resp.json(data);
+        resp.json(DATA);
     }
 
     else
@@ -49,9 +49,9 @@ app.route("").get(async function (req, resp)
 
     if (!ERROR)
     {
-        const data = RESULT.data;
+        const DATA = RESULT.data;
 
-        resp.json(data);
+        resp.json(DATA);
     }
 
     else

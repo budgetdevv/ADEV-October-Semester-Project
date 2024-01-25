@@ -22,12 +22,12 @@ app.route("/:id").get(async function(req, resp)
 
     if (!ERROR)
     {
-        const data = RESULT.data;
+        const DATA = RESULT.data;
 
-        if (data.length !== 0)
+        if (DATA.length !== 0)
         {
             // Remember that RESULT from SELECT is ALWAYS an array, even if there's only a single item.
-            resp.json(data[0]);
+            resp.json(DATA[0]);
         }
 
         else
@@ -71,9 +71,9 @@ app.route("").get(async function (req, resp)
 // UPDATE
 app.route("").put(async function (req, resp)
 {
-    let product = new Product(req.body);
+    const PRODUCT = new Product(req.body);
 
-    if (product.price < 0)
+    if (PRODUCT.price < 0)
     {
         resp.status(400).send("Product price may NOT be negative!");
         return;
@@ -88,12 +88,12 @@ app.route("").put(async function (req, resp)
                    picture = ?
                    WHERE id = ?`
 
-    const PARAMS = [product.name,
-                    product.description,
-                    product.price,
-                    product.category_id,
-                    product.picture,
-                    product.id];
+    const PARAMS = [PRODUCT.name,
+                    PRODUCT.description,
+                    PRODUCT.price,
+                    PRODUCT.category_id,
+                    PRODUCT.picture,
+                    PRODUCT.id];
 
     const RESULT = await tryQueryDB(db, QUERY, PARAMS);
 
@@ -172,9 +172,9 @@ app.route("/:id").delete(async function (req, resp)
 
     if (!ERROR)
     {
-        const data = RESULT.data;
+        const DATA = RESULT.data;
 
-        resp.json(data);
+        resp.json(DATA);
     }
 
     else
