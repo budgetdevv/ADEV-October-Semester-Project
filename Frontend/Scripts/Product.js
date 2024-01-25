@@ -34,7 +34,6 @@ function renderProducts(products)
 {
     let cardBodies = "";
 
-    // fullRows + 1, as we include that one row that is not full
     for (let i = 0; i < products.length; i++)
     {
         const PRODUCT = new Product(products[i]);
