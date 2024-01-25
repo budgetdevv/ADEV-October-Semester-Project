@@ -2,26 +2,10 @@ import { Product } from "/Common/Data_Structures/Product.js";
 import { PRODUCTS_ROUTE_NAME as ROUTE_NAME, RESET_ROUTE, PRODUCT_IMAGE_ID, PLACEHOLDER_PRODUCT_IMAGE_URL, JSON_HEADER } from "/Common/Constants.js"
 import { Modal } from "./Modal.js";
 
-const PRODUCT_LIST_ID = "product_list";
+const PRODUCT_LIST_ID = "product_list",
+      PRODUCT_PAGE_MODAL_ID = "product_page_modal";
 
 document.addEventListener('DOMContentLoaded', onLoad);
-
-const CREATE_PRODUCT_MODAL = new Modal(
-    "create_product_modal",
-    "Create Product!",
-    `<div class="field">
-                <label class="label" for="${PRODUCT_IMAGE_ID}">Image URL</label>
-                <div class="control has-icons-left">
-                    <span class="icon is-small is-left">
-                        <i class="fa-solid fa-paperclip"></i>
-                    </span>
-                    <input class="input is-warning" id="${PRODUCT_IMAGE_ID}" type="url" placeholder="Enter product's Image URL" value="${PLACEHOLDER_PRODUCT_IMAGE_URL}" />
-                </div>
-            </div>`,
-    "onCreateProductModalSubmit",
-    "onCreateProductModalCancel",
-    "onCreateProductModalCancel",
-    "Create!");
 
 async function onLoad()
 {
@@ -50,7 +34,7 @@ function renderProducts(products)
                             <div class="card">
                                 <div class="card-image">
                                     <figure class="image is-4by3">
-                                        <img src="${PRODUCT.picture}" alt="Stock Product Image">
+                                        <img src="${PRODUCT.picture}" onclick="onShowModalForProductImage('${productName}', this)" alt="Stock Product Image">
                                     </figure>
                                 </div>
                                 <header class="card-header has-background-warning">
@@ -86,9 +70,26 @@ function renderProducts(products)
     div.innerHTML = HTML;
 }
 
+const CREATE_PRODUCT_MODAL = new Modal(PRODUCT_PAGE_MODAL_ID);
+
+CREATE_PRODUCT_MODAL.targetID = PRODUCT_PAGE_MODAL_ID;
+CREATE_PRODUCT_MODAL.title =  "Create Product!";
+CREATE_PRODUCT_MODAL.body =  `<div class="field">
+                                <label class="label" for="${PRODUCT_IMAGE_ID}">Image URL</label>
+                                <div class="control has-icons-left">
+                                    <span class="icon is-small is-left">
+                                        <i class="fa-solid fa-paperclip"></i>
+                                    </span>
+                                    <input class="input is-warning" id="${PRODUCT_IMAGE_ID}" type="url" placeholder="Enter product's Image URL" value="${PLACEHOLDER_PRODUCT_IMAGE_URL}" />
+                                </div>
+                              </div>`;
+CREATE_PRODUCT_MODAL.submitButtonCallbackName = "onCreateProductModalSubmit";
+CREATE_PRODUCT_MODAL.submitButtonName = "Create!";
+
+CREATE_PRODUCT_MODAL.render();
+
 // Export function(s). This is required if we treat this .js as a module.
-window.onReset = onReset;
-window.onDelete = onDelete;
+
 window.onToggleProductModal = function() { CREATE_PRODUCT_MODAL.enable(); }
 
 window.onCreateProductModalSubmit = async function()
@@ -108,10 +109,26 @@ window.onCreateProductModalSubmit = async function()
     const _ = onLoad();
 };
 
-window.onCreateProductModalCancel = function()
+const VIEW_PRODUCT_IMAGE_MODAL = new Modal(PRODUCT_PAGE_MODAL_ID);
+
+VIEW_PRODUCT_IMAGE_MODAL.targetID = PRODUCT_PAGE_MODAL_ID;
+VIEW_PRODUCT_IMAGE_MODAL.title = "Product Image Preview";
+VIEW_PRODUCT_IMAGE_MODAL.body_padx = VIEW_PRODUCT_IMAGE_MODAL.body_pady = 0;
+VIEW_PRODUCT_IMAGE_MODAL.enableFooter = false;
+
+window.onShowModalForProductImage = function(productName, imageElement)
 {
-    CREATE_PRODUCT_MODAL.disable();
-};
+    VIEW_PRODUCT_IMAGE_MODAL.title = productName;
+    VIEW_PRODUCT_IMAGE_MODAL.body = `<p class="image is-4by3">
+                                        <img src="${imageElement.src}" alt="">
+                                     </p>`;
+
+    VIEW_PRODUCT_IMAGE_MODAL.render();
+    VIEW_PRODUCT_IMAGE_MODAL.enable();
+}
+
+window.onReset = onReset;
+window.onDelete = onDelete;
 
 window.onToggleFullDescription = function(descriptionElement)
 {
