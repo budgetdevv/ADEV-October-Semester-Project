@@ -53,7 +53,7 @@ function renderProducts(products)
                                         <img src="${PRODUCT.picture}" alt="Stock Product Image">
                                     </figure>
                                 </div>
-                                <header class="card-header">
+                                <header class="card-header has-background-warning">
                                     <p class="card-header-title is-centered truncate_text">
                                         ${productName}
                                     </p>
