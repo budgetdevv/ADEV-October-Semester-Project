@@ -104,7 +104,7 @@ async function renderProducts(useCached, sortTypeChanged = false)
         const ID = PRODUCT.id;
 
         let productName = PRODUCT.name;
-        productName = (productName !== "") ? productName : "<b>( No product name )</b>";
+        productName = (productName !== "") ? productName : "<i>( No product name )</i>";
 
         let product_desc = PRODUCT.description;
         product_desc = (product_desc !== "") ? product_desc : "<b>( No product description )</b>";
