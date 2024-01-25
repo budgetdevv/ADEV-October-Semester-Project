@@ -47,16 +47,13 @@ function renderProducts(products)
                                         ${product_desc}
                                     </p>
                                 </div>
-                                <footer class="card-footer">
-                                    <div class="column is-half px-0 py-0">
-                                        <button class="button is-success is-fullwidth" type="button" onClick="location.href = '/ProductDetails.html?ID=${ID}'">Details & Edit</button>
-                                    </div>
-
-                                    <div class="column is-half px-0 py-0">
-                                        <button class="button is-danger is-fullwidth" type="button" onclick="onDelete(${ID})">Delete!!!</button>
-                                    </div>
-                                 </footer>
                             </div>
+        
+                            <div class="buttons has-addons"">
+                                <button class="button is-half is-success" style="width: 50%" onClick="location.href = '/ProductDetails.html?ID=${ID}'">Details & Edit</button>
+                                <button class="button is-half is-danger" style="width: 50%" onclick="onDelete(${ID})">Delete!!!</button>
+                            </div>
+                            
                         </div>`;
 
     }
