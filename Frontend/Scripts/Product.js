@@ -26,10 +26,24 @@ function defaultSort(left, right)
  * @param {Product} left
  * @param {Product} right
  */
-function sortByCategory(left, right)
+function sortByName(left, right)
 {
-    return left.category_id - right.category_id;
+    const L_NAME = left.name;
+    const R_NAME = right.name;
+
+    if (L_NAME < R_NAME)
+    {
+        return -1;
+    }
+
+    else if (L_NAME > R_NAME)
+    {
+        return 1;
+    }
+
+    return 0;
 }
+
 
 /**
  * @param {Product} left
@@ -38,6 +52,15 @@ function sortByCategory(left, right)
 function sortByPrice(left, right)
 {
     return left.price - right.price;
+}
+
+/**
+ * @param {Product} left
+ * @param {Product} right
+ */
+function sortByCategory(left, right)
+{
+    return left.category_id - right.category_id;
 }
 
 /**
@@ -51,10 +74,13 @@ function setSortType(sortType)
             currentSortFunction = defaultSort;
             break;
         case 1:
-            currentSortFunction = sortByCategory;
+            currentSortFunction = sortByName;
             break;
         case 2:
             currentSortFunction = sortByPrice;
+            break;
+        case 3:
+            currentSortFunction = sortByCategory;
             break;
     }
 
