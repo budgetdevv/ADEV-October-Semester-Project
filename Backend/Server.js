@@ -41,8 +41,12 @@ export const PATH_TO_RESET_SQL = "./project_sql.sql",
 // Setup code
 export const app = express();
 app.use(express.json());
+// Allow us to access anything inside the root directory of project.
 app.use(express.static("../"));
+// Mainly to support grabbing of front-end resources. E.x. If we only configure localhost/Frontend/Pages as root,
+// then it will be unable to access scripts in localhost/Frontend/Scripts
 app.use(express.static("../Frontend"));
+// Serve pages without having to input full URL. E.x. http://localhost/Product.html instead of http://localhost/Frontend/Pages/Product.html
 app.use(express.static(`..${PAGES_DIRECTORY}`));
 
 app.listen(80); // Listen on port 80
