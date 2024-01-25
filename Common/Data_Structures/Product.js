@@ -5,7 +5,7 @@ export class Product
     description;
     price;
     category_id;
-    category_name;
+    // category_name;
     picture;
 
     constructor(jsonObject)

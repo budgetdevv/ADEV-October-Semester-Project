@@ -5,17 +5,96 @@ import { Modal } from "./Modal.js";
 const PRODUCT_LIST_ID = "product_list",
       PRODUCT_PAGE_MODAL_ID = "product_page_modal";
 
-document.addEventListener('DOMContentLoaded', onLoad);
+let loadedProducts;
+let currentSortFunction = defaultSort;
 
-async function onLoad()
+document.addEventListener('DOMContentLoaded', function()
 {
-    const RESPONSE = await fetch(ROUTE_NAME);
+    const _ = renderProducts(false);
+});
 
-    renderProducts(JSON.parse(await RESPONSE.text()));
+/**
+ * @param {Product} left
+ * @param {Product} right
+ */
+function defaultSort(left, right)
+{
+    return left.id - right.id;
 }
 
-function renderProducts(products)
+/**
+ * @param {Product} left
+ * @param {Product} right
+ */
+function sortByCategory(left, right)
 {
+    return left.category_id - right.category_id;
+}
+
+/**
+ * @param {Product} left
+ * @param {Product} right
+ */
+function sortByPrice(left, right)
+{
+    return left.price - right.price;
+}
+
+/**
+ * @param {number} sortType
+ * */
+function setSortType(sortType)
+{
+    switch (sortType)
+    {
+        case 0:
+            currentSortFunction = defaultSort;
+            break;
+        case 1:
+            currentSortFunction = sortByCategory;
+            break;
+        case 2:
+            currentSortFunction = sortByPrice;
+            break;
+    }
+
+    const _ = renderProducts(true, true);
+
+    alert("Sort complete!");
+}
+
+// Export function(s). This is required if we treat this .js as a module.
+window.setSortType = setSortType;
+
+async function renderProducts(useCached, sortTypeChanged = false)
+{
+    let products;
+
+    if (!useCached)
+    {
+        const RESPONSE = await fetch(ROUTE_NAME);
+
+        loadedProducts = JSON.parse(await RESPONSE.text());
+
+        // Data from DB are not ordered by the current sort type.
+        sortTypeChanged = true;
+    }
+
+    products = loadedProducts;
+
+    if (sortTypeChanged)
+    {
+        // sort() sorts in-place, so it doesn't create a new array.
+
+        // Sort by ID first, so that we get consistent sort result regardless of current order.
+        loadedProducts.sort(defaultSort);
+
+        if (currentSortFunction !== defaultSort)
+        {
+            loadedProducts.sort(currentSortFunction);
+        }
+    }
+
     let cardBodies = "";
 
     for (let i = 0; i < products.length; i++)
@@ -103,7 +182,7 @@ window.onCreateProductModalSubmit = async function()
     alert(`New product created! ID: ${await RESPONSE.text()}`);
 
     CREATE_PRODUCT_MODAL.disable();
-    const _ = onLoad();
+    const _ = renderProducts(false);
 };
 
 const VIEW_PRODUCT_IMAGE_MODAL = new Modal(PRODUCT_PAGE_MODAL_ID);
@@ -154,7 +233,7 @@ async function onReset()
     });
 
     alert(`Database has been reset! \n\n${await RESPONSE.text()}`);
-    const _ = onLoad();
+    const _ = renderProducts(false);
 }
 
 async function onDelete(productID)
@@ -170,5 +249,5 @@ async function onDelete(productID)
 
     alert(text);
 
-    const _ = onLoad();
+    const _ = renderProducts(false);
 }

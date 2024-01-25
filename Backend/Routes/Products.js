@@ -11,10 +11,15 @@ app.route("/:id").get(async function(req, resp)
 {
     const URL_PARAMS = req.params;
 
-    const QUERY = `SELECT ${DB_TABLE_NAME}.*, ${CATEGORY_DB_TABLE_NAME}.name AS category_name FROM ${DB_TABLE_NAME}
-                   JOIN ${CATEGORY_DB_TABLE_NAME} ON ${CATEGORY_DB_TABLE_NAME}.id = category_id
-                   WHERE ${DB_TABLE_NAME}.id = ${URL_PARAMS.id}
-                   ORDER BY ${DB_TABLE_NAME}.id ASC`;
+    // const QUERY = `SELECT ${DB_TABLE_NAME}.*, ${CATEGORY_DB_TABLE_NAME}.name AS category_name FROM ${DB_TABLE_NAME}
+    //                JOIN ${CATEGORY_DB_TABLE_NAME} ON ${CATEGORY_DB_TABLE_NAME}.id = category_id
+    //                WHERE ${DB_TABLE_NAME}.id = ${URL_PARAMS.id}
+    //                ORDER BY ${DB_TABLE_NAME}.id ASC`;
+
+    // No need to sort - We now handle this in front-end
+    const QUERY = `SELECT *
+                   FROM ${DB_TABLE_NAME}
+                   WHERE ${DB_TABLE_NAME}.id = ${URL_PARAMS.id}`;
 
     const RESULT = await tryQueryDB(db, QUERY);
 
@@ -46,10 +51,13 @@ app.route("/:id").get(async function(req, resp)
 // GET ALL
 app.route("").get(async function (req, resp)
 {
-    const QUERY = `SELECT ${DB_TABLE_NAME}.*, ${CATEGORY_DB_TABLE_NAME}.name AS category_name FROM ${DB_TABLE_NAME}
-                   JOIN ${CATEGORY_DB_TABLE_NAME} ON ${CATEGORY_DB_TABLE_NAME}.id = ${DB_TABLE_NAME}.category_id
-                   ORDER BY ${DB_TABLE_NAME}.id ASC`;
+    // const QUERY = `SELECT ${DB_TABLE_NAME}.*, ${CATEGORY_DB_TABLE_NAME}.name AS category_name FROM ${DB_TABLE_NAME}
+    //                JOIN ${CATEGORY_DB_TABLE_NAME} ON ${CATEGORY_DB_TABLE_NAME}.id = ${DB_TABLE_NAME}.category_id
+    //                ORDER BY ${DB_TABLE_NAME}.id ASC`;
 
+    // No need to sort - We now handle this in front-end
+    const QUERY = `SELECT *
+                   FROM ${DB_TABLE_NAME}`;
 
     const RESULT = await tryQueryDB(db, QUERY);
 
