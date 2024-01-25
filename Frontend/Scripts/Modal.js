@@ -3,7 +3,8 @@ export class Modal
     targetID;
     originalHTML;
     html;
-    constructor(targetID, title, body, submitButtonCallbackName, cancelButtonCallbackName, crossButtonCallbackName, submitButtonName = "Submit", cancelButtonName = "Cancel")
+    constructor(targetID, title, body, submitButtonCallbackName, cancelButtonCallbackName, crossButtonCallbackName,
+                submitButtonName = "Submit", cancelButtonName = "Cancel", submitButtonColor = "is-success", cancelButtonColor = "is-danger")
     {
         this.targetID = targetID;
         this.html = `<div class="modal is-active" id="${targetID}">
@@ -17,8 +18,8 @@ export class Modal
                                 ${body}
                             </section>
                             <footer class="modal-card-foot">
-                                <button class="button is-warning" onclick="${submitButtonCallbackName}()">${submitButtonName}</button>
-                                <button class="button is-danger" onclick="${cancelButtonCallbackName}()">${cancelButtonName}</button>
+                                <button class="button ${submitButtonColor}" onclick="${submitButtonCallbackName}()">${submitButtonName}</button>
+                                <button class="button ${cancelButtonColor}" onclick="${cancelButtonCallbackName}()">${cancelButtonName}</button>
                             </footer>
                         </div>
                      </div>`;
