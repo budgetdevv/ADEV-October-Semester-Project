@@ -2,7 +2,7 @@ import { Product } from "../../Common/Data_Structures/Product.js";
 import { PRODUCTS_ROUTE_NAME, CATEGORIES_ROUTE_NAME, CATEGORY_ID, JSON_HEADER } from "/Common/Constants.js"
 
 const SUBMIT_BUTTON_ID = "submit_button",
-      PRODUCT_PAGE_URL = "../Pages/Product.html";
+      PRODUCT_PAGE_URL = "/Product.html";
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
