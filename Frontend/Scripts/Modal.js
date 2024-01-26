@@ -39,13 +39,11 @@ export class Modal
         const CROSS_BUTTON_ON_CLICK_CODE = (CROSS_BUTTON_CALLBACK_NAME != null) ? `${CROSS_BUTTON_CALLBACK_NAME}()` : DEFAULT_CLOSE_CODE;
 
         const HEADER_HTML = this.enableTitle ?
-                            `
-                            <header class="modal-card-head ${this.titleBackgroundColor}">
-                                <p class="modal-card-title">${this.title}</p>
-                                <button class="delete" aria-label="close" onclick='${CROSS_BUTTON_ON_CLICK_CODE}'></button>
-                            </header>
-                            ` :
-                            "";
+        `
+        <header class="modal-card-head ${this.titleBackgroundColor}">
+            <p class="modal-card-title">${this.title}</p>
+            <button class="delete" aria-label="close" onclick='${CROSS_BUTTON_ON_CLICK_CODE}'></button>
+        </header>` : "";
 
 
         let padx = this.body_padx;
@@ -57,12 +55,10 @@ export class Modal
         pady = (pady != null) ? ` py-${pady}` : "";
 
         const BODY_HTML = this.enableBody ?
-                          `
-                          <section class="modal-card-body${padx}${pady}">
-                                ${this.body}
-                          </section>
-                          ` :
-                          "";
+        `
+        <section class="modal-card-body${padx}${pady}">
+            ${this.body}
+        </section>` : "";
 
         const SUBMIT_BUTTON_CALLBACK_NAME = this.submitButtonCallbackName;
         const SUBMIT_BUTTON_ON_CLICK_CODE = (SUBMIT_BUTTON_CALLBACK_NAME != null) ? `${SUBMIT_BUTTON_CALLBACK_NAME}()` : "";
@@ -71,22 +67,21 @@ export class Modal
         const CANCEL_BUTTON_ON_CLICK_CODE = (CANCEL_BUTTON_CALLBACK_NAME != null) ? `${CANCEL_BUTTON_CALLBACK_NAME}()` : DEFAULT_CLOSE_CODE;
 
         const FOOTER_HTML = this.enableFooter ?
-                            `
-                            <footer class="modal-card-foot ${this.footerBackgroundColor}">
-                                <button class="button ${this.submitButtonColor}" onclick='${SUBMIT_BUTTON_ON_CLICK_CODE}'>${this.submitButtonName}</button>
-                                <button class="button ${this.cancelButtonColor}" onclick='${CANCEL_BUTTON_ON_CLICK_CODE}'>${this.cancelButtonName}</button>
-                            </footer>
-                            ` :
-                            "";
+        `
+        <footer class="modal-card-foot ${this.footerBackgroundColor}">
+            <button class="button ${this.submitButtonColor}" onclick='${SUBMIT_BUTTON_ON_CLICK_CODE}'>${this.submitButtonName}</button>
+            <button class="button ${this.cancelButtonColor}" onclick='${CANCEL_BUTTON_ON_CLICK_CODE}'>${this.cancelButtonName}</button>
+        </footer>` : "";
 
-        this.renderedHTML = `<div class="modal is-active" id="${TARGET_ID}">
-                                <div class="modal-background"></div>
-                                <div class="modal-card">
-                                    ${HEADER_HTML}
-                                    ${BODY_HTML}
-                                    ${FOOTER_HTML}
-                                </div>
-                            </div>`;
+        this.renderedHTML = `
+        <div class="modal is-active" id="${TARGET_ID}">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                ${HEADER_HTML}
+                ${BODY_HTML}
+                ${FOOTER_HTML}
+            </div>
+        </div>`;
     }
 
     enable()

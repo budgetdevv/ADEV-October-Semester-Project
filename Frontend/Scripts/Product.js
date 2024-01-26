@@ -44,7 +44,6 @@ function sortByName(left, right)
     return 0;
 }
 
-
 /**
  * @param {Product} left
  * @param {Product} right

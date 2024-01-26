@@ -6,7 +6,6 @@ const SUBMIT_BUTTON_ID = "submit_button",
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
-
 async function onLoad()
 {
     let queries = new URLSearchParams(location.search);
