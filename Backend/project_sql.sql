@@ -55,8 +55,8 @@ INSERT INTO `e-commerce`.`product`
 (name, description, price, category_id, picture)
 VALUES
 ("Chicken Rice", "Delicious chicken rice from flavors food canteen!", 6.00, 2, "/Frontend/Assets/ChickenRice.jpg"),
-("Failing in Temasek Poly ( Free )", "Who knew that failing is free?", 0.00, 1, "https://dramscotland.co.uk/wp-content/uploads/2021/08/Gordon-Ramsay-.jpg"),
-("Samsung S24 Ultra", "Very sexy phone that rips a hole in your wallet...", 1928.00, 3, "https://images.samsung.com/sg/smartphones/galaxy-s24-ultra/images/galaxy-s24-ultra-highlights-color-titanium-yellow-back-mo.jpg");
+("Samsung S24 Ultra", "Very sexy phone that rips a hole in your wallet...", 1928.00, 3, "https://images.samsung.com/sg/smartphones/galaxy-s24-ultra/images/galaxy-s24-ultra-highlights-color-titanium-yellow-back-mo.jpg"),
+("Failing in Temasek Poly ( Free )", "Who knew that failing is free?", 0.00, 1, "https://dramscotland.co.uk/wp-content/uploads/2021/08/Gordon-Ramsay-.jpg");
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
