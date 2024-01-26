@@ -9,3 +9,8 @@
 {
     overflow-wrap: break-word !important;
 }
+
+.navbar-item.has-dropdown.is-hoverable .navbar-link::after
+{
+    border-color: #beaa56;
+}
