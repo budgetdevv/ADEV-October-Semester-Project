@@ -254,7 +254,7 @@ const PROMPT_PRODUCT_CREATION_MODAL = new Modal(PRODUCT_PAGE_MODAL_ID);
 
 PROMPT_PRODUCT_CREATION_MODAL.title = "No Products Available!";
 PROMPT_PRODUCT_CREATION_MODAL.body = `It seems like there are no products.
-                                      Click on "Create" to add one.
+                                      Click on "Create" to add one.<br/>
                                       Products may also be added via Options > Create Product!`;
 
 PROMPT_PRODUCT_CREATION_MODAL.submitButtonCallbackName = "onToggleCreateProductModal";
