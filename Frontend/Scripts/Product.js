@@ -163,19 +163,39 @@ async function renderProducts(useCached, sortTypeChanged = false)
 
     }
 
-    const HTML = `<div class="columns is-multiline">
-                    ${cardBodies}
-                  </div>`;
+    let html;
+
+    if (cardBodies.length !== 0)
+    {
+        html =
+        `
+        <div class="columns is-multiline">
+            ${cardBodies}
+        </div>`;
+    }
+
+    else
+    {
+        html =
+        `
+        <div class="container is-fullwidth px-0 py-0">
+            <image style="width: 100%" src="https://cdn.matthewjamestaylor.com/titles/empty-div.png"></image>
+        </div>`;
+
+        if (!useCached)
+        {
+            PROMPT_PRODUCT_CREATION_MODAL.enable();
+        }
+    }
 
     let div = document.getElementById(PRODUCT_LIST_ID);
 
-    div.innerHTML = HTML;
+    div.innerHTML = html;
 }
 
 const CREATE_PRODUCT_MODAL = new Modal(PRODUCT_PAGE_MODAL_ID);
 
-CREATE_PRODUCT_MODAL.targetID = PRODUCT_PAGE_MODAL_ID;
-CREATE_PRODUCT_MODAL.title =  "Create Product!";
+CREATE_PRODUCT_MODAL.title = "Create Product!";
 CREATE_PRODUCT_MODAL.body =  `<div class="field">
                                 <label class="label" for="${PRODUCT_IMAGE_ID}">Image URL</label>
                                 <div class="control has-icons-left">
@@ -192,7 +212,7 @@ CREATE_PRODUCT_MODAL.render();
 
 // Export function(s). This is required if we treat this .js as a module.
 
-window.onToggleProductModal = function() { CREATE_PRODUCT_MODAL.enable(); }
+window.onToggleCreateProductModal = function() { CREATE_PRODUCT_MODAL.enable(); }
 
 window.onCreateProductModalSubmit = async function()
 {
@@ -213,7 +233,6 @@ window.onCreateProductModalSubmit = async function()
 
 const VIEW_PRODUCT_IMAGE_MODAL = new Modal(PRODUCT_PAGE_MODAL_ID);
 
-VIEW_PRODUCT_IMAGE_MODAL.targetID = PRODUCT_PAGE_MODAL_ID;
 VIEW_PRODUCT_IMAGE_MODAL.title = "Product Image Preview";
 VIEW_PRODUCT_IMAGE_MODAL.body_padx = VIEW_PRODUCT_IMAGE_MODAL.body_pady = 0;
 VIEW_PRODUCT_IMAGE_MODAL.enableFooter = false;
@@ -231,6 +250,19 @@ window.onShowModalForProductImage = function(productName, imageElement)
 
 window.onReset = onReset;
 window.onDelete = onDelete;
+
+const PROMPT_PRODUCT_CREATION_MODAL = new Modal(PRODUCT_PAGE_MODAL_ID);
+
+PROMPT_PRODUCT_CREATION_MODAL.title = "No Products Available!";
+PROMPT_PRODUCT_CREATION_MODAL.body = `It seems like there are no products.
+                                      Click on "Create" to add one.
+                                      Products may also be added via Options > Create Product!`;
+
+PROMPT_PRODUCT_CREATION_MODAL.submitButtonCallbackName = "onToggleCreateProductModal";
+PROMPT_PRODUCT_CREATION_MODAL.submitButtonName = "Create!";
+PROMPT_PRODUCT_CREATION_MODAL.cancelButtonName = "Skip for now";
+
+PROMPT_PRODUCT_CREATION_MODAL.render();
 
 window.onToggleFullDescription = function(descriptionElement)
 {
