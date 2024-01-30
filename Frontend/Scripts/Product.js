@@ -204,7 +204,7 @@ CREATE_PRODUCT_MODAL.body =
         <span class="icon is-small is-left">
             <i class="fa-solid fa-signature"></i>
         </span>
-        <input class="input is-warning" id="name" type="text" placeholder="Enter product's name" required />
+        <input class="input is-warning" type="text" pattern="\\S(.*\\S)?" placeholder="Enter product's name" id="name" required />
     </div>
 </div>
 
