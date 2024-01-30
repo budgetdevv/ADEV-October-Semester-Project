@@ -60,28 +60,30 @@ export class Modal
             ${this.body}
         </section>` : "";
 
-        const SUBMIT_BUTTON_CALLBACK_NAME = this.submitButtonCallbackName;
-        const SUBMIT_BUTTON_ON_CLICK_CODE = (SUBMIT_BUTTON_CALLBACK_NAME != null) ? `${SUBMIT_BUTTON_CALLBACK_NAME}()` : "";
-
         const CANCEL_BUTTON_CALLBACK_NAME = this.cancelButtonCallbackName;
         const CANCEL_BUTTON_ON_CLICK_CODE = (CANCEL_BUTTON_CALLBACK_NAME != null) ? `${CANCEL_BUTTON_CALLBACK_NAME}()` : DEFAULT_CLOSE_CODE;
 
         const FOOTER_HTML = this.enableFooter ?
         `
         <footer class="modal-card-foot ${this.footerBackgroundColor}">
-            <button class="button ${this.submitButtonColor}" onclick='${SUBMIT_BUTTON_ON_CLICK_CODE}'>${this.submitButtonName}</button>
+            <button class="button ${this.submitButtonColor}" type="submit">${this.submitButtonName}</button>
             <button class="button ${this.cancelButtonColor}" onclick='${CANCEL_BUTTON_ON_CLICK_CODE}'>${this.cancelButtonName}</button>
         </footer>` : "";
 
+        const SUBMIT_BUTTON_CALLBACK_NAME = this.submitButtonCallbackName;
+        const SUBMIT_BUTTON_ON_CLICK_CODE = (SUBMIT_BUTTON_CALLBACK_NAME != null) ? `${SUBMIT_BUTTON_CALLBACK_NAME}()` : "";
+
         this.renderedHTML = `
-        <div class="modal is-active" id="${TARGET_ID}">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-                ${HEADER_HTML}
-                ${BODY_HTML}
-                ${FOOTER_HTML}
+        <form onsubmit='${SUBMIT_BUTTON_ON_CLICK_CODE}'>
+            <div class="modal is-active" id="${TARGET_ID}">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    ${HEADER_HTML}
+                    ${BODY_HTML}
+                    ${FOOTER_HTML}
+                </div>
             </div>
-        </div>`;
+        </form>>`;
     }
 
     enable()
