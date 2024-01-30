@@ -1,6 +1,7 @@
 import { Product } from "/Common/Data_Structures/Product.js";
 import { PRODUCTS_ROUTE_NAME as ROUTE_NAME, RESET_ROUTE, PRODUCT_IMAGE_ID, PLACEHOLDER_PRODUCT_IMAGE_URL, JSON_HEADER } from "/Common/Constants.js"
 import { Modal } from "./Modal.js";
+import { populateCategorySelector, constructProductFromDocument } from "./Shared.js";
 
 const PRODUCT_LIST_ID = "product_list",
       PRODUCT_PAGE_MODAL_ID = "product_page_modal";
@@ -195,15 +196,59 @@ async function renderProducts(useCached, sortTypeChanged = false)
 const CREATE_PRODUCT_MODAL = new Modal(PRODUCT_PAGE_MODAL_ID);
 
 CREATE_PRODUCT_MODAL.title = "Create Product!";
-CREATE_PRODUCT_MODAL.body =  `<div class="field">
-                                <label class="label" for="${PRODUCT_IMAGE_ID}">Image URL</label>
-                                <div class="control has-icons-left">
-                                    <span class="icon is-small is-left">
-                                        <i class="fa-solid fa-paperclip"></i>
-                                    </span>
-                                    <input class="input is-warning" id="${PRODUCT_IMAGE_ID}" type="url" placeholder="Enter product's Image URL" value="${PLACEHOLDER_PRODUCT_IMAGE_URL}" />
-                                </div>
-                              </div>`;
+CREATE_PRODUCT_MODAL.body =
+`
+<div class="field">
+    <label class="label" for="name">Name</label>
+    <div class="control has-icons-left">
+        <span class="icon is-small is-left">
+            <i class="fa-solid fa-signature"></i>
+        </span>
+        <input class="input is-warning" id="name" type="text" placeholder="Enter product's name" required />
+    </div>
+</div>
+
+<div class="field">
+    <label class="label" for="description">Description</label>
+    <div class="control">
+        <textarea class="textarea is-warning" id="description" type="text" placeholder="Enter product's description"></textarea>
+    </div>
+</div>
+
+<div class="field">
+    <label class="label" for="price">Price</label>
+    <div class="control has-icons-left">
+        <span class="icon is-small is-left">
+            <i class="fa-solid fa-dollar-sign"></i>
+        </span>
+        <input class="input is-warning" id="price" type="number" min=0 max=9999999.99 step=0.01 placeholder="Enter product's price" required />
+    </div>
+</div>
+
+<div class="field">
+    <label class="label" for="category_id">Category</label>
+    <div class="control has-icons-left">
+        <div class="select is-warning">
+            <span class="icon is-small is-left">
+                <i class="fa-solid fa-list"></i>
+            </span>
+            <select id="category_id">
+                <!--Contents will be patched by JS-->
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="field">
+    <label class="label" for="picture">Image URL</label>
+    <div class="control has-icons-left">
+        <span class="icon is-small is-left">
+            <i class="fa-solid fa-paperclip"></i>
+        </span>
+        <input class="input is-warning" id="picture" placeholder="Enter product's Image URL" />
+    </div>
+</div>
+`;
 CREATE_PRODUCT_MODAL.submitButtonCallbackName = "onCreateProductModalSubmit";
 CREATE_PRODUCT_MODAL.submitButtonName = "Create!";
 
@@ -211,11 +256,16 @@ CREATE_PRODUCT_MODAL.render();
 
 // Export function(s). This is required if we treat this .js as a module.
 
-window.onToggleCreateProductModal = function() { CREATE_PRODUCT_MODAL.enable(); }
+window.onToggleCreateProductModal = function()
+{
+    CREATE_PRODUCT_MODAL.enable();
+
+    const _ = populateCategorySelector();
+}
 
 window.onCreateProductModalSubmit = async function()
 {
-    const PRODUCT = Product.getDefault(document.getElementById(PRODUCT_IMAGE_ID).value);
+    const PRODUCT = constructProductFromDocument();
 
     const RESPONSE = await fetch(ROUTE_NAME,
         {

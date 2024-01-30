@@ -1,5 +1,6 @@
 import { Product } from "../../Common/Data_Structures/Product.js";
-import { PRODUCTS_ROUTE_NAME, CATEGORIES_ROUTE_NAME, CATEGORY_ID, JSON_HEADER } from "/Common/Constants.js"
+import { PRODUCTS_ROUTE_NAME, CATEGORY_ID, JSON_HEADER } from "/Common/Constants.js";
+import { populateCategorySelector, constructProductFromDocument } from "./Shared.js";
 
 const FORM_ID = "product_details_form",
       PRODUCT_PAGE_URL = "/Product.html";
@@ -51,20 +52,7 @@ async function onLoad()
         switch (fieldName)
         {
             case CATEGORY_ID:
-                response = await fetch(`${CATEGORIES_ROUTE_NAME}`);
-                responseText = await response.text();
-
-                const CATEGORIES = JSON.parse(responseText);
-
-                let categorySelectorHTML = "";
-
-                for (let i = 0; i < CATEGORIES.length; i++)
-                {
-                    const CATEGORY = CATEGORIES[i];
-                    categorySelectorHTML += `<option value="${CATEGORY.id}">${CATEGORY.name}</option>`;
-                }
-
-                element.innerHTML = categorySelectorHTML;
+                await populateCategorySelector(element);
                 break;
         }
 
@@ -77,22 +65,9 @@ window.onSubmit = onSubmit;
 
 async function onSubmit(restaurantID)
 {
-    // Construct the restaurant object.
-    let product = new Product();
+    let product = constructProductFromDocument();
 
     product.id = restaurantID;
-
-    for (const fieldName of  Object.keys(product))
-    {
-        const element = document.getElementById(fieldName);
-
-        if (element == null)
-        {
-            continue;
-        }
-
-        product[fieldName] = element.value;
-    }
 
     const RESPONSE = await fetch(PRODUCTS_ROUTE_NAME,
     {
