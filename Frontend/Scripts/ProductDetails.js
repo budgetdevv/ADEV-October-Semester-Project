@@ -82,8 +82,6 @@ async function onSubmit(restaurantID)
 
     alert(await RESPONSE.text());
 
-    alert(RESPONSE.status)
-
     // If success, return back to products page.
     if (RESPONSE.status === 200)
     {

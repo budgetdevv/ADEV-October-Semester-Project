@@ -139,7 +139,7 @@ async function renderProducts(useCached, sortTypeChanged = false)
                             <div class="card">
                                 <div class="card-image">
                                     <figure class="image is-4by3">
-                                        <img src="${PRODUCT.picture}" onclick="onShowModalForProductImage('${productName}', this)" alt="Stock Product Image">
+                                        <img src="${PRODUCT.picture}" onclick="onShowModalForProductImage('${productName}', this)" onerror="onProductImageLoadFailure(this)" alt="Image missing">
                                     </figure>
                                 </div>
                                 <header class="card-header has-background-warning">
@@ -303,6 +303,7 @@ window.onShowModalForProductImage = function(productName, imageElement)
 
 window.onReset = onReset;
 window.onDelete = onDelete;
+window.onProductImageLoadFailure = onProductImageLoadFailure;
 
 const PROMPT_PRODUCT_CREATION_MODAL = new Modal(PRODUCT_PAGE_MODAL_ID);
 
@@ -336,15 +337,12 @@ window.onToggleFullDescription = function(descriptionElement)
     }
 }
 
-async function onReset()
+/**
+ * @param { HTMLImageElement } productImage
+ */
+function onProductImageLoadFailure(productImage)
 {
-    const RESPONSE = await fetch(RESET_ROUTE,
-    {
-            method: "POST"
-    });
-
-    alert(`Database has been reset! \n\n${await RESPONSE.text()}`);
-    const _ = renderProducts(false);
+    productImage.src = "Frontend/Assets/PRODUCT_MISSING.png";
 }
 
 async function onDelete(productID)
@@ -360,5 +358,16 @@ async function onDelete(productID)
 
     alert(text);
 
+    const _ = renderProducts(false);
+}
+
+async function onReset()
+{
+    const RESPONSE = await fetch(RESET_ROUTE,
+        {
+            method: "POST"
+        });
+
+    alert(`Database has been reset! \n\n${await RESPONSE.text()}`);
     const _ = renderProducts(false);
 }
