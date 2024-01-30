@@ -67,7 +67,7 @@ export class Modal
         `
         <footer class="modal-card-foot ${this.footerBackgroundColor}">
             <button class="button ${this.submitButtonColor}" type="submit">${this.submitButtonName}</button>
-            <button class="button ${this.cancelButtonColor}" onclick='${CANCEL_BUTTON_ON_CLICK_CODE}'>${this.cancelButtonName}</button>
+            <button class="button ${this.cancelButtonColor}" type="button" onclick='${CANCEL_BUTTON_ON_CLICK_CODE}'>${this.cancelButtonName}</button>
         </footer>` : "";
 
         const SUBMIT_BUTTON_CALLBACK_NAME = this.submitButtonCallbackName;

@@ -65,6 +65,9 @@ window.onSubmit = onSubmit;
 
 async function onSubmit(restaurantID)
 {
+    // Prevent submit from navigating away
+    event.preventDefault();
+
     let product = constructProductFromDocument();
 
     product.id = restaurantID;
@@ -78,6 +81,8 @@ async function onSubmit(restaurantID)
     })
 
     alert(await RESPONSE.text());
+
+    alert(RESPONSE.status)
 
     // If success, return back to products page.
     if (RESPONSE.status === 200)

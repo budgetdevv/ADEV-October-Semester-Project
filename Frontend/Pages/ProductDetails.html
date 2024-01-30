@@ -38,7 +38,7 @@
     </div>
 </section>
 
-<form id="product_details_form">
+<form id="product_details_form"> <!--Form's onsubmit attribute will be patched-->
     <div class="container px-6 py-6">
         <div class="field">
             <label class="label" for="name">Name</label>
@@ -94,12 +94,11 @@
         <div class="py-5">
             <div class="field is-grouped">
                 <div class="control">
-                    <!--Submit button's onclick attribute will be patched-->
                     <button class="button is-success" id="submit_button" type="submit">Save!</button>
                 </div>
 
                 <div class="control">
-                    <button class="button is-danger" onclick="location.href='Product.html'">Back</button>
+                    <button class="button is-danger" type="button" onclick="location.href='Product.html'">Back</button>
                 </div>
             </div>
         </div>

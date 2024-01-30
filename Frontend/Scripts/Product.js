@@ -266,6 +266,9 @@ window.onToggleCreateProductModal = function()
 
 window.onCreateProductModalSubmit = async function()
 {
+    // Prevent submit from navigating away
+    event.preventDefault();
+
     const PRODUCT = constructProductFromDocument();
 
     const RESPONSE = await fetch(ROUTE_NAME,

@@ -24,7 +24,7 @@ export class Product
         //     errors += "Product name cannot be null or empty! \n";
         // }
 
-        if (self.price < 0)
+        if (this.price < 0)
         {
             errors += "Product price may NOT be negative!"
         }
