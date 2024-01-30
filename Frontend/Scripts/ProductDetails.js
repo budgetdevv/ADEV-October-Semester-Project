@@ -2,6 +2,7 @@ import { Product } from "../../Common/Data_Structures/Product.js";
 import { PRODUCTS_ROUTE_NAME, CATEGORIES_ROUTE_NAME, CATEGORY_ID, JSON_HEADER } from "/Common/Constants.js"
 
 const SUBMIT_BUTTON_ID = "submit_button",
+      FORM_ID = "product_details_form",
       PRODUCT_PAGE_URL = "/Product.html";
 
 document.addEventListener('DOMContentLoaded', onLoad);
@@ -19,9 +20,11 @@ async function onLoad()
         return;
     }
 
-    let submitButton = document.getElementById(SUBMIT_BUTTON_ID);
+    // let submitButton = document.getElementById(SUBMIT_BUTTON_ID);
+    // submitButton.setAttribute("onclick", `onSubmit(${productID})`);
 
-    submitButton.setAttribute("onclick", `onSubmit(${productID})`)
+    let submitButton = document.getElementById(FORM_ID);
+    submitButton.setAttribute("onsubmit", `onSubmit(${productID})`);
 
     let response = await fetch(`${PRODUCTS_ROUTE_NAME}/${productID}`);
 
