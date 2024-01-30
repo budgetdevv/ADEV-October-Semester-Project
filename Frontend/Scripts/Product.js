@@ -249,6 +249,7 @@ CREATE_PRODUCT_MODAL.body =
     </div>
 </div>
 `;
+
 CREATE_PRODUCT_MODAL.submitButtonCallbackName = "onCreateProductModalSubmit";
 CREATE_PRODUCT_MODAL.submitButtonName = "Create!";
 
