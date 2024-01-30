@@ -83,7 +83,7 @@ export class Modal
                     ${FOOTER_HTML}
                 </div>
             </div>
-        </form>>`;
+        </form>`;
     }
 
     enable()
