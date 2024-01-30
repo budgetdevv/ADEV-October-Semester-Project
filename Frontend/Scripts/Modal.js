@@ -21,6 +21,7 @@ export class Modal
     enableBody = true;
     enableFooter = true;
     clickBackgroundToCancel = true;
+    submitButtonSuppressDefaultBehavior = true;
     renderedHTML;
 
     constructor(targetID)
@@ -73,14 +74,14 @@ export class Modal
         </footer>` : "";
 
         const SUBMIT_BUTTON_CALLBACK_NAME = this.submitButtonCallbackName;
-        const SUBMIT_BUTTON_ON_CLICK_CODE = (SUBMIT_BUTTON_CALLBACK_NAME != null) ? `${SUBMIT_BUTTON_CALLBACK_NAME}()` : "";
+        const SUBMIT_BUTTON_ON_CLICK_CODE = (this.submitButtonSuppressDefaultBehavior ? "event.preventDefault();" : "") + ((SUBMIT_BUTTON_CALLBACK_NAME != null) ? `${SUBMIT_BUTTON_CALLBACK_NAME}()` : "");
 
         const BACKGROUND_CALLBACK_NAME = this.backgroundCallbackName;
         const BACKGROUND_ON_CLICK_CODE = (BACKGROUND_CALLBACK_NAME != null) ? `${SUBMIT_BUTTON_CALLBACK_NAME}()` : ((this.clickBackgroundToCancel) ? DEFAULT_CLOSE_CODE : "");
 
         this.renderedHTML = `
-        <form onsubmit='${SUBMIT_BUTTON_ON_CLICK_CODE}'>
-            <div class="modal is-active" id="${TARGET_ID}">
+        <form onsubmit='${SUBMIT_BUTTON_ON_CLICK_CODE}' id="${TARGET_ID}">
+            <div class="modal is-active">
                 <div class="modal-background" onclick='${BACKGROUND_ON_CLICK_CODE}'></div>
                 <div class="modal-card">
                     ${HEADER_HTML}

@@ -204,14 +204,14 @@ CREATE_PRODUCT_MODAL.body =
         <span class="icon is-small is-left">
             <i class="fa-solid fa-signature"></i>
         </span>
-        <input class="input is-warning" type="text" pattern="\\S(.*\\S)?" placeholder="Enter product's name" id="name" required />
+            <input class="input is-warning" type="text" pattern="\\S(.*\\S)?" placeholder="Enter product's name" maxlength=100 id="name" required />
     </div>
 </div>
 
 <div class="field">
     <label class="label" for="description">Description</label>
     <div class="control">
-        <textarea class="textarea is-warning" id="description" type="text" placeholder="Enter product's description"></textarea>
+        <textarea class="textarea is-warning" type="text" placeholder="Enter product's description" maxlength=200 id="description" ></textarea>
     </div>
 </div>
 
@@ -245,7 +245,7 @@ CREATE_PRODUCT_MODAL.body =
         <span class="icon is-small is-left">
             <i class="fa-solid fa-paperclip"></i>
         </span>
-        <input class="input is-warning" id="picture" placeholder="Enter product's Image URL" />
+        <input class="input is-warning" placeholder="Enter product's Image URL" maxlength=200 id="picture" />
     </div>
 </div>
 `;
@@ -266,9 +266,6 @@ window.onToggleCreateProductModal = function()
 
 window.onCreateProductModalSubmit = async function()
 {
-    // Prevent submit from navigating away
-    event.preventDefault();
-
     const PRODUCT = constructProductFromDocument();
 
     const RESPONSE = await fetch(ROUTE_NAME,
