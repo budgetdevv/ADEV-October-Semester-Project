@@ -1,3 +1,5 @@
+import { isNullOrWhitespace } from "../Helpers.js";
+
 export class Product
 {
     id;
@@ -13,16 +15,20 @@ export class Product
         Object.assign(this, jsonObject);
     }
 
-    static getDefault(picture_url)
+    validateAndReturnErrorsIfAny()
     {
-        let product = new Product();
+        let errors = "";
 
-        product.name = "New Product";
-        product.description = "";
-        product.price = product.category_id = 0;
-        product.category_id = 1;
-        product.picture = picture_url;
+        // if (isNullOrWhitespace(self.name))
+        // {
+        //     errors += "Product name cannot be null or empty! \n";
+        // }
 
-        return product;
+        if (self.price < 0)
+        {
+            errors += "Product price may NOT be negative!"
+        }
+
+        return errors;
     }
 }

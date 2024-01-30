@@ -79,36 +79,45 @@ app.route("").get(async function (req, resp)
 // UPDATE
 app.route("").put(async function (req, resp)
 {
-    const PRODUCT = new Product(req.body);
+    let ERRORS;
 
-    if (PRODUCT.price < 0)
+    // We use while loop's break to jump to common path should there be error(s).
+    // noinspection LoopStatementThatDoesntLoopJS
+    while (true)
     {
-        resp.status(400).send("Product price may NOT be negative!");
-        return;
-    }
+        const PRODUCT = new Product(req.body);
+        ERRORS = PRODUCT.validateAndReturnErrorsIfAny();
 
-    const QUERY = `UPDATE ${DB_TABLE_NAME}
-                   SET
-                   name = ?,
-                   description = ?,
-                   price = ?,
-                   category_id = ?,
-                   picture = ?
-                   WHERE id = ?`
+        if (ERRORS.length !== 0)
+        {
+            break;
+        }
 
-    const PARAMS = [PRODUCT.name,
-                    PRODUCT.description,
-                    PRODUCT.price,
-                    PRODUCT.category_id,
-                    PRODUCT.picture,
-                    PRODUCT.id];
+        const QUERY = `UPDATE ${DB_TABLE_NAME}
+                       SET
+                       name = ?,
+                       description = ?,
+                       price = ?,
+                       category_id = ?,
+                       picture = ?
+                       WHERE id = ?`
 
-    const RESULT = await tryQueryDB(db, QUERY, PARAMS);
+        const PARAMS = [PRODUCT.name,
+                        PRODUCT.description,
+                        PRODUCT.price,
+                        PRODUCT.category_id,
+                        PRODUCT.picture,
+                        PRODUCT.id];
 
-    const ERROR = RESULT.error;
+        const RESULT = await tryQueryDB(db, QUERY, PARAMS);
 
-    if (!ERROR)
-    {
+        ERRORS = RESULT.error;
+
+        if (ERRORS != null)
+        {
+            break;
+        }
+
         const data = RESULT.data;
 
         if (data.length !== 0)
@@ -122,46 +131,60 @@ app.route("").put(async function (req, resp)
             // Respond with empty object
             resp.json({});
         }
+
+        return;
     }
 
-    else
-    {
-        resp.status(400).send(ERROR);
-    }
+    resp.status(400).send(ERRORS);
 });
 
 // CREATE
 app.route("").post(async function (req, resp)
 {
-    let product = new Product(req.body);
 
-    // id is auto-increment
-    const QUERY = `INSERT INTO ${DB_TABLE_NAME}
-                   (name, description, price, category_id, picture)
-                   VALUES
-                   (?, ?, ?, ?, ?)`;
+    let errors;
 
-    const PARAMS = [product.name,
-                    product.description,
-                    product.price,
-                    product.category_id,
-                    product.picture];
-
-    const RESULT = await tryQueryDB(db, QUERY, PARAMS);
-
-    const ERROR = RESULT.error;
-
-    if (!ERROR)
+    // We use while loop's break to jump to common path should there be error(s).
+    // noinspection LoopStatementThatDoesntLoopJS
+    while (true)
     {
+        const PRODUCT = new Product(req.body);
+        errors = PRODUCT.validateAndReturnErrorsIfAny();
+
+        if (errors.length !== 0)
+        {
+            break;
+        }
+
+        // id is auto-increment
+        const QUERY = `INSERT INTO ${DB_TABLE_NAME}
+                      (name, description, price, category_id, picture)
+                      VALUES
+                      (?, ?, ?, ?, ?)`;
+
+        const PARAMS = [PRODUCT.name,
+                        PRODUCT.description,
+                        PRODUCT.price,
+                        PRODUCT.category_id,
+                        PRODUCT.picture];
+
+        const RESULT = await tryQueryDB(db, QUERY, PARAMS);
+
+        errors = RESULT.error;
+
+        if (errors != null)
+        {
+            break;
+        }
+
         const data = RESULT.data;
 
         resp.json(data.insertId);
+
+        return;
     }
 
-    else
-    {
-        resp.status(400).send(ERROR);
-    }
+    resp.status(400).send(errors);
 });
 
 // DELETE
