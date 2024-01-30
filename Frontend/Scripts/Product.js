@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', function()
 });
 
 /**
- * @param {Product} left
- * @param {Product} right
+ * @param { Product } left
+ * @param { Product } right
  */
 function defaultSort(left, right)
 {
@@ -24,8 +24,8 @@ function defaultSort(left, right)
 }
 
 /**
- * @param {Product} left
- * @param {Product} right
+ * @param { Product } left
+ * @param { Product } right
  */
 function sortByName(left, right)
 {
@@ -46,8 +46,8 @@ function sortByName(left, right)
 }
 
 /**
- * @param {Product} left
- * @param {Product} right
+ * @param { Product } left
+ * @param { Product } right
  */
 function sortByPrice(left, right)
 {
@@ -55,8 +55,8 @@ function sortByPrice(left, right)
 }
 
 /**
- * @param {Product} left
- * @param {Product} right
+ * @param { Product } left
+ * @param { Product } right
  */
 function sortByCategory(left, right)
 {
