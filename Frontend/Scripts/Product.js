@@ -342,7 +342,7 @@ window.onToggleFullDescription = function(descriptionElement)
  */
 function onProductImageLoadFailure(productImage)
 {
-    productImage.src = "Frontend/Assets/PRODUCT_MISSING.png";
+    productImage.src = "/Frontend/Assets/PRODUCT_MISSING.png";
 }
 
 async function onDelete(productID)
