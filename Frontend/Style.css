@@ -14,3 +14,10 @@
 {
     border-color: #beaa56;
 }
+
+.hero-body
+{
+    background: no-repeat right;
+    background-size: contain;
+    /*background-origin: content-box;*/
+}
