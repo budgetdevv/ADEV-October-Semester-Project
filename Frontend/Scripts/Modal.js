@@ -10,6 +10,7 @@ export class Modal
     submitButtonCallbackName = null;
     cancelButtonCallbackName = null;
     crossButtonCallbackName = null;
+    backgroundCallbackName = null;
     submitButtonName = "Submit";
     cancelButtonName = "Cancel";
     titleBackgroundColor = "has-background-warning";
@@ -19,6 +20,7 @@ export class Modal
     enableTitle = true;
     enableBody = true;
     enableFooter = true;
+    clickBackgroundToCancel = true;
     renderedHTML;
 
     constructor(targetID)
@@ -73,10 +75,13 @@ export class Modal
         const SUBMIT_BUTTON_CALLBACK_NAME = this.submitButtonCallbackName;
         const SUBMIT_BUTTON_ON_CLICK_CODE = (SUBMIT_BUTTON_CALLBACK_NAME != null) ? `${SUBMIT_BUTTON_CALLBACK_NAME}()` : "";
 
+        const BACKGROUND_CALLBACK_NAME = this.backgroundCallbackName;
+        const BACKGROUND_ON_CLICK_CODE = (BACKGROUND_CALLBACK_NAME != null) ? `${SUBMIT_BUTTON_CALLBACK_NAME}()` : ((this.clickBackgroundToCancel) ? DEFAULT_CLOSE_CODE : "");
+
         this.renderedHTML = `
         <form onsubmit='${SUBMIT_BUTTON_ON_CLICK_CODE}'>
             <div class="modal is-active" id="${TARGET_ID}">
-                <div class="modal-background"></div>
+                <div class="modal-background" onclick='${BACKGROUND_ON_CLICK_CODE}'></div>
                 <div class="modal-card">
                     ${HEADER_HTML}
                     ${BODY_HTML}
