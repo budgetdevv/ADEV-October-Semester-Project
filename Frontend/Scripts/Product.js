@@ -27,6 +27,7 @@ function scrollToProduct(productID)
 
     let scrollTarget;
 
+    // noinspection LoopStatementThatDoesntLoopJS
     while (true)
     {
         if (FIRST_PRODUCT != null)
