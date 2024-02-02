@@ -69,21 +69,35 @@
            </nav>
         </div>
 
-        <div class="hero-body" style="background-image: url('/Frontend/Assets/Warehouse.png')">
-           <div class="columns">
+        <div class="hero-body pb-2" style="background-image: url('/Frontend/Assets/Warehouse.png')">
+            <div class="columns">
                 <div class="column is-two-thirds">
-                   <p class="title">
-                      Manage Products
-                   </p>
-                 <p class="subtitle">
-                     View, Edit or Delete products!
-                  </p>
-              </div>
-         </div>
-      </div>
+                    <p class="title">
+                        Manage Products
+                    </p>
+                    <p class="subtitle">
+                        View, Edit or Delete products!
+                    </p>
+                </div>
+            </div>
+        </div>
 
         <div class="hero-foot">
-
+            <div class="column">
+                <div class="columns is-centered py-0">
+                    <div class="column is-one-third py-0">
+                        <div class="field">
+                            <div class="control">
+<!--                            <div class="control has-icons-right">-->
+<!--                                <span class="icon is-small is-right">-->
+<!--                                    <i class="fa-solid fa-magnifying-glass has-text-white"></i>-->
+<!--                                </span>-->
+                                <input class="input is-black hero-footer-search-bar" type="text" placeholder="Enter product name" oninput="renderProducts(true)" id="filter" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 

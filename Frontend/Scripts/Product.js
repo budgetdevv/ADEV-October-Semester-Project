@@ -121,11 +121,19 @@ async function renderProducts(useCached, sortTypeChanged = false)
         }
     }
 
+    const FILTER_TEXT = document.getElementById("filter").value.toUpperCase();
+
     let cardBodies = "";
 
     for (let i = 0; i < products.length; i++)
     {
         const PRODUCT = new Product(products[i]);
+
+        // Filter by name for now. We will add more options in the future
+        if (!PRODUCT.name.toUpperCase().includes(FILTER_TEXT))
+        {
+            continue;
+        }
 
         cardBodies +=
         `
@@ -148,15 +156,27 @@ async function renderProducts(useCached, sortTypeChanged = false)
 
     else
     {
-        html =
-        `
-        <div class="container is-fullwidth px-0 py-0">
-            <image style="width: 100%" src="https://cdn.matthewjamestaylor.com/titles/empty-div.png"></image>
-        </div>`;
-
-        if (!useCached)
+        if (FILTER_TEXT === "")
         {
-            PROMPT_PRODUCT_CREATION_MODAL.enable();
+            html =
+            `
+            <div class="container is-fullwidth px-0 py-0">
+                <image style="width: 100%" src="https://cdn.matthewjamestaylor.com/titles/empty-div.png"></image>
+            </div>`;
+
+            if (!useCached)
+            {
+                PROMPT_PRODUCT_CREATION_MODAL.enable();
+            }
+        }
+
+        else
+        {
+            html =
+            `
+            <div class="container is-fullwidth px-0 py-0">
+                <h1 style="text-align: center">No matching products</h1>  
+            </div>`;
         }
     }
 
@@ -164,6 +184,8 @@ async function renderProducts(useCached, sortTypeChanged = false)
 
     div.innerHTML = html;
 }
+
+window.renderProducts = renderProducts;
 
 const CREATE_PRODUCT_MODAL = new Modal(PRODUCT_PAGE_MODAL_ID);
 
