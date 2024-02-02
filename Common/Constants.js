@@ -6,7 +6,6 @@ export const PRODUCTS_ROUTE_NAME = "/products",
 
 // We make HTML elements' IDs the same as their class field representation, which in turn, is the same as field name in DB.
 export const PRICE_ID = "price",
-             CATEGORY_ID = "category_id",
-             PRODUCT_IMAGE_ID = "picture";
+             CATEGORY_ID = "category_id";
 
 export const JSON_HEADER = { "Content-Type": "application/json" };
