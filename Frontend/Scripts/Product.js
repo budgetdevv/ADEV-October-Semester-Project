@@ -1,5 +1,5 @@
 import { Product } from "/Common/Data_Structures/Product.js";
-import { PRODUCTS_ROUTE_NAME as ROUTE_NAME, RESET_ROUTE, PRODUCT_IMAGE_ID, PLACEHOLDER_PRODUCT_IMAGE_URL, JSON_HEADER } from "/Common/Constants.js"
+import { PRODUCTS_ROUTE_NAME as ROUTE_NAME, RESET_ROUTE, PRODUCT_IMAGE_ID, JSON_HEADER } from "/Common/Constants.js"
 import { Modal } from "./Modal.js";
 import { populateCategorySelector, constructProductFromDocument } from "./Shared.js";
 
