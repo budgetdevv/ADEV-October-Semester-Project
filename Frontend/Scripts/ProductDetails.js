@@ -1,9 +1,8 @@
 import { Product } from "../../Common/Data_Structures/Product.js";
-import { PRODUCTS_ROUTE_NAME, CATEGORY_ID, JSON_HEADER } from "/Common/Constants.js";
+import { PRODUCTS_ROUTE_NAME, PRODUCT_PAGE_ROUTE, CATEGORY_ID, JSON_HEADER } from "/Common/Constants.js";
 import { populateCategorySelector, constructProductFromDocument } from "./Shared.js";
 
-const FORM_ID = "product_details_form",
-      PRODUCT_PAGE_URL = "/Product.html";
+const FORM_ID = "product_details_form";
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
@@ -63,14 +62,14 @@ async function onLoad()
 // Export this function. This is required if we treat this .js as a module.
 window.onSubmit = onSubmit;
 
-async function onSubmit(restaurantID)
+async function onSubmit(productID)
 {
     // Prevent submit from navigating away
     event.preventDefault();
 
     let product = constructProductFromDocument();
 
-    product.id = restaurantID;
+    product.id = productID;
 
     const RESPONSE = await fetch(PRODUCTS_ROUTE_NAME,
     {
@@ -85,6 +84,6 @@ async function onSubmit(restaurantID)
     // If success, return back to products page.
     if (RESPONSE.status === 200)
     {
-        location.href = PRODUCT_PAGE_URL;
+        location.href = `${PRODUCT_PAGE_ROUTE}?ID=${productID}`;
     }
 }

@@ -1,4 +1,5 @@
 import { isNullOrWhitespace } from "../Helpers.js";
+import { PRODUCT_ID_PREFIX } from "../Constants.js";
 
 export class Product
 {
@@ -27,7 +28,7 @@ export class Product
 
         const HTML =
         `
-        <div class="card">
+        <div class="card" id="${PRODUCT_ID_PREFIX}${ID}">
             <div class="card-image">
                 <figure class="image is-4by3">
                     <img src="${this.picture}" onclick="onShowModalForProductImage('${productName}', this)" onerror="onProductImageLoadFailure(this)" alt="Image missing">

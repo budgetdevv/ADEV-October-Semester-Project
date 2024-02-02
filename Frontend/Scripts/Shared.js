@@ -23,7 +23,7 @@ export async function populateCategorySelector(categorySelector = null)
 
 export function constructProductFromDocument()
 {
-    // Construct the restaurant object.
+    // Construct the product object.
     let product = new Product();
 
     for (const fieldName of Object.keys(product))
@@ -41,16 +41,8 @@ export function constructProductFromDocument()
     return product;
 }
 
-/**
- * @param { HTMLElement } htmlElement
- */
-export function scrollToElement(htmlElement)
+export function scrollToBottomOfPage(smooth = true)
 {
-    window.scrollTo(0, htmlElement.scrollHeight);
-}
-
-export function scrollToBottomOfPage()
-{
-    window.scrollTo(0, document.body.scrollHeight);
+    window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: smooth ? "smooth" : "instant" });
 }
 

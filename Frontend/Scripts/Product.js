@@ -1,5 +1,5 @@
 import { Product } from "/Common/Data_Structures/Product.js";
-import { PRODUCTS_ROUTE_NAME as ROUTE_NAME, RESET_ROUTE, JSON_HEADER } from "/Common/Constants.js"
+import { PRODUCTS_ROUTE_NAME as ROUTE_NAME, PRODUCT_ID_PREFIX, RESET_ROUTE, JSON_HEADER } from "/Common/Constants.js"
 import { Modal } from "./Modal.js";
 import { populateCategorySelector, constructProductFromDocument, scrollToBottomOfPage } from "./Shared.js";
 
@@ -9,10 +9,51 @@ const PRODUCT_LIST_ID = "product_list",
 let loadedProducts;
 let currentSortFunction = defaultSort;
 
-document.addEventListener('DOMContentLoaded', function()
+document.addEventListener('DOMContentLoaded', async function()
 {
-    const _ = renderProducts(false);
+    await renderProducts(false);
+
+    const PRODUCT_ID = new URLSearchParams(location.search).get("ID");
+
+    scrollToProduct(PRODUCT_ID);
 });
+
+/**
+ * @param { String } productID
+ */
+function scrollToProduct(productID)
+{
+    const FIRST_PRODUCT = document.getElementById(`${PRODUCT_ID_PREFIX}1`);
+
+    let scrollTarget;
+
+    while (true)
+    {
+        if (FIRST_PRODUCT != null)
+        {
+            const PRODUCT = document.getElementById(`${PRODUCT_ID_PREFIX}${productID}`);
+
+            // alert(FIRST_PRODUCT.parentElement.scrollHeight)
+            // alert(PRODUCT.parentElement.scrollHeight)
+
+            // User may input arbitrary product number
+            // Are they on the first column? If so, we scroll to start of the page.
+            if (PRODUCT != null && PRODUCT.getBoundingClientRect().y !== FIRST_PRODUCT.getBoundingClientRect().y)
+            {
+                // Parent element ( Which is the column ) includes padding
+                scrollTarget = PRODUCT.parentElement;
+                break;
+            }
+        }
+
+        // Scroll to the body, which basically starts from the top
+        scrollTarget = document.body;
+
+        break;
+    }
+
+    scrollTarget.scrollIntoView({ behavior: "smooth" });
+}
 
 /**
  * @param { Product } left

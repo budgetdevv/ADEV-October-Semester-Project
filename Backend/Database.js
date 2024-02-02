@@ -64,7 +64,7 @@ export class Database
             multipleStatements: true
         });
 
-        const restaurant_connection = await mysql.createConnection({
+        const main_connection = await mysql.createConnection({
             host: config.host, // IP of database server
             port: config.port, // port of database server
             user: config.username, // user of database server
@@ -75,11 +75,11 @@ export class Database
         let db = new Database();
 
         db.global_database = global_connection;
-        db.main_database = restaurant_connection;
+        db.main_database = main_connection;
 
         // Test Connections
         await global_connection.connect();
-        await restaurant_connection.connect();
+        await main_connection.connect();
 
         console.log('Connected to DB!');
 
