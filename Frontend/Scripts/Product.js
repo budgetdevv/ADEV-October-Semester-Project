@@ -1,7 +1,7 @@
 import { Product } from "/Common/Data_Structures/Product.js";
 import { PRODUCTS_ROUTE_NAME as ROUTE_NAME, RESET_ROUTE, JSON_HEADER } from "/Common/Constants.js"
 import { Modal } from "./Modal.js";
-import { populateCategorySelector, constructProductFromDocument } from "./Shared.js";
+import { populateCategorySelector, constructProductFromDocument, scrollToBottomOfPage } from "./Shared.js";
 
 const PRODUCT_LIST_ID = "product_list",
       PRODUCT_PAGE_MODAL_ID = "product_page_modal";
@@ -250,7 +250,9 @@ window.onCreateProductModalSubmit = async function()
     alert(`New product created! ID: ${await RESPONSE.text()}`);
 
     CREATE_PRODUCT_MODAL.disable();
-    const _ = renderProducts(false);
+
+    const renderPromise = renderProducts(false);
+    renderPromise.then(scrollToBottomOfPage);
 };
 
 const VIEW_PRODUCT_IMAGE_MODAL = new Modal(PRODUCT_PAGE_MODAL_ID);

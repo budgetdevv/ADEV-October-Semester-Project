@@ -41,3 +41,16 @@ export function constructProductFromDocument()
     return product;
 }
 
+/**
+ * @param { HTMLElement } htmlElement
+ */
+export function scrollToElement(htmlElement)
+{
+    window.scrollTo(0, htmlElement.scrollHeight);
+}
+
+export function scrollToBottomOfPage()
+{
+    window.scrollTo(0, document.body.scrollHeight);
+}
+
