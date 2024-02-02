@@ -15,6 +15,47 @@ export class Product
         Object.assign(this, jsonObject);
     }
 
+    getProductDisplayHTML()
+    {
+        const ID = this.id;
+
+        let productName = this.name;
+        productName = (productName !== "") ? productName : "<i>( No product name )</i>";
+
+        let product_desc = this.description;
+        product_desc = (product_desc !== "") ? product_desc : "<b>( No product description )</b>";
+
+        const HTML =
+        `
+        <div class="card">
+            <div class="card-image">
+                <figure class="image is-4by3">
+                    <img src="${this.picture}" onclick="onShowModalForProductImage('${productName}', this)" onerror="onProductImageLoadFailure(this)" alt="Image missing">
+                </figure>
+            </div>
+            
+            <header class="card-header has-background-warning">
+                <p class="card-header-title is-centered truncate_text">
+                    ${productName}
+                </p>
+            </header>
+            
+            <div class="card-content">
+                <p class="content wrap_text truncate_text" onclick="onToggleFullDescription(this)">
+                    ${product_desc}
+                </p>
+            </div>
+        </div>
+        
+        <div class="buttons has-addons"">
+            <button class="button is-half is-success" style="width: 50%" onClick="location.href = '/ProductDetails.html?ID=${ID}'">Details & Edit</button>
+            <button class="button is-half is-danger" style="width: 50%" onclick="onDelete(${ID})">Delete!!!</button>
+        </div>
+        `;
+
+        return HTML;
+    }
+
     validateAndReturnErrorsIfAny()
     {
         let errors = "";
