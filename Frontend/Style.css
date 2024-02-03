@@ -22,10 +22,36 @@
     /*background-origin: content-box;*/
 }
 
+.hero-header-search-bar
+{
+    border: None;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    background-color: #E7BA40;
+    /*display: inherit;*/
+}
+
 .hero-footer-search-bar
 {
     border: None;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     background-color: #E7BA40;
+    /*display: none;*/
+}
+
+@media screen and (max-width: 600px)
+{
+    .hero-header-search-bar
+    {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 600px)
+{
+    .hero-footer-search-bar
+    {
+        display: none;
+    }
 }

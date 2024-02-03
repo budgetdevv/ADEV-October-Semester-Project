@@ -15,60 +15,74 @@
 <body>
     <section class="hero is-med is-warning">
         <div class="hero-head">
-            <nav class="navbar is-warning" role="navigation" aria-label="main navigation">
-                <div class="navbar-brand">
-                    <a class="navbar-item" href="/Product.html">
-                        <img src="../Assets/ABC2.png">
-                    </a>
+            <div class="columns">
+                <div class="column is-one-third">
+                    <nav class="navbar is-warning" role="navigation" aria-label="main navigation">
+                        <div class="navbar-brand">
+                            <a class="navbar-item" href="/Product.html">
+                                <img src="../Assets/ABC2.png">
+                            </a>
+                        </div>
 
+                        <div id="navbar" class="navbar-menu">
+                            <div class="navbar-start">
+                                <div class="navbar-item has-dropdown is-hoverable">
+                                    <a class="navbar-link">
+                                        Options
+                                    </a>
+
+                                    <div class="navbar-dropdown">
+                                        <a class="navbar-item" onclick="onToggleCreateProductModal()">
+                                            Create Product
+                                        </a>
+                                        <hr class="navbar-divider">
+                                        <a class="navbar-item" onclick="onReset()">
+                                            Reset Database!!!
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="navbar-item has-dropdown is-hoverable">
+                                    <a class="navbar-link">
+                                        Sort By
+                                    </a>
+
+                                    <div class="navbar-dropdown">
+                                        <a class="navbar-item" onclick="setSortType(0)">
+                                            ID
+                                        </a>
+                                        <a class="navbar-item" onclick="setSortType(1)">
+                                            Name
+                                        </a>
+                                        <a class="navbar-item" onclick="setSortType(2)">
+                                            Price
+                                        </a>
+                                        <a class="navbar-item" onclick="setSortType(3)">
+                                            Category
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+
+                <div class="column is-one-third">
+                    <div class="field">
+                        <div class="control">
+                            <input class="input is-black hero-header-search-bar" type="text" placeholder="Enter product name" oninput="renderProducts(true)" id="filter" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column is-one-third">
                     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar">
                         <span aria-hidden="true"></span>
                         <span aria-hidden="true"></span>
                         <span aria-hidden="true"></span>
                     </a>
                 </div>
-
-                <div id="navbar" class="navbar-menu">
-                <div class="navbar-start">
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">
-                            Options
-                        </a>
-
-                        <div class="navbar-dropdown">
-                            <a class="navbar-item" onclick="onToggleCreateProductModal()">
-                                Create Product
-                            </a>
-                            <hr class="navbar-divider">
-                            <a class="navbar-item" onclick="onReset()">
-                                Reset Database!!!
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">
-                            Sort By
-                        </a>
-
-                        <div class="navbar-dropdown">
-                            <a class="navbar-item" onclick="setSortType(0)">
-                                ID
-                            </a>
-                            <a class="navbar-item" onclick="setSortType(1)">
-                                Name
-                            </a>
-                            <a class="navbar-item" onclick="setSortType(2)">
-                                Price
-                            </a>
-                            <a class="navbar-item" onclick="setSortType(3)">
-                                Category
-                            </a>
-                        </div>
-                    </div>
-                </div>
             </div>
-           </nav>
         </div>
 
         <div class="hero-body pb-2" style="background-image: url('/Frontend/Assets/Warehouse.png')">
