@@ -1,6 +1,3 @@
-import { IS_ACTIVE_CLASS } from "/Common/Constants.js";
-// import { BulmaColor, CustomColor } from "/Frontend/Scripts/BulmaColor.js";
-
 export class Color
 {
     /**
@@ -119,36 +116,6 @@ export class Modal
      * @public
      */
     footerElement;
-
-    // /**
-    //  * @type { BulmaColor }
-    //  * @private
-    //  */
-    // #headerBackgroundBulmaColor;
-    //
-    // /**
-    //  * @type { BulmaColor }
-    //  * @private
-    //  */
-    // #bodyBackgroundBulmaColor;
-    //
-    // /**
-    //  * @type { BulmaColor }
-    //  * @private
-    //  */
-    // #footerBackgroundBulmaColor;
-    //
-    // /**
-    //  * @type { BulmaColor }
-    //  * @private
-    //  */
-    // #submitButtonBulmaColor;
-    //
-    // /**
-    //  * @type { BulmaColor }
-    //  * @private
-    //  */
-    // #cancelButtonBulmaColor;
 
     /**
      * @type { boolean }
@@ -374,67 +341,6 @@ export class Modal
         style.color = color.textColorHex ?? style.color;
         style.backgroundColor = color.backgroundColorHex ?? style.backgroundColor;
     }
-
-    // /**
-    //  * @param { HTMLElement } element
-    //  * @returns { String }
-    //  */
-    // static #getCustomBackgroundColorHex(element)
-    // {
-    //     return element.style.backgroundColor;
-    // }
-    //
-    // #getBackgroundColor(COLOR)
-    // {
-    //     return COLOR ?? new CustomColor(#getCustomBackgroundColorHex());
-    // }
-    //
-    // get headerBackgroundColor()
-    // {
-    //     const COLOR = this.#headerBackgroundBulmaColor;
-    // }
-    //
-    // /**
-    //  * @param { (BulmaColor | CustomColor) } color
-    //  */
-    // set headerBackgroundColor(color)
-    // {
-    //     this.#headerBackgroundBulmaColor =
-    //
-    //     if (color instanceof BulmaColor)
-    //     {
-    //         this.#headerBackgroundBulmaColor = color;
-    //     }
-    //
-    //     else if (color instanceof CustomColor)
-    //     {
-    //         this.headerElement.style.backgroundColor = color.hex;
-    //     }
-    // }
-    //
-    // /**
-    //  * @param { String } hex
-    //  */
-    // setFooterBackgroundColor(hex)
-    // {
-    //     this.footerElement.style.backgroundColor = hex;
-    // }
-    //
-    // /**
-    //  * @param { String } hex
-    //  */
-    // setSubmitButtonColor(hex)
-    // {
-    //     this.submitButtonElement.style.backgroundColor = hex;
-    // }
-    //
-    // /**
-    //  * @param { String } hex
-    //  */
-    // setCancelButtonColor(hex)
-    // {
-    //
-    // }
 
     enable()
     {
