@@ -32,22 +32,19 @@ function scrollToProduct(productID)
             // Sort type may mean that first displayed item doesn't necessarily have an ID of 1.
             const FIRST_PRODUCT = document.getElementById(`${PRODUCT_ID_PREFIX}${new Product(loadedProducts[0]).id}`);
 
-            if (FIRST_PRODUCT != null)
+            const PRODUCT = document.getElementById(`${PRODUCT_ID_PREFIX}${productID}`);
+
+            // alert(FIRST_PRODUCT.parentElement.scrollHeight)
+            // alert(PRODUCT.parentElement.scrollHeight)
+
+            // User may input arbitrary product number
+            // Are they on the first column? If so, we scroll to start of the page.
+            if (PRODUCT != null && PRODUCT.getBoundingClientRect().y !== FIRST_PRODUCT.getBoundingClientRect().y)
             {
-                const PRODUCT = document.getElementById(`${PRODUCT_ID_PREFIX}${productID}`);
-
-                // alert(FIRST_PRODUCT.parentElement.scrollHeight)
-                // alert(PRODUCT.parentElement.scrollHeight)
-
-                // User may input arbitrary product number
-                // Are they on the first column? If so, we scroll to start of the page.
-                if (PRODUCT != null && PRODUCT.getBoundingClientRect().y !== FIRST_PRODUCT.getBoundingClientRect().y)
-                {
-                    alert("SSSS")
-                    // Parent element ( Which is the column ) includes padding
-                    scrollTarget = PRODUCT.parentElement;
-                    break;
-                }
+                alert("SSSS")
+                // Parent element ( Which is the column ) includes padding
+                scrollTarget = PRODUCT.parentElement;
+                break;
             }
         }
 
