@@ -214,7 +214,7 @@ export class Modal
         this.crossButtonElement = document.getElementById(CROSS_BUTTON_ID);
         this.backgroundElement = document.getElementById(BACKGROUND_ID);
 
-        const DISABLE_CALLBACK = this.disable;
+        const DISABLE_CALLBACK = Modal.#disableCallback;
 
         this.cancelCallback = DISABLE_CALLBACK;
         this.crossCallback = DISABLE_CALLBACK;
@@ -254,8 +254,7 @@ export class Modal
         this.crossButtonElement.removeEventListener("click", this);
         this.backgroundElement.removeEventListener("click", this);
     }
-
-
+    
     // It is used by addEventListener()
     // noinspection JSUnusedGlobalSymbols
     /**
@@ -273,7 +272,12 @@ export class Modal
                     event.preventDefault();
                 }
 
-                this?.submitCallback(this);
+                const SUBMIT_CALLBACK = this.submitCallback;
+
+                if (SUBMIT_CALLBACK != null)
+                {
+                    SUBMIT_CALLBACK(this);
+                }
 
                 if (this.closeModalOnSubmit)
                 {
@@ -284,17 +288,32 @@ export class Modal
             case "click":
                 if (SOURCE_ELEMENT === this.cancelButtonElement)
                 {
-                    this?.cancelCallback(this);
+                    const CANCEL_CALLBACK = this.cancelCallback;
+
+                    if (CANCEL_CALLBACK != null)
+                    {
+                        CANCEL_CALLBACK(this);
+                    }
                 }
 
                 else if (SOURCE_ELEMENT === this.crossButtonElement)
                 {
-                    this?.crossCallback(this);
+                    const CROSS_CALLBACK = this.crossCallback;
+
+                    if (CROSS_CALLBACK != null)
+                    {
+                        CROSS_CALLBACK(this);
+                    }
                 }
 
                 else if (SOURCE_ELEMENT === this.backgroundElement)
                 {
-                    this?.backgroundCallback(this);
+                    const BACKGROUND_CALLBACK = this.backgroundCallback;
+
+                    if (BACKGROUND_CALLBACK != null)
+                    {
+                        BACKGROUND_CALLBACK(this);
+                    }
                 }
 
                 return;
@@ -347,6 +366,11 @@ export class Modal
     enable()
     {
         this.modalElement.classList.add(IS_ACTIVE_CLASS);
+    }
+
+    static #disableCallback(modal)
+    {
+        modal.disable();
     }
 
     disable()
