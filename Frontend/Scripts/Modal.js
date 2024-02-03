@@ -1,3 +1,5 @@
+import { IS_ACTIVE_CLASS } from "/Common/Constants.js";
+
 export class Color
 {
     /**
