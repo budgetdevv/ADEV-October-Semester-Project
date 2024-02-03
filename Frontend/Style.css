@@ -22,9 +22,10 @@
     /*background-origin: content-box;*/
 }
 
-.hero-footer-search-bar{
+.hero-footer-search-bar
+{
     border: None;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    background-color: #E8CD88;
+    background-color: #E7BA40;
 }
