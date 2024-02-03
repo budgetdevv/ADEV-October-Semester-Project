@@ -3,8 +3,7 @@ import { PRODUCTS_ROUTE_NAME as ROUTE_NAME, PRODUCT_ID_PREFIX, RESET_ROUTE, JSON
 import { Modal } from "./Modal.js";
 import { populateCategorySelector, constructProductFromDocument, scrollToBottomOfPage } from "./Shared.js";
 
-const PRODUCT_LIST_ID = "product_list",
-      PRODUCT_PAGE_MODAL_ID = "product_page_modal";
+const PRODUCT_LIST_ID = "product_list";
 
 let loadedProducts;
 let currentSortFunction = defaultSort;
@@ -229,10 +228,11 @@ async function renderProducts(useCached, sortTypeChanged = false)
 
 window.renderProducts = renderProducts;
 
-const CREATE_PRODUCT_MODAL = new Modal(PRODUCT_PAGE_MODAL_ID);
+const CREATE_PRODUCT_MODAL = new Modal();
 
-CREATE_PRODUCT_MODAL.title = "Create Product!";
-CREATE_PRODUCT_MODAL.body =
+CREATE_PRODUCT_MODAL.setTitle("Create Product!");
+
+CREATE_PRODUCT_MODAL.setBody(
 `
 <div class="field">
     <label class="label" for="name">Name</label>
@@ -284,23 +284,9 @@ CREATE_PRODUCT_MODAL.body =
         <input class="input is-warning" placeholder="Enter product's Image URL" maxlength=200 id="picture" />
     </div>
 </div>
-`;
+`);
 
-CREATE_PRODUCT_MODAL.submitButtonCallbackName = "onCreateProductModalSubmit";
-CREATE_PRODUCT_MODAL.submitButtonName = "Create!";
-
-CREATE_PRODUCT_MODAL.render();
-
-// Export function(s). This is required if we treat this .js as a module.
-
-window.onToggleCreateProductModal = function()
-{
-    CREATE_PRODUCT_MODAL.enable();
-
-    const _ = populateCategorySelector();
-}
-
-window.onCreateProductModalSubmit = async function()
+CREATE_PRODUCT_MODAL.submitCallback = async function(modal)
 {
     const PRODUCT = constructProductFromDocument();
 
@@ -313,26 +299,25 @@ window.onCreateProductModalSubmit = async function()
 
     alert(`New product created! ID: ${await RESPONSE.text()}`);
 
-    CREATE_PRODUCT_MODAL.disable();
-
     const renderPromise = renderProducts(false);
     renderPromise.then(scrollToBottomOfPage);
 };
 
-const VIEW_PRODUCT_IMAGE_MODAL = new Modal(PRODUCT_PAGE_MODAL_ID);
+CREATE_PRODUCT_MODAL.submitButtonElement.textContent = "Create!";
 
-VIEW_PRODUCT_IMAGE_MODAL.title = "Product Image Preview";
-VIEW_PRODUCT_IMAGE_MODAL.body_padx = VIEW_PRODUCT_IMAGE_MODAL.body_pady = 0;
-VIEW_PRODUCT_IMAGE_MODAL.enableFooter = false;
+const VIEW_PRODUCT_IMAGE_MODAL = new Modal();
+
+VIEW_PRODUCT_IMAGE_MODAL.setTitle("Product Image Preview");
+VIEW_PRODUCT_IMAGE_MODAL.setBodyPadding(0, 0);
+VIEW_PRODUCT_IMAGE_MODAL.footerEnabled = false;
 
 window.onShowModalForProductImage = function(productName, imageElement)
 {
-    VIEW_PRODUCT_IMAGE_MODAL.title = productName;
-    VIEW_PRODUCT_IMAGE_MODAL.body = `<p class="image is-4by3">
+    VIEW_PRODUCT_IMAGE_MODAL.setTitle(productName);
+    VIEW_PRODUCT_IMAGE_MODAL.setBody(`<p class="image is-4by3">
                                         <img src="${imageElement.src}" alt="">
-                                     </p>`;
+                                     </p>`);
 
-    VIEW_PRODUCT_IMAGE_MODAL.render();
     VIEW_PRODUCT_IMAGE_MODAL.enable();
 }
 
@@ -340,18 +325,26 @@ window.onReset = onReset;
 window.onDelete = onDelete;
 window.onProductImageLoadFailure = onProductImageLoadFailure;
 
-const PROMPT_PRODUCT_CREATION_MODAL = new Modal(PRODUCT_PAGE_MODAL_ID);
+const PROMPT_PRODUCT_CREATION_MODAL = new Modal();
 
-PROMPT_PRODUCT_CREATION_MODAL.title = "No Products Available!";
-PROMPT_PRODUCT_CREATION_MODAL.body = `It seems like there are no products.
-                                      Click on "Create" to add one.<br/>
-                                      Products may also be added via Options > Create Product!`;
+PROMPT_PRODUCT_CREATION_MODAL.setTitle("No Products Available!");
+PROMPT_PRODUCT_CREATION_MODAL.setBody(`It seems like there are no products.
+                                       Click on "Create" to add one.<br/>
+                                       Products may also be added via Options > Create Product!`);
 
-PROMPT_PRODUCT_CREATION_MODAL.submitButtonCallbackName = "onToggleCreateProductModal";
-PROMPT_PRODUCT_CREATION_MODAL.submitButtonName = "Create!";
-PROMPT_PRODUCT_CREATION_MODAL.cancelButtonName = "Skip for now";
+PROMPT_PRODUCT_CREATION_MODAL.submitCallback = onToggleCreateProductModal;
 
-PROMPT_PRODUCT_CREATION_MODAL.render();
+function onToggleCreateProductModal()
+{
+    CREATE_PRODUCT_MODAL.enable();
+
+    const _ = populateCategorySelector();
+}
+
+window.onToggleCreateProductModal = onToggleCreateProductModal;
+
+PROMPT_PRODUCT_CREATION_MODAL.submitButtonElement.textContent = "Create!";
+PROMPT_PRODUCT_CREATION_MODAL.cancelButtonElement.textContent = "Skip for now";
 
 window.onToggleFullDescription = function(descriptionElement)
 {
