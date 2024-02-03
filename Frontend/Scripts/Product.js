@@ -29,6 +29,7 @@ function scrollToProduct(productID)
     {
         if (loadedProducts.length !== 0)
         {
+            // Sort type may mean that first displayed item doesn't necessarily have an ID of 1.
             const FIRST_PRODUCT = document.getElementById(`${PRODUCT_ID_PREFIX}${new Product(loadedProducts[0]).id}`);
 
             if (FIRST_PRODUCT != null)
