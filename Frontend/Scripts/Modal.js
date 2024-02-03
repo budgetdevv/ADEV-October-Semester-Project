@@ -25,13 +25,13 @@ export class Modal
      * @type { String }
      * @private
      */
-    bodyPadX = null;
+    #bodyPadX = null;
 
     /**
      * @type { String }
      * @private
      */
-    bodyPadY = null;
+    #bodyPadY = null;
 
     /**
      * @type { function }
@@ -119,21 +119,21 @@ export class Modal
 
     /**
      * @type { boolean }
-     * @private
+     * @public
      */
     suppressSubmitDefaultBehavior = true;
 
     /**
      * @type { boolean }
-     * @private
+     * @public
      */
     closeModalOnSubmit = true;
 
-    static uniqueIDCount = 0;
+    static #uniqueIDCount = 0;
 
     static #getUniqueID()
     {
-        return `unique_id_${Modal.uniqueIDCount++}`;
+        return `unique_id_${Modal.#uniqueIDCount++}`;
     }
 
     constructor()
@@ -379,22 +379,22 @@ export class Modal
 
         let classes = this.bodyElement.classList;
 
-        classes.remove(this.bodyPadX);
-        classes.remove(this.bodyPadY);
+        classes.remove(this.#bodyPadX);
+        classes.remove(this.#bodyPadY);
 
-        classes.add(this.bodyPadX = padX);
-        classes.add(this.bodyPadY = padY);
+        classes.add(this.#bodyPadX = padX);
+        classes.add(this.#bodyPadY = padY);
     }
 
     useDefaultBodyPadding()
     {
         let classes = this.bodyElement.classList;
 
-        classes.remove(this.bodyPadX);
-        classes.remove(this.bodyPadY);
+        classes.remove(this.#bodyPadX);
+        classes.remove(this.#bodyPadY);
 
-        this.bodyPadX = null;
-        this.bodyPadY = null;
+        this.#bodyPadX = null;
+        this.#bodyPadY = null;
     }
 
     get clickBackgroundToCancel()
