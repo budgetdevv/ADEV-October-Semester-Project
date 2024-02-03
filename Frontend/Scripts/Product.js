@@ -22,27 +22,31 @@ document.addEventListener('DOMContentLoaded', async function()
  */
 function scrollToProduct(productID)
 {
-    const FIRST_PRODUCT = document.getElementById(`${PRODUCT_ID_PREFIX}1`);
-
     let scrollTarget;
 
     // noinspection LoopStatementThatDoesntLoopJS
     while (true)
     {
-        if (FIRST_PRODUCT != null)
+        if (loadedProducts.length !== 0)
         {
-            const PRODUCT = document.getElementById(`${PRODUCT_ID_PREFIX}${productID}`);
+            const FIRST_PRODUCT = document.getElementById(`${PRODUCT_ID_PREFIX}${new Product(loadedProducts[0]).id}`);
 
-            // alert(FIRST_PRODUCT.parentElement.scrollHeight)
-            // alert(PRODUCT.parentElement.scrollHeight)
-
-            // User may input arbitrary product number
-            // Are they on the first column? If so, we scroll to start of the page.
-            if (PRODUCT != null && PRODUCT.getBoundingClientRect().y !== FIRST_PRODUCT.getBoundingClientRect().y)
+            if (FIRST_PRODUCT != null)
             {
-                // Parent element ( Which is the column ) includes padding
-                scrollTarget = PRODUCT.parentElement;
-                break;
+                const PRODUCT = document.getElementById(`${PRODUCT_ID_PREFIX}${productID}`);
+
+                // alert(FIRST_PRODUCT.parentElement.scrollHeight)
+                // alert(PRODUCT.parentElement.scrollHeight)
+
+                // User may input arbitrary product number
+                // Are they on the first column? If so, we scroll to start of the page.
+                if (PRODUCT != null && PRODUCT.getBoundingClientRect().y !== FIRST_PRODUCT.getBoundingClientRect().y)
+                {
+                    alert("SSSS")
+                    // Parent element ( Which is the column ) includes padding
+                    scrollTarget = PRODUCT.parentElement;
+                    break;
+                }
             }
         }
 
@@ -286,6 +290,8 @@ CREATE_PRODUCT_MODAL.setBody(
 </div>
 `);
 
+CREATE_PRODUCT_MODAL.closeModalOnSubmit = false;
+
 CREATE_PRODUCT_MODAL.submitCallback = async function(modal)
 {
     const PRODUCT = constructProductFromDocument();
@@ -299,12 +305,21 @@ CREATE_PRODUCT_MODAL.submitCallback = async function(modal)
 
     const NEW_PRODUCT_ID = await RESPONSE.text();
 
-    alert(`New product created! ID: ${NEW_PRODUCT_ID}`);
+    const SUCCESS = RESPONSE.status === 200;
 
-    const renderPromise = renderProducts(false);
+    const TEXT = `${(SUCCESS) ? "New product created! ID: " : "An error occurred!\n\n"}${NEW_PRODUCT_ID}`;
 
-    // Don't use scroll to bottom, since sort type may mean that new product is not appended to bottom of page
-    renderPromise.then(function (_) { scrollToProduct(NEW_PRODUCT_ID) });
+    alert(TEXT);
+
+    if (SUCCESS)
+    {
+        modal.disable();
+
+        await renderProducts(false);
+
+        // Don't use scroll to bottom, since sort type may mean that new product is not appended to bottom of page
+        scrollToProduct(NEW_PRODUCT_ID);
+    }
 };
 
 CREATE_PRODUCT_MODAL.submitButtonElement.textContent = "Create!";
