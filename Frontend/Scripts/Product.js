@@ -1,7 +1,7 @@
 import { Product } from "/Common/Data_Structures/Product.js";
 import { PRODUCTS_ROUTE_NAME as ROUTE_NAME, PRODUCT_ID_PREFIX, RESET_ROUTE, JSON_HEADER } from "/Common/Constants.js"
 import { Modal } from "./Modal.js";
-import { populateCategorySelector, constructProductFromDocument, scrollToBottomOfPage } from "./Shared.js";
+import { populateCategorySelector, constructProductFromDocument } from "./Shared.js";
 
 const PRODUCT_LIST_ID = "product_list";
 
@@ -297,10 +297,14 @@ CREATE_PRODUCT_MODAL.submitCallback = async function(modal)
             body: JSON.stringify(PRODUCT)
         });
 
-    alert(`New product created! ID: ${await RESPONSE.text()}`);
+    const NEW_PRODUCT_ID = await RESPONSE.text();
+
+    alert(`New product created! ID: ${NEW_PRODUCT_ID}`);
 
     const renderPromise = renderProducts(false);
-    renderPromise.then(scrollToBottomOfPage);
+
+    // Don't use scroll to bottom, since sort type may mean that new product is not appended to bottom of page
+    renderPromise.then(function (_) { scrollToProduct(NEW_PRODUCT_ID) });
 };
 
 CREATE_PRODUCT_MODAL.submitButtonElement.textContent = "Create!";
