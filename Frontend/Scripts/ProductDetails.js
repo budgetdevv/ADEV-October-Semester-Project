@@ -2,7 +2,8 @@ import { Product } from "../../Common/Data_Structures/Product.js";
 import { PRODUCTS_ROUTE_NAME, PRODUCT_PAGE_ROUTE, CATEGORY_ID, JSON_HEADER } from "/Common/Constants.js";
 import { populateCategorySelector, constructProductFromDocument } from "./Shared.js";
 
-const FORM_ID = "product_details_form";
+const FORM_ID = "product_details_form",
+      BACK_BUTTON_ID = "back_button";
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
@@ -19,8 +20,10 @@ async function onLoad()
         return;
     }
 
-    let submitButton = document.getElementById(FORM_ID);
-    submitButton.setAttribute("onsubmit", `onSubmit(${productID})`);
+    document.getElementById(FORM_ID).addEventListener("submit", function (_)
+    {
+        onSubmit(productID);
+    });
 
     let response = await fetch(`${PRODUCTS_ROUTE_NAME}/${productID}`);
 
@@ -57,10 +60,12 @@ async function onLoad()
 
         element.value = value;
     }
-}
 
-// Export this function. This is required if we treat this .js as a module.
-window.onSubmit = onSubmit;
+    document.getElementById(BACK_BUTTON_ID).addEventListener("click", function (_)
+    {
+        location.href = `/Product.html?ID=${productID}`;
+    });
+}
 
 async function onSubmit(productID)
 {
