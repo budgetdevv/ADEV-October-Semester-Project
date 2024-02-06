@@ -49,11 +49,9 @@ export class FilterInput
         // wrapperElementStyle.overflowY = "hidden";
 
         elementHideScrollBar(wrapperElement);
-
         document.body.append(wrapperElement);
 
         wrapperElement.append(FilterInput.#createTag("ZZZ"));
-
         wrapperElement.append(FilterInput.#createInnerTextInput(textInputElementClassList));
     }
 
