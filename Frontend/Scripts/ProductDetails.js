@@ -20,9 +20,9 @@ async function onLoad()
         return;
     }
 
-    document.getElementById(FORM_ID).addEventListener("submit", function (_)
+    document.getElementById(FORM_ID).addEventListener("submit", function (event)
     {
-        onSubmit(productID);
+        onSubmit(event, productID);
     });
 
     let response = await fetch(`${PRODUCTS_ROUTE_NAME}/${productID}`);
@@ -67,7 +67,7 @@ async function onLoad()
     });
 }
 
-async function onSubmit(productID)
+async function onSubmit(event, productID)
 {
     // Prevent submit from navigating away
     event.preventDefault();
