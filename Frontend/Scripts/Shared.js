@@ -5,7 +5,7 @@ export async function populateCategorySelector(categorySelector = null)
 {
     categorySelector ??= document.getElementById(CATEGORY_ID);
 
-    const RESPONSE = await fetch(`${CATEGORIES_ROUTE_NAME}`);
+    const RESPONSE = await fetch(CATEGORIES_ROUTE_NAME);
     const RESPONSE_TEXT = await RESPONSE.text();
 
     const CATEGORIES = JSON.parse(RESPONSE_TEXT);
