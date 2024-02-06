@@ -58,7 +58,6 @@
 .hero-search-bar
 {
     border: none;
-    z-index: 20;
     position: absolute;
     width: 50vw;
     top: 0;
@@ -70,6 +69,7 @@
 {
     .hero-search-bar
     {
+        z-index: 30;
         border-top-left-radius: 0;
         border-top-right-radius: 0;
     }
@@ -80,6 +80,7 @@
 {
     .hero-search-bar
     {
+        z-index: 29;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
         top: unset;
