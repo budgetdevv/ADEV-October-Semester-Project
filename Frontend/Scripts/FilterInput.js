@@ -44,7 +44,7 @@ export class FilterInput
      * @type { HTMLElement }
      * @private
      */
-    #textInputElement;
+    #backgroundTextInputElement;
 
     /**
      * @type { HTMLElement }
@@ -56,7 +56,13 @@ export class FilterInput
      * @type { HTMLElement }
      * @private
      */
-    #textWrapperElement;
+    #innerTextWrapperElement;
+
+    /**
+     * @type { HTMLElement }
+     * @private
+     */
+    #innerTextInputElement
 
     /**
      * @type { HTMLElement }
@@ -146,21 +152,23 @@ export class FilterInput
         let wrapperElementStyle = wrapperElement.style;
         wrapperElement.classList.add(FilterInput.#SEARCH_BAR_CLASS);
 
-        let backgroundTextInputElement = this.#textInputElement = document.createElement("input")
+        let backgroundTextInputElement = this.#backgroundTextInputElement = document.createElement("input")
         let backgroundTextInputElementClassList = backgroundTextInputElement.classList;
         backgroundTextInputElementClassList.add("input");
         backgroundTextInputElementClassList.add("is-black");
         backgroundTextInputElementClassList.add(FilterInput.#SEARCH_BAR_BACKGROUND_TEXT_INPUT_CLASS)
         backgroundTextInputElement.id = "filter";
 
-        let textWrapperElement = this.#textWrapperElement = document.createElement("div");
-        textWrapperElement.classList.add(FilterInput.#SEARCH_BAR_INNER_WRAPPER_CLASS);
+        let innerTextWrapperElement = this.#innerTextWrapperElement = document.createElement("div");
+        innerTextWrapperElement.classList.add(FilterInput.#SEARCH_BAR_INNER_WRAPPER_CLASS);
 
-        elementHideScrollBar(textWrapperElement);
+        elementHideScrollBar(innerTextWrapperElement);
 
-        textWrapperElement.append(FilterInput.#createInnerTextInput());
-        textWrapperElement.append(FilterInput.#createTag("X"));
-        textWrapperElement.append(FilterInput.#createTag("ZZZ"));
+        let innerTextInputElement = this.#innerTextInputElement = FilterInput.#createInnerTextInput();
+
+        innerTextWrapperElement.append(innerTextInputElement);
+        innerTextWrapperElement.append(FilterInput.#createTag("X"));
+        innerTextWrapperElement.append(FilterInput.#createTag("ZZZ"));
 
         let dropdownWrapperElement = this.#dropdownWrapperElement = document.createElement("div");
         dropdownWrapperElement.classList.add(FilterInput.#SEARCH_BAR_DROPDOWN_WRAPPER_CLASS);
@@ -169,6 +177,7 @@ export class FilterInput
         let dropdownElementClassList = dropdownElement.classList;
         dropdownElementClassList.add(FilterInput.#SEARCH_BAR_DROPDOWN_CLASS);
         dropdownElementClassList.add("dropdown-content");
+        dropdownElement.setAttribute("hidden", "");
 
         dropdownWrapperElement.append(dropdownElement);
 
@@ -178,13 +187,26 @@ export class FilterInput
 
         dropdownElement.append(testDropdownItem);
 
-        wrapperElement.append(textWrapperElement);
+        wrapperElement.append(innerTextWrapperElement);
         wrapperElement.append(backgroundTextInputElement);
         wrapperElement.append(dropdownWrapperElement);
 
-
         let textInputParentElement = document.getElementById(parentID);
         textInputParentElement.append(wrapperElement);
+
+        // this.#toggleDropdown();
+
+        let instance = this;
+
+        innerTextInputElement.addEventListener("focus", function (_)
+        {
+            instance.#toggleDropdown();
+        });
+
+        innerTextInputElement.addEventListener("blur", function (_)
+        {
+            instance.#toggleDropdown();
+        });
     }
 
     /**
@@ -260,5 +282,11 @@ export class FilterInput
         tag.append(crossButton);
 
         return tag;
+    }
+
+    #toggleDropdown()
+    {
+        this.#backgroundTextInputElement.classList.toggle(FilterInput.#DROPDOWN_VISIBLE_CLASS);
+        this.#dropdownElement.toggleAttribute("hidden");
     }
 }
