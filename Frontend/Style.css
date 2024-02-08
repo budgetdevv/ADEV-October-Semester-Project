@@ -114,7 +114,7 @@
         z-index: 30;
     }
 
-    .hero-search-bar > .input
+    .hero-search-bar-background-text-input
     {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
@@ -133,7 +133,7 @@
         bottom: 0;
     }
 
-    .hero-search-bar > .input
+    .hero-search-bar-background-text-input
     {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
