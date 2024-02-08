@@ -149,7 +149,6 @@ export class FilterInput
     constructor(parentID)
     {
         let wrapperElement = this.#wrapperElement = document.createElement("div");
-        let wrapperElementStyle = wrapperElement.style;
         wrapperElement.classList.add(FilterInput.#SEARCH_BAR_CLASS);
 
         let backgroundTextInputElement = this.#backgroundTextInputElement = document.createElement("input")
