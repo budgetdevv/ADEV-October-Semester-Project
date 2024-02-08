@@ -103,53 +103,28 @@ export class FilterInput
 
     constructor(textInputID)
     {
-        let textInputElement = this.#textInputElement = document.getElementById(textInputID);
-        let textInputElementClassList = textInputElement.classList;
         let wrapperElement = this.#wrapperElement = document.createElement("div");
         let wrapperElementStyle = wrapperElement.style;
         wrapperElementStyle.position = "relative";
 
-        // let textInputElementStyle = window.getComputedStyle(textInputElement);
-        // let wrapperElementStyle = wrapperElement.style;
-        //
-        // wrapperElementStyle.position = "absolute";
-        //
-        // wrapperElementStyle.left = textInputElement.offsetLeft + "px";
-        // wrapperElementStyle.top = textInputElement.offsetTop + "px";
-        //
-        // wrapperElementStyle.width = textInputElementStyle.width;
-        // wrapperElementStyle.height = textInputElementStyle.height;
-        // wrapperElementStyle.zIndex = textInputElementStyle.zIndex + 1;
+        let textInputElement = this.#textInputElement = document.getElementById(textInputID);
+        let textInputElementClassList = textInputElement.classList;
 
-        let textInputRect = textInputElement.getBoundingClientRect();
         let textInputElementStyle = textInputElement.style;
-
-
-        // wrapperElementStyle.position = "relative";
-
-        // wrapperElementStyle.left = numberToPx(textInputRect.left);
-        // wrapperElementStyle.top = numberToPx(textInputRect.top);
-        // wrapperElementStyle.width = numberToPx(textInputRect.width);
-        // wrapperElementStyle.alignItems = "center";
-        // wrapperElementStyle.overflowX = "scroll";
-        // wrapperElementStyle.overflowY = "hidden";
-
-        // elementHideScrollBar(wrapperElement);
-
-        // wrapperElement.append(FilterInput.#createInnerTextInput(textInputElementClassList, false));
-        // wrapperElement.append(FilterInput.#createTag("ZZZ"));
+        textInputElementStyle.position = "absolute";
+        textInputElementStyle.top = textInputElementStyle.left = 0;
 
         let textWrapperElement = this.#textWrapperElement = document.createElement("div");
         let textWrapperElementStyle = textWrapperElement.style;
 
         const TEXT_INPUT_ELEMENT_Z_INDEX = window.getComputedStyle(textInputElement).zIndex;
+        textWrapperElementStyle.position = "relative";
         textWrapperElementStyle.zIndex = TEXT_INPUT_ELEMENT_Z_INDEX === "auto" ? 1 : parseInt(TEXT_INPUT_ELEMENT_Z_INDEX) + 1;
+
         // textWrapperElementStyle.backgroundColor = "black";
         textWrapperElementStyle.display = "flex";
         textWrapperElementStyle.alignItems = "center";
         textWrapperElementStyle.overflowX = "scroll";
-        textWrapperElementStyle.height = numberToPx(textInputRect.height);
-        // textWrapperElementStyle.flexGrow = 1;
         elementHideScrollBar(textWrapperElement);
 
         textWrapperElement.append(FilterInput.#createInnerTextInput(textInputElementClassList));
@@ -158,7 +133,6 @@ export class FilterInput
         let dropdownElement = this.#dropdownElement = document.createElement("div");
 
         dropdownElement.classList.add("dropdown-content");
-        // dropdownElement.style.width = wrapperElementStyle.width;
 
         let testDropdownItem = document.createElement("a");
         testDropdownItem.classList.add("dropdown-item");
@@ -168,33 +142,11 @@ export class FilterInput
 
         let textInputParentElement = textInputElement.parentElement;
 
-        textInputElementStyle.position = "absolute";
-        textInputElementStyle.top = textWrapperElementStyle.left = 0;
-        textWrapperElementStyle.position = "relative";
-
         wrapperElement.append(textWrapperElement);
         wrapperElement.append(textInputElement);
         wrapperElement.append(dropdownElement);
 
         textInputParentElement.append(wrapperElement);
-
-        // let instance = this;
-        //
-        // let resizeObserver = this.#resizeObserver = new ResizeObserver(function (entries)
-        // {
-        //     instance.#onTextInputResized(entries[0]);
-        // });
-        //
-        // resizeObserver.observe(textInputElement);
-
-        // let mutationObserver = this.#mutationObserver = new MutationObserver(instance.#onTextInputMutated);
-        //
-        // mutationObserver.observe(textInputElement,
-        // {
-        //     attributes: true,
-        //     childList: true,
-        //     characterData: true
-        // });
     }
 
     /**
@@ -270,25 +222,5 @@ export class FilterInput
         tag.append(crossButton);
 
         return tag;
-    }
-
-    /**
-     * @param { ResizeObserverEntry } textInputResizeEntry
-     */
-    #onTextInputResized(textInputResizeEntry)
-    {
-        return;
-        //let textInputRect = textInputResizeEntry.contentRect;
-        let textInputRect = this.#textInputElement.getBoundingClientRect();
-        let wrapperElementStyle = this.#wrapperElement.style;
-        let textWrapperElementStyle = this.#textWrapperElement.style;
-        // let dropdownElementStyle = this.#dropdownElement.style;
-
-        // alert(textInputRect.width)
-
-        wrapperElementStyle.left = numberToPx(textInputRect.left);
-        wrapperElementStyle.top = numberToPx(textInputRect.top);
-        wrapperElementStyle.width = numberToPx(textInputRect.width);
-        textWrapperElementStyle.height = numberToPx(textInputRect.height);
     }
 }
