@@ -1,5 +1,43 @@
 import { pxToNumber, numberToPx, elementHideScrollBar } from "../../Common/Helpers.js";
 
+export class FilterTag
+{
+    /**
+     * @type { String }
+     * @private
+     */
+    id;
+
+    /**
+     * @type { String }
+     * @private
+     */
+    text;
+
+    /**
+     * @type { String }
+     * @private
+     */
+    value;
+
+    /**
+     * @type { String }
+     * @private
+     */
+    allowDupe;
+
+    // Too lazy to implement click for now
+    onclick;
+
+    constructor(id, text, value, allowDupe)
+    {
+        this.id = id;
+        this.text = text;
+        this.value = value;
+        this.allowDupe = allowDupe;
+    }
+}
+
 export class FilterInput
 {
     /**
@@ -13,6 +51,49 @@ export class FilterInput
      * @private
      */
     #wrapperElement;
+
+    /**
+     * @type { HTMLElement }
+     * @private
+     */
+    #textWrapperElement;
+
+    /**
+     * @type { HTMLElement }
+     * @private
+     */
+    #dropdownElement;
+
+    /**
+     * @type { ResizeObserver }
+     * @private
+     */
+    #resizeObserver;
+
+    /**
+     * @type { function }
+     * @private
+     */
+    oninput;
+
+    /**
+     * @type { function }
+     * @private
+     */
+    ontagadded;
+
+    /**
+     * @type { function }
+     * @private
+     */
+    ontagremoved;
+
+    // // Technically possible to make it a set instead of "dictionary", but set in JS doesn't support custom equality comparison
+    // tags = {};
+
+    tags = [];
+
+
 
     constructor(textInputID)
     {
@@ -36,23 +117,59 @@ export class FilterInput
         let textInputElementStyle = window.getComputedStyle(textInputElement);
         let wrapperElementStyle = wrapperElement.style;
 
-        wrapperElementStyle.display = "flex";
         wrapperElementStyle.position = "absolute";
         const TEXT_INPUT_ELEMENT_Z_INDEX = textInputElementStyle.zIndex;
         wrapperElementStyle.zIndex = TEXT_INPUT_ELEMENT_Z_INDEX === "auto" ? 1 : parseInt(TEXT_INPUT_ELEMENT_Z_INDEX) + 1;
         wrapperElementStyle.left = numberToPx(textInputRect.left);
         wrapperElementStyle.top = numberToPx(textInputRect.top);
         wrapperElementStyle.width = numberToPx(textInputRect.width);
-        wrapperElementStyle.height = numberToPx(textInputRect.height);
-        wrapperElementStyle.alignItems = "center";
-        wrapperElementStyle.overflowX = "scroll";
+        // wrapperElementStyle.alignItems = "center";
+        // wrapperElementStyle.overflowX = "scroll";
         // wrapperElementStyle.overflowY = "hidden";
 
-        elementHideScrollBar(wrapperElement);
-        document.body.append(wrapperElement);
+        // elementHideScrollBar(wrapperElement);
 
-        wrapperElement.append(FilterInput.#createTag("ZZZ"));
-        wrapperElement.append(FilterInput.#createInnerTextInput(textInputElementClassList));
+        // wrapperElement.append(FilterInput.#createInnerTextInput(textInputElementClassList, false));
+        // wrapperElement.append(FilterInput.#createTag("ZZZ"));
+
+        let textWrapperElement = this.#textWrapperElement = document.createElement("div");
+        let textWrapperElementStyle = textWrapperElement.style;
+
+        textWrapperElementStyle.display = "flex";
+        textWrapperElementStyle.alignItems = "center";
+        textWrapperElementStyle.overflowX = "scroll";
+        textWrapperElementStyle.height = numberToPx(textInputRect.height);
+        // textWrapperElementStyle.flexGrow = 1;
+        elementHideScrollBar(textWrapperElement);
+
+        textWrapperElement.append(FilterInput.#createInnerTextInput(textInputElementClassList));
+
+        let dropdownElement = this.#dropdownElement = document.createElement("div");
+
+        dropdownElement.classList.add("dropdown-content");
+        // dropdownElement.style.width = wrapperElementStyle.width;
+
+        let testDropdownItem = document.createElement("a");
+        testDropdownItem.classList.add("dropdown-item");
+        testDropdownItem.innerText = "Hi";
+
+        dropdownElement.append(testDropdownItem);
+
+        wrapperElement.append(textWrapperElement);
+        wrapperElement.append(dropdownElement);
+
+        let documentBody = document.body;
+
+        documentBody.append(wrapperElement);
+
+        let instance = this;
+
+        let resizeObserver = this.#resizeObserver = new ResizeObserver(function (entries)
+        {
+            instance.#onTextInputResized(entries[0]);
+        });
+
+        resizeObserver.observe(textInputElement);
     }
 
     /**
@@ -128,5 +245,25 @@ export class FilterInput
         tag.append(crossButton);
 
         return tag;
+    }
+
+
+    /**
+     * @param { ResizeObserverEntry } textInputResizeEntry
+     */
+    #onTextInputResized(textInputResizeEntry)
+    {
+        //let textInputRect = textInputResizeEntry.contentRect;
+        let textInputRect = this.#textInputElement.getBoundingClientRect();
+        let wrapperElementStyle = this.#wrapperElement.style;
+        let textWrapperElementStyle = this.#textWrapperElement.style;
+        // let dropdownElementStyle = this.#dropdownElement.style;
+
+        // alert(textInputRect.width)
+
+        wrapperElementStyle.left = numberToPx(textInputRect.left);
+        wrapperElementStyle.top = numberToPx(textInputRect.top);
+        wrapperElementStyle.width = numberToPx(textInputRect.width);
+        textWrapperElementStyle.height = numberToPx(textInputRect.height);
     }
 }
