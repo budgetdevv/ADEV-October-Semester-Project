@@ -167,8 +167,8 @@ export class FilterInput
         let innerTextInputElement = this.#innerTextInputElement = FilterInput.#createInnerTextInput();
 
         innerTextWrapperElement.append(innerTextInputElement);
-        innerTextWrapperElement.append(FilterInput.#createTag("X"));
-        innerTextWrapperElement.append(FilterInput.#createTag("ZZZ"));
+        innerTextWrapperElement.append(FilterInput.#createTag("Name: Chicken"));
+        innerTextWrapperElement.append(FilterInput.#createTag("Price >= $5"));
 
         let dropdownWrapperElement = this.#dropdownWrapperElement = document.createElement("div");
         dropdownWrapperElement.classList.add(FilterInput.#SEARCH_BAR_DROPDOWN_WRAPPER_CLASS);
@@ -269,7 +269,7 @@ export class FilterInput
 
         let tagClassList = tag.classList;
         tagClassList.add("tag");
-        tagClassList.add("is-success");
+        tagClassList.add("is-warning");
         tagClassList.add("is-medium");
         tag.dataset["value"] = value;
 
