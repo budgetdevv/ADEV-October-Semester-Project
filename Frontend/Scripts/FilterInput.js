@@ -62,6 +62,12 @@ export class FilterInput
      * @type { HTMLElement }
      * @private
      */
+    #dropdownWrapperElement
+
+    /**
+     * @type { HTMLElement }
+     * @private
+     */
     #dropdownElement;
 
     /**
@@ -99,40 +105,47 @@ export class FilterInput
 
     tags = [];
 
-
-
-    constructor(textInputID)
+    constructor(parentID)
     {
         let wrapperElement = this.#wrapperElement = document.createElement("div");
         let wrapperElementStyle = wrapperElement.style;
-        wrapperElementStyle.position = "relative";
+        wrapperElement.classList.add("hero-search-bar");
 
-        let textInputElement = this.#textInputElement = document.getElementById(textInputID);
-        let textInputElementClassList = textInputElement.classList;
-
-        let textInputElementStyle = textInputElement.style;
-        textInputElementStyle.position = "absolute";
-        textInputElementStyle.top = textInputElementStyle.left = 0;
+        let backgroundTextInputElement = this.#textInputElement = document.createElement("input")
+        let backgroundTextInputElementClassList = backgroundTextInputElement.classList;
+        backgroundTextInputElementClassList.add("input");
+        backgroundTextInputElementClassList.add("is-black");
+        backgroundTextInputElementClassList.add("hero-search-bar-background-text-input")
+        backgroundTextInputElement.id = "filter";
 
         let textWrapperElement = this.#textWrapperElement = document.createElement("div");
+        textWrapperElement.classList.add("hero-search-bar-inner-wrapper");
         let textWrapperElementStyle = textWrapperElement.style;
 
-        const TEXT_INPUT_ELEMENT_Z_INDEX = window.getComputedStyle(textInputElement).zIndex;
         textWrapperElementStyle.position = "relative";
-        textWrapperElementStyle.zIndex = TEXT_INPUT_ELEMENT_Z_INDEX === "auto" ? 1 : parseInt(TEXT_INPUT_ELEMENT_Z_INDEX) + 1;
+        textWrapperElementStyle.zIndex = 1;
 
         // textWrapperElementStyle.backgroundColor = "black";
         textWrapperElementStyle.display = "flex";
         textWrapperElementStyle.alignItems = "center";
         textWrapperElementStyle.overflowX = "scroll";
+
+
         elementHideScrollBar(textWrapperElement);
 
-        textWrapperElement.append(FilterInput.#createInnerTextInput(textInputElementClassList));
+        textWrapperElement.append(FilterInput.#createInnerTextInput());
+        textWrapperElement.append(FilterInput.#createTag("X"));
         textWrapperElement.append(FilterInput.#createTag("ZZZ"));
 
-        let dropdownElement = this.#dropdownElement = document.createElement("div");
+        let dropdownWrapperElement = this.#dropdownWrapperElement = document.createElement("div");
+        dropdownWrapperElement.classList.add("hero-search-bar-dropdown-wrapper");
 
-        dropdownElement.classList.add("dropdown-content");
+        let dropdownElement = this.#dropdownElement = document.createElement("div");
+        let dropdownElementClassList = dropdownElement.classList;
+        dropdownElementClassList.add("hero-search-bar-dropdown");
+        dropdownElementClassList.add("dropdown-content");
+
+        dropdownWrapperElement.append(dropdownElement);
 
         let testDropdownItem = document.createElement("a");
         testDropdownItem.classList.add("dropdown-item");
@@ -140,12 +153,12 @@ export class FilterInput
 
         dropdownElement.append(testDropdownItem);
 
-        let textInputParentElement = textInputElement.parentElement;
-
         wrapperElement.append(textWrapperElement);
-        wrapperElement.append(textInputElement);
-        wrapperElement.append(dropdownElement);
+        wrapperElement.append(backgroundTextInputElement);
+        wrapperElement.append(dropdownWrapperElement);
 
+
+        let textInputParentElement = document.getElementById(parentID);
         textInputParentElement.append(wrapperElement);
     }
 
@@ -176,14 +189,14 @@ export class FilterInput
     static #createInnerTextInput(referenceClass, fullWidth = true)
     {
         let textInput = document.createElement("input");
-        textInput.classList = referenceClass;
+
+        let classList = textInput.classList;
+
+        classList.add("input");
+        classList.add("is-black");
+        classList.add("hero-search-bar-inner-text-input");
 
         let style = textInput.style;
-        // style.display = "inline-block";
-        // style.border = "none";
-        style.borderColor = "transparent";
-        style.background = "none";
-        // style.height = "100%";
 
         if (fullWidth)
         {

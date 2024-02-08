@@ -10,10 +10,15 @@
 <!--    <link rel="icon" href="/favicon.ico?v=2" />-->
     <script src="https://kit.fontawesome.com/10b93f2174.js" crossorigin="anonymous"></script>
     <script type="module" src="../Scripts/Product.js"></script>
+    <script type="module">
+        import { FilterInput } from "../Scripts/FilterInput.js";
+
+        new FilterInput("header");
+    </script>
 </head>
 
 <body>
-    <section class="hero is-med is-warning">
+    <section class="hero is-med is-warning" id="header">
         <div class="hero-head">
             <nav class="navbar is-warning" role="navigation" aria-label="main navigation">
                 <div class="navbar-brand">
@@ -84,7 +89,7 @@
             </div>
         </div>
 
-        <input class="input is-black hero-search-bar" type="text" placeholder="Enter product name" oninput="renderProducts(true)" id="filter" />
+<!--        <input class="input is-black hero-search-bar" type="text" placeholder="Enter product name" oninput="renderProducts(true)" id="filter" />-->
     </section>
 
     <div class="container px-6 py-5" id="product_list">
