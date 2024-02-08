@@ -113,7 +113,13 @@
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     width: 100%;
-    background-color: #c99a0b
+    background-color: #c99a0b;
+}
+
+.search-bar-dropdown-item
+{
+    display: flex;
+    gap: 10px;
 }
 
 @media screen and (min-width: 1201px)

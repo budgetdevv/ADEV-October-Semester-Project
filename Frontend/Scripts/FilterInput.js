@@ -20,21 +20,21 @@ export class FilterTag
      */
     value;
 
-    /**
-     * @type { String }
-     * @private
-     */
-    allowDupe;
+    // /**
+    //  * @type { String }
+    //  * @private
+    //  */
+    // allowDupe;
 
     // Too lazy to implement click for now
     onclick;
 
-    constructor(id, text, value, allowDupe)
+    constructor(id, text, value)//, allowDupe)
     {
         this.id = id;
         this.text = text;
         this.value = value;
-        this.allowDupe = allowDupe;
+        // this.allowDupe = allowDupe;
     }
 }
 
@@ -141,6 +141,11 @@ export class FilterInput
         return "search-bar-dropdown";
     }
 
+    static get #SEARCH_BAR_DROPDOWN_ITEM_CLASS()
+    {
+        return "search-bar-dropdown-item";
+    }
+
     static get #DROPDOWN_VISIBLE_CLASS()
     {
         return "dropdown-visible";
@@ -181,10 +186,30 @@ export class FilterInput
         dropdownWrapperElement.append(dropdownElement);
 
         let testDropdownItem = document.createElement("a");
-        testDropdownItem.classList.add("dropdown-item");
+        let testDropdownItemClassList = testDropdownItem.classList;
+        testDropdownItemClassList.add("dropdown-item");
+        testDropdownItemClassList.add(FilterInput.#SEARCH_BAR_DROPDOWN_ITEM_CLASS);
         testDropdownItem.innerText = "Hi";
-
+        // let testSpan = document.createElement("span");
+        // testSpan.innerText = "Hi";
+        // testDropdownItem.append(testSpan);
+        testDropdownItem.append(FilterInput.#createTag("Test"));
+        testDropdownItem.append(FilterInput.#createTag("Test"));
+        testDropdownItem.append(FilterInput.#createTag("Test"));
         dropdownElement.append(testDropdownItem);
+
+        let testDropdownItem2 = document.createElement("a");
+        let testDropdownItemClassList2 = testDropdownItem2.classList;
+        testDropdownItemClassList2.add("dropdown-item");
+        testDropdownItemClassList2.add(FilterInput.#SEARCH_BAR_DROPDOWN_ITEM_CLASS);
+        testDropdownItem2.innerText = "Hi";
+        // let testSpan = document.createElement("span");
+        // testSpan.innerText = "Hi";
+        // testDropdownItem.append(testSpan);
+        testDropdownItem2.append(FilterInput.#createTag("Test"));
+        testDropdownItem2.append(FilterInput.#createTag("Test"));
+        testDropdownItem2.append(FilterInput.#createTag("Test"));
+        dropdownElement.append(testDropdownItem2);
 
         wrapperElement.append(innerTextWrapperElement);
         wrapperElement.append(backgroundTextInputElement);
