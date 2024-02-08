@@ -93,6 +93,13 @@
     padding-right: 0;
 }
 
+.search-bar-inner-text-input:focus
+{
+    outline: none !important;
+    box-shadow: none !important;
+
+}
+
 .search-bar-dropdown-wrapper
 {
     position: relative;
@@ -106,6 +113,7 @@
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     width: 100%;
+    background-color: #c99a0b
 }
 
 @media screen and (min-width: 1201px)
