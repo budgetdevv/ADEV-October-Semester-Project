@@ -105,31 +105,56 @@ export class FilterInput
 
     tags = [];
 
+    static get #SEARCH_BAR_CLASS()
+    {
+        return "search-bar";
+    }
+
+    static get #SEARCH_BAR_BACKGROUND_TEXT_INPUT_CLASS()
+    {
+        return "search-bar-background-text-input";
+    }
+
+    static get #SEARCH_BAR_INNER_WRAPPER_CLASS()
+    {
+        return "search-bar-inner-wrapper";
+    }
+
+    static get #SEARCH_BAR_INNER_TEXT_INPUT_CLASS()
+    {
+        return "search-bar-inner-text-input";
+    }
+
+    static get #SEARCH_BAR_DROPDOWN_WRAPPER_CLASS()
+    {
+        return "search-bar-dropdown-wrapper";
+    }
+
+    static get #SEARCH_BAR_DROPDOWN_CLASS()
+    {
+        return "search-bar-dropdown";
+    }
+
+    static get #DROPDOWN_VISIBLE_CLASS()
+    {
+        return "dropdown-visible";
+    }
+
     constructor(parentID)
     {
         let wrapperElement = this.#wrapperElement = document.createElement("div");
         let wrapperElementStyle = wrapperElement.style;
-        wrapperElement.classList.add("hero-search-bar");
+        wrapperElement.classList.add(FilterInput.#SEARCH_BAR_CLASS);
 
         let backgroundTextInputElement = this.#textInputElement = document.createElement("input")
         let backgroundTextInputElementClassList = backgroundTextInputElement.classList;
         backgroundTextInputElementClassList.add("input");
         backgroundTextInputElementClassList.add("is-black");
-        backgroundTextInputElementClassList.add("hero-search-bar-background-text-input")
+        backgroundTextInputElementClassList.add(FilterInput.#SEARCH_BAR_BACKGROUND_TEXT_INPUT_CLASS)
         backgroundTextInputElement.id = "filter";
 
         let textWrapperElement = this.#textWrapperElement = document.createElement("div");
-        textWrapperElement.classList.add("hero-search-bar-inner-wrapper");
-        let textWrapperElementStyle = textWrapperElement.style;
-
-        textWrapperElementStyle.position = "relative";
-        textWrapperElementStyle.zIndex = 1;
-
-        // textWrapperElementStyle.backgroundColor = "black";
-        textWrapperElementStyle.display = "flex";
-        textWrapperElementStyle.alignItems = "center";
-        textWrapperElementStyle.overflowX = "scroll";
-
+        textWrapperElement.classList.add(FilterInput.#SEARCH_BAR_INNER_WRAPPER_CLASS);
 
         elementHideScrollBar(textWrapperElement);
 
@@ -138,11 +163,11 @@ export class FilterInput
         textWrapperElement.append(FilterInput.#createTag("ZZZ"));
 
         let dropdownWrapperElement = this.#dropdownWrapperElement = document.createElement("div");
-        dropdownWrapperElement.classList.add("hero-search-bar-dropdown-wrapper");
+        dropdownWrapperElement.classList.add(FilterInput.#SEARCH_BAR_DROPDOWN_WRAPPER_CLASS);
 
         let dropdownElement = this.#dropdownElement = document.createElement("div");
         let dropdownElementClassList = dropdownElement.classList;
-        dropdownElementClassList.add("hero-search-bar-dropdown");
+        dropdownElementClassList.add(FilterInput.#SEARCH_BAR_DROPDOWN_CLASS);
         dropdownElementClassList.add("dropdown-content");
 
         dropdownWrapperElement.append(dropdownElement);
@@ -194,7 +219,7 @@ export class FilterInput
 
         classList.add("input");
         classList.add("is-black");
-        classList.add("hero-search-bar-inner-text-input");
+        classList.add(FilterInput.#SEARCH_BAR_INNER_TEXT_INPUT_CLASS);
 
         let style = textInput.style;
 
