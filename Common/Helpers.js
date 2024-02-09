@@ -47,7 +47,7 @@ export function elementHideScrollBar(element)
  */
 export function elementHide(element)
 {
-    element.setAttribute("hidden", "");
+    element.classList.add("hidden");
 }
 
 /**
@@ -55,5 +55,5 @@ export function elementHide(element)
  */
 export function elementUnhide(element)
 {
-    element.removeAttribute("hidden");
+    element.classList.remove("hidden");
 }
