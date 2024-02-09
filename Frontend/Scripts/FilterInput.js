@@ -1,4 +1,4 @@
-import { pxToNumber, numberToPx, elementHideScrollBar } from "../../Common/Helpers.js";
+import { pxToNumber, numberToPx, elementHideScrollBar, elementHide, elementUnhide } from "../../Common/Helpers.js";
 
 export class FilterTag
 {
@@ -13,33 +13,228 @@ export class FilterTag
      * @private
      */
     text;
-
-    /**
-     * @type { String }
-     * @private
-     */
-    value;
-
-    // /**
-    //  * @type { String }
-    //  * @private
-    //  */
-    // allowDupe;
-
-    // Too lazy to implement click for now
-    onclick;
-
-    constructor(id, text, value)//, allowDupe)
-    {
-        this.id = id;
-        this.text = text;
-        this.value = value;
-        // this.allowDupe = allowDupe;
-    }
 }
 
 export class FilterInput
 {
+    static TagAutocompleteDefinition = class
+    {
+        /**
+         * @type { String }
+         * @private
+         */
+        text;
+
+        /**
+         * @type { String }
+         * @private
+         */
+        value;
+
+        constructor(text, value)
+        {
+            this.text = text;
+            this.value = value;
+        }
+    }
+
+    static FilterTagDefinition = class
+    {
+        /**
+         * @type { String }
+         * @private
+         */
+        key;
+
+        /**
+         * @type { String }
+         * @private
+         */
+        text;
+
+        /**
+         * @type { FilterInput }
+         * @private
+         */
+        #filterInputInstance;
+
+        /**
+         * @type { HTMLElement }
+         * @private
+         */
+        #selectedTagElement;
+
+        /**
+         * @type { HTMLElement }
+         * @private
+         */
+        #autocompleteDropdownItemElement;
+
+        /**
+         * @param { String } key
+         * @param { String } text
+         * @param { FilterInput } filterInputInstance
+         */
+        constructor(key, text, filterInputInstance)
+        {
+            this.key = key;
+            this.text = text;
+            this.filterInputInstance = filterInputInstance;
+
+            let dropdownItemElement = this.#autocompleteDropdownItemElement = document.createElement("a");
+            let DropdownItemClassList = dropdownItemElement.classList;
+            DropdownItemClassList.add("dropdown-item");
+            DropdownItemClassList.add(FilterInput.#SEARCH_BAR_DROPDOWN_ITEM_CLASS);
+            dropdownItemElement.innerText = text;
+
+            // dropdownItemElement.append(FilterInput.#createTag("Test"));
+            // dropdownItemElement.append(FilterInput.#createTag("Test"));
+            // dropdownItemElement.append(FilterInput.#createTag("Test"));
+
+            // elementHide(dropdownItemElement);
+
+            // tag = FilterInput.FilterTagDefinition.#createTag(`${key}:`, key, null, true)
+
+            let selectedTag = FilterInput.FilterTagDefinition.#createTag();
+
+            selectedTag.text = text;
+            selectedTag.key = key;
+            selectedTag.crossButtonEnabled = true;
+
+            filterInputInstance.#innerTextWrapperElement.append(selectedTag.tagElement)
+
+            filterInputInstance.#dropdownElement.append(dropdownItemElement);
+        }
+
+        static FilterTag = class
+        {
+            tagElement;
+            crossButtonElement;
+
+            constructor()
+            {
+                let tagElement = this.tagElement = document.createElement("span");
+
+                let tagElementClassList = tagElement.classList;
+                tagElementClassList.add("tag");
+                tagElementClassList.add("is-warning");
+                tagElementClassList.add("is-medium");
+
+                let crossButtonElement = this.crossButtonElement = document.createElement("button");
+                let crossButtonClassList = crossButtonElement.classList;
+                crossButtonClassList.add("delete");
+                crossButtonClassList.add("is-small");
+            }
+
+            get crossButtonEnabled()
+            {
+                return this.tagElement.children.length !== 0;
+            }
+
+            set crossButtonEnabled(enabled)
+            {
+                let tagElement = this.tagElement;
+                let crossButtonElement = this.crossButtonElement;
+
+                if (enabled)
+                {
+                    tagElement.append(crossButtonElement);
+                }
+
+                else
+                {
+                    tagElement.remove(crossButtonElement)
+                }
+            }
+
+            get text()
+            {
+                return this.tagElement.innerText;
+            }
+
+            set text(text)
+            {
+                this.tagElement.innerText = text;
+            }
+
+            get key()
+            {
+                return this.tagElement.dataset["key"];
+            }
+
+            set key(key)
+            {
+                this.tagElement.dataset["key"] = key;
+            }
+
+            get value()
+            {
+                return this.tagElement.dataset["value"];
+            }
+
+            set value(value)
+            {
+                this.tagElement.dataset["value"] = value;
+            }
+        };
+
+        // static #createTag(text, key, value, includeCross)
+        static #createTag()
+        {
+            return new FilterInput.FilterTagDefinition.FilterTag();
+
+            // let tag = document.createElement("span");
+            // // tag.style.height = "auto";
+            //
+            // let tagClassList = tag.classList;
+            // tagClassList.add("tag");
+            // tagClassList.add("is-warning");
+            // tagClassList.add("is-medium");
+            //
+            // let dataset = tag.dataset;
+            // dataset["key"] = key;
+            // dataset["value"] = value;
+            //
+            // tag.textContent = text;
+            //
+            // if (includeCross)
+            // {
+            //     let crossButton = document.createElement("button");
+            //     let crossButtonClassList = crossButton.classList;
+            //     crossButtonClassList.add("delete");
+            //     crossButtonClassList.add("is-small");
+            //
+            //     tag.append(crossButton);
+            // }
+            //
+            // return tag;
+        }
+
+        /**
+         * @param { FilterInput.TagAutocompleteDefinition } tagAutocompleteDef
+         */
+        addTagAutocomplete(tagAutocompleteDef)
+        {
+            let autocompleteTag = FilterInput.FilterTagDefinition.#createTag();
+            autocompleteTag.text = tagAutocompleteDef.text;
+            autocompleteTag.key = this.key;
+            autocompleteTag.value = tagAutocompleteDef.value;
+            let autocompleteTagElement = autocompleteTag.tagElement;
+
+            this.#autocompleteDropdownItemElement.append(autocompleteTagElement);
+
+            // autocompleteTagElement.addEventListener("click", this.#onTagAutocompleteSelected);
+
+            // mousedown event has higher priority than blur, unlike click
+            autocompleteTagElement.addEventListener("mousedown", this.#onTagAutocompleteSelected);
+        }
+
+        #onTagAutocompleteSelected(event)
+        {
+            alert(event.srcElement.dataset["value"]);
+        }
+    };
+
     /**
      * @type { HTMLElement }
      * @private
@@ -92,51 +287,51 @@ export class FilterInput
      * @type { function }
      * @private
      */
-    oninput;
+    onInput;
 
     /**
      * @type { function }
      * @private
      */
-    ontagadded;
+    onTagSelected;
 
     /**
      * @type { function }
      * @private
      */
-    ontagremoved;
+    onTagDeselected;
 
     // // Technically possible to make it a set instead of "dictionary", but set in JS doesn't support custom equality comparison
     // tags = {};
 
     tags = [];
 
-    static get #SEARCH_BAR_CLASS()
+    static get SEARCH_BAR_CLASS()
     {
         return "search-bar";
     }
 
-    static get #SEARCH_BAR_BACKGROUND_TEXT_INPUT_CLASS()
+    static get SEARCH_BAR_BACKGROUND_TEXT_INPUT_CLASS()
     {
         return "search-bar-background-text-input";
     }
 
-    static get #SEARCH_BAR_INNER_WRAPPER_CLASS()
+    static get SEARCH_BAR_INNER_WRAPPER_CLASS()
     {
         return "search-bar-inner-wrapper";
     }
 
-    static get #SEARCH_BAR_INNER_TEXT_INPUT_CLASS()
+    static get SEARCH_BAR_INNER_TEXT_INPUT_CLASS()
     {
         return "search-bar-inner-text-input";
     }
 
-    static get #SEARCH_BAR_DROPDOWN_WRAPPER_CLASS()
+    static get SEARCH_BAR_DROPDOWN_WRAPPER_CLASS()
     {
         return "search-bar-dropdown-wrapper";
     }
 
-    static get #SEARCH_BAR_DROPDOWN_CLASS()
+    static get SEARCH_BAR_DROPDOWN_CLASS()
     {
         return "search-bar-dropdown";
     }
@@ -146,7 +341,7 @@ export class FilterInput
         return "search-bar-dropdown-item";
     }
 
-    static get #DROPDOWN_VISIBLE_CLASS()
+    static get DROPDOWN_VISIBLE_CLASS()
     {
         return "dropdown-visible";
     }
@@ -154,71 +349,80 @@ export class FilterInput
     constructor(parentID)
     {
         let wrapperElement = this.#wrapperElement = document.createElement("div");
-        wrapperElement.classList.add(FilterInput.#SEARCH_BAR_CLASS);
+        wrapperElement.classList.add(FilterInput.SEARCH_BAR_CLASS);
 
         let backgroundTextInputElement = this.#backgroundTextInputElement = document.createElement("input")
         let backgroundTextInputElementClassList = backgroundTextInputElement.classList;
         backgroundTextInputElementClassList.add("input");
         backgroundTextInputElementClassList.add("is-black");
-        backgroundTextInputElementClassList.add(FilterInput.#SEARCH_BAR_BACKGROUND_TEXT_INPUT_CLASS)
+        backgroundTextInputElementClassList.add(FilterInput.SEARCH_BAR_BACKGROUND_TEXT_INPUT_CLASS)
         backgroundTextInputElement.id = "filter";
 
         let innerTextWrapperElement = this.#innerTextWrapperElement = document.createElement("div");
-        innerTextWrapperElement.classList.add(FilterInput.#SEARCH_BAR_INNER_WRAPPER_CLASS);
+        innerTextWrapperElement.classList.add(FilterInput.SEARCH_BAR_INNER_WRAPPER_CLASS);
 
         elementHideScrollBar(innerTextWrapperElement);
 
-        let innerTextInputElement = this.#innerTextInputElement = FilterInput.#createInnerTextInput();
-
+         let innerTextInputElement = this.#innerTextInputElement = FilterInput.#createInnerTextInput();
         innerTextWrapperElement.append(innerTextInputElement);
-        innerTextWrapperElement.append(FilterInput.#createTag("Name: Chicken"));
-        innerTextWrapperElement.append(FilterInput.#createTag("Price >= $5"));
 
+        // innerTextWrapperElement.append(FilterInput.#createTag("Name: Chicken"));
+        // innerTextWrapperElement.append(FilterInput.#createTag("Price >= $5"));
+        //
         let dropdownWrapperElement = this.#dropdownWrapperElement = document.createElement("div");
-        dropdownWrapperElement.classList.add(FilterInput.#SEARCH_BAR_DROPDOWN_WRAPPER_CLASS);
+        dropdownWrapperElement.classList.add(FilterInput.SEARCH_BAR_DROPDOWN_WRAPPER_CLASS);
 
         let dropdownElement = this.#dropdownElement = document.createElement("div");
         let dropdownElementClassList = dropdownElement.classList;
-        dropdownElementClassList.add(FilterInput.#SEARCH_BAR_DROPDOWN_CLASS);
+        dropdownElementClassList.add(FilterInput.SEARCH_BAR_DROPDOWN_CLASS);
         dropdownElementClassList.add("dropdown-content");
         dropdownElement.setAttribute("hidden", "");
-
         dropdownWrapperElement.append(dropdownElement);
-
-        let testDropdownItem = document.createElement("a");
-        let testDropdownItemClassList = testDropdownItem.classList;
-        testDropdownItemClassList.add("dropdown-item");
-        testDropdownItemClassList.add(FilterInput.#SEARCH_BAR_DROPDOWN_ITEM_CLASS);
-        testDropdownItem.innerText = "Hi";
-        // let testSpan = document.createElement("span");
-        // testSpan.innerText = "Hi";
-        // testDropdownItem.append(testSpan);
-        testDropdownItem.append(FilterInput.#createTag("Test"));
-        testDropdownItem.append(FilterInput.#createTag("Test"));
-        testDropdownItem.append(FilterInput.#createTag("Test"));
-        dropdownElement.append(testDropdownItem);
-
-        let testDropdownItem2 = document.createElement("a");
-        let testDropdownItemClassList2 = testDropdownItem2.classList;
-        testDropdownItemClassList2.add("dropdown-item");
-        testDropdownItemClassList2.add(FilterInput.#SEARCH_BAR_DROPDOWN_ITEM_CLASS);
-        testDropdownItem2.innerText = "Hi";
-        // let testSpan = document.createElement("span");
-        // testSpan.innerText = "Hi";
-        // testDropdownItem.append(testSpan);
-        testDropdownItem2.append(FilterInput.#createTag("Test"));
-        testDropdownItem2.append(FilterInput.#createTag("Test"));
-        testDropdownItem2.append(FilterInput.#createTag("Test"));
-        dropdownElement.append(testDropdownItem2);
 
         wrapperElement.append(innerTextWrapperElement);
         wrapperElement.append(backgroundTextInputElement);
         wrapperElement.append(dropdownWrapperElement);
 
+        // let testDropdownItem = document.createElement("a");
+        // let testDropdownItemClassList = testDropdownItem.classList;
+        // testDropdownItemClassList.add("dropdown-item");
+        // testDropdownItemClassList.add(FilterInput.SEARCH_BAR_DROPDOWN_ITEM_CLASS);
+        // testDropdownItem.innerText = "Hi";
+        // // let testSpan = document.createElement("span");
+        // // testSpan.innerText = "Hi";
+        // // testDropdownItem.append(testSpan);
+        // testDropdownItem.append(FilterInput.#createTag("Test"));
+        // testDropdownItem.append(FilterInput.#createTag("Test"));
+        // testDropdownItem.append(FilterInput.#createTag("Test"));
+        // dropdownElement.append(testDropdownItem);
+        //
+        // let testDropdownItem2 = document.createElement("a");
+        // let testDropdownItemClassList2 = testDropdownItem2.classList;
+        // testDropdownItemClassList2.add("dropdown-item");
+        // testDropdownItemClassList2.add(FilterInput.SEARCH_BAR_DROPDOWN_ITEM_CLASS);
+        // testDropdownItem2.innerText = "Hi";
+        // // let testSpan = document.createElement("span");
+        // // testSpan.innerText = "Hi";
+        // // testDropdownItem.append(testSpan);
+        // testDropdownItem2.append(FilterInput.#createTag("Test"));
+        // testDropdownItem2.append(FilterInput.#createTag("Test"));
+        // testDropdownItem2.append(FilterInput.#createTag("Test"));
+        // dropdownElement.append(testDropdownItem2);
+
         let textInputParentElement = document.getElementById(parentID);
         textInputParentElement.append(wrapperElement);
 
         // this.#toggleDropdown();
+        let def = new FilterInput.FilterTagDefinition("Category", "Category: ", this);
+        def.addTagAutocomplete(new FilterInput.TagAutocompleteDefinition("None", 1));
+        def.addTagAutocomplete(new FilterInput.TagAutocompleteDefinition("Food", 2));
+        def.addTagAutocomplete(new FilterInput.TagAutocompleteDefinition("Tech", 3));
+
+        def = new FilterInput.FilterTagDefinition("Sort", "Sort: ", this);
+        def.addTagAutocomplete(new FilterInput.TagAutocompleteDefinition("ID", 1));
+        def.addTagAutocomplete(new FilterInput.TagAutocompleteDefinition("Name", 2));
+        def.addTagAutocomplete(new FilterInput.TagAutocompleteDefinition("Price", 3));
+        def.addTagAutocomplete(new FilterInput.TagAutocompleteDefinition("Category", 4));
 
         let instance = this;
 
@@ -227,10 +431,15 @@ export class FilterInput
             instance.#toggleDropdown();
         });
 
-        innerTextInputElement.addEventListener("blur", function (_)
+        innerTextInputElement.addEventListener("blur", function (event)
         {
             instance.#toggleDropdown();
         });
+
+        // dropdownWrapperElement.addEventListener("mousedown", function (event)
+        // {
+        //     event.preventDefault();
+        // });
     }
 
     /**
@@ -265,7 +474,7 @@ export class FilterInput
 
         classList.add("input");
         classList.add("is-black");
-        classList.add(FilterInput.#SEARCH_BAR_INNER_TEXT_INPUT_CLASS);
+        classList.add(FilterInput.SEARCH_BAR_INNER_TEXT_INPUT_CLASS);
 
         let style = textInput.style;
 
@@ -286,31 +495,9 @@ export class FilterInput
         return textInput;
     }
 
-    static #createTag(text, value)
-    {
-        let tag = document.createElement("span");
-        // tag.style.height = "auto";
-
-        let tagClassList = tag.classList;
-        tagClassList.add("tag");
-        tagClassList.add("is-warning");
-        tagClassList.add("is-medium");
-        tag.dataset["value"] = value;
-
-        let crossButton = document.createElement("button");
-        let crossButtonClassList = crossButton.classList;
-        crossButtonClassList.add("delete");
-        crossButtonClassList.add("is-small");
-        tag.textContent = text;
-
-        tag.append(crossButton);
-
-        return tag;
-    }
-
     #toggleDropdown()
     {
-        this.#backgroundTextInputElement.classList.toggle(FilterInput.#DROPDOWN_VISIBLE_CLASS);
+        this.#backgroundTextInputElement.classList.toggle(FilterInput.DROPDOWN_VISIBLE_CLASS);
         this.#dropdownElement.toggleAttribute("hidden");
     }
 }

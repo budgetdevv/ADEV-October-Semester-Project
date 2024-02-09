@@ -41,3 +41,19 @@ export function elementHideScrollBar(element)
     // Hide scrollbar for IE and Edge
     style['-ms-overflow-style'] = 'none';
 }
+
+/**
+ * @param { HTMLElement } element
+ */
+export function elementHide(element)
+{
+    element.setAttribute("hidden", "");
+}
+
+/**
+ * @param { HTMLElement } element
+ */
+export function elementUnhide(element)
+{
+    element.removeAttribute("hidden");
+}
