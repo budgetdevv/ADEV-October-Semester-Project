@@ -54,6 +54,7 @@ export class FilterInput
         static TagElementWrapper = class
         {
             tagElement;
+            textElement;
             crossButtonElement;
 
             constructor()
@@ -64,6 +65,9 @@ export class FilterInput
                 tagElementClassList.add("tag");
                 tagElementClassList.add("is-warning");
                 tagElementClassList.add("is-medium");
+
+                let textElement = this.textElement = document.createElement("span");
+                tagElement.append(textElement);
 
                 let crossButtonElement = this.crossButtonElement = document.createElement("button");
                 let crossButtonClassList = crossButtonElement.classList;
@@ -94,12 +98,12 @@ export class FilterInput
 
             get text()
             {
-                return this.tagElement.innerText;
+                return this.textElement.innerText;
             }
 
             set text(text)
             {
-                this.tagElement.innerText = text;
+                this.textElement.innerText = text;
             }
 
             get key()
