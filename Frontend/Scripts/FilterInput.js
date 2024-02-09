@@ -205,7 +205,7 @@ export class FilterInput
 
             let selectedTag = this.#selectedTagElementWrapper = FilterInput.TagDefinition.#createTag();
 
-            this.selectedTagData = new FilterInput.TagData("Z", 1);
+            this.selectedTagData = new FilterInput.TagData("", null);
 
             selectedTag.crossButtonEnabled = true;
 
