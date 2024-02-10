@@ -242,7 +242,8 @@ export class FilterInput
             DropdownItemClassList.add(FilterInput.#SEARCH_BAR_DROPDOWN_ITEM_CLASS);
 
             let selectedTag = this.#selectionTag = new FilterInput.Tag();
-
+            selectedTag.key = key;
+            selectedTag.value = null;
             selectedTag.textFormatterCallback = (tag, text) =>
             {
                 return `${tag.key}: ${text}`
@@ -250,8 +251,7 @@ export class FilterInput
 
             selectedTag.text = "";
             selectedTag.value = null;
-            selectedTag.crossButtonEnabled = true;
-
+            selectedTag.crossButtonEnabled = true;s
             filterInputInstance.#innerTextWrapperElement.append(selectedTag.tagElement)
 
             filterInputInstance.#dropdownElement.append(dropdownItemElement);
@@ -280,17 +280,20 @@ export class FilterInput
 
             this.#autocompleteDropdownItemElement.append(autocompleteTag.tagElement);
 
-            autocompleteTag.addEventListener("click", (_, tag) => this.#selectAutocompleteTag(tag))
+            autocompleteTag.addEventListener("click", (_, tag) => this.#onAutoCompleteTagSelected(tag))
         }
 
-        #selectAutocompleteTag(autocompleteTag)
+        #onAutoCompleteTagSelected(autoCompleteTag)
         {
-            // let tagData = this.selectedTagData = FilterInput.TagData.fromTagElement(autocompleteTagElement);
             let filterInputInstance = this.#filterInputInstance;
-
-            alert(autocompleteTag.value);
-
             filterInputInstance.#innerTextInputElement.blur();
+
+            // Perhaps consider making selectedAutocompleteTag a setter property...
+            let selectionTag = this.#selectionTag;
+            selectionTag.text = autoCompleteTag.text;
+            selectionTag.value = autoCompleteTag.value;
+
+            this.#selectedAutocompleteTag = autoCompleteTag;
         }
 
         get key()
