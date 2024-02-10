@@ -284,7 +284,7 @@ export class FilterInput
             let defaultTagValue = selectedTag.value = null;
             let defaultTagText = selectedTag.text = "";
             selectedTag.crossButtonEnabled = true;
-            selectedTag.crossButtonAddEventListener("click", (_, tag) => this.#onSelectionTagCrossed(tag));
+            selectedTag.crossButtonAddEventListener("click", (event, tag) => this.#onSelectionTagCrossed(event, tag));
 
             selectedTag.textFormatterCallback = (tag, text) =>
             {
@@ -314,12 +314,6 @@ export class FilterInput
         {
             return this.#selectionTag.value;
         }
-
-        // get defaultSelectionTagValue()
-        // {
-        //     const DEFAULT_SELECTION_TAG = this.#defaultSelectionTag;
-        //     return (DEFAULT_SELECTION_TAG != null) ? DEFAULT_SELECTION_TAG.value : null;
-        // }
 
         get autoCompleteDropdownText()
         {
@@ -376,12 +370,16 @@ export class FilterInput
             autocompleteTag.key = this.#key;
             autocompleteTag.text = text;
             autocompleteTag.value = value;
-            autocompleteTag.tagAddEventListener("click", (_, tag) => this.#onAutoCompleteTagSelected(tag));
+            autocompleteTag.tagAddEventListener("click", (event, tag) => this.#onAutoCompleteTagSelected(event, tag));
 
             return autocompleteTag;
         }
 
-        #onAutoCompleteTagSelected(autoCompleteTag)
+        /**
+         * @param { Event } event
+         * @param { FilterInput.Tag } autoCompleteTag
+         */
+        #onAutoCompleteTagSelected(event, autoCompleteTag)
         {
             let filterInputInstance = this.#filterInputInstance;
             filterInputInstance.#innerTextInputElement.blur();
@@ -401,12 +399,28 @@ export class FilterInput
 
             this.#selectedAutocompleteTag = autoCompleteTag;
             autoCompleteTag.hide();
+
+            this.#onSelectionTagUpdated(event);
         }
 
         /**
+         * @param { Event } event
+         */
+        #onSelectionTagUpdated(event)
+        {
+            const TAG_SELECTED_CALLBACK = this.#filterInputInstance.onTagSelectedCallback;
+
+            if (TAG_SELECTED_CALLBACK != null)
+            {
+                TAG_SELECTED_CALLBACK(event, this);
+            }
+        }
+
+        /**
+         * @param { Event } event
          * @param { FilterInput.Tag } selectionTag
          */
-        #onSelectionTagCrossed(selectionTag)
+        #onSelectionTagCrossed(event, selectionTag)
         {
             const DEFAULT_SELECTION_TAG = this.#defaultSelectionTag;
             selectionTag.text = DEFAULT_SELECTION_TAG.text;
@@ -415,6 +429,13 @@ export class FilterInput
 
             this.#selectedAutocompleteTag.unhide();
             this.#selectedAutocompleteTag = null;
+
+            const TAG_DESELECTED_CALLBACK = this.#filterInputInstance.onTagDeselectedCallback;
+
+            if (TAG_DESELECTED_CALLBACK != null)
+            {
+                TAG_DESELECTED_CALLBACK(event, this);
+            }
         }
     };
     //#endregion
@@ -463,16 +484,16 @@ export class FilterInput
     onTextInputCallback;
 
     /**
-     * @type { function(Event, FilterInput.Tag) }
+     * @type { function(Event, FilterInput.FilterDefinition) }
      * @public
      */
-    onTagSelectedCallback;
+    onTagSelectedCallback = null;
 
     /**
-     * @type { function(Event, FilterInput.Tag) }
+     * @type { function(Event, FilterInput.FilterDefinition) }
      * @public
      */
-    onTagDeselectedCallback;
+    onTagDeselectedCallback = null;
 
     /**
      * @type { Map<string, FilterInput.FilterDefinition> }

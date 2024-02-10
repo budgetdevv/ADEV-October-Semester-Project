@@ -40,7 +40,12 @@ document.addEventListener('DOMContentLoaded', async _ =>
         renderProducts(false, null);
     }
 
-    await renderProducts(false, filterInput, null);
+    filterInput.onTagSelectedCallback = filterInput.onTagDeselectedCallback = (event, currentFilterDefinition) =>
+    {
+        renderProducts(false, currentFilterDefinition);
+    }
+
+    await renderProducts(false, null);
 
     const PRODUCT_ID = new URLSearchParams(location.search).get("ID");
 
@@ -137,9 +142,9 @@ function sortByCategory(left, right)
 
 /**
  * @param { boolean } useCached
- * @param { FilterInput.FilterDefinition } selectionTag
+ * @param { FilterInput.FilterDefinition } currentFilterDefinition
  */
-async function renderProducts(useCached, selectionTag = null)
+async function renderProducts(useCached, currentFilterDefinition = null)
 {
     let products, sortTypeChanged;
 
@@ -149,7 +154,7 @@ async function renderProducts(useCached, selectionTag = null)
     }
 
     // Data from DB are not ordered by the current sort type.
-    sortTypeChanged = !useCached || selectionTag.key === CATEGORY_FILTER_TAG_KEY;
+    sortTypeChanged = !useCached || currentFilterDefinition.key === CATEGORY_FILTER_TAG_KEY;
 
     // if (selectionTag != null)
     // {
