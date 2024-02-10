@@ -344,18 +344,6 @@ export class FilterInput
     #dropdownElement;
 
     /**
-     * @type { ResizeObserver }
-     * @private
-     */
-    #resizeObserver;
-
-    /**
-     * @type { MutationObserver }
-     * @private
-     */
-    #mutationObserver;
-
-    /**
      * @type { function(Event, FilterInput) }
      * @public
      */
