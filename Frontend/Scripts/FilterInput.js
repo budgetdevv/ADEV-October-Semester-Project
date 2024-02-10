@@ -6,6 +6,12 @@ export class FilterInput
     static Tag = class
     {
         /**
+         * @type { Object }
+         * @private
+         */
+        #value;
+
+        /**
          * @type { HTMLElement }
          * @public
          */
@@ -30,7 +36,7 @@ export class FilterInput
         textFormatterCallback = null;
 
         /**
-         * @type { function(FilterInput.Tag, String):boolean }
+         * @type { function(FilterInput.Tag, Object):boolean }
          * @public
          */
         shouldDisplaySelectedTagCallback = null;
@@ -46,7 +52,7 @@ export class FilterInput
 
         /**
          * @param { FilterInput.Tag } tagInstance
-         * @param { String } value
+         * @param { Object } value
          */
         static #defaultShouldDisplaySelectedTagCallback(tagInstance, value)
         {
@@ -134,7 +140,7 @@ export class FilterInput
 
         get value()
         {
-            return this.tagElement.dataset["value"];
+            return this.#value;
         }
 
         set value(value)
@@ -151,7 +157,7 @@ export class FilterInput
                 this.hide();
             }
 
-            this.tagElement.dataset["value"] = value;
+            this.#value = value;
         }
 
         hide()
@@ -272,7 +278,7 @@ export class FilterInput
 
         /**
          * @param { String } text
-         * @param { String } value
+         * @param { Object } value
          */
         addTagAutocomplete(text, value)
         {
@@ -326,7 +332,7 @@ export class FilterInput
     #innerTextWrapperElement;
 
     /**
-     * @type { HTMLElement }
+     * @type { HTMLInputElement }
      * @private
      */
     #innerTextInputElement
@@ -467,6 +473,16 @@ export class FilterInput
         });
 
         this.#hideDropdown();
+    }
+
+    get text()
+    {
+        return this.#innerTextInputElement.value;
+    }
+
+    set text(text)
+    {
+        this.#innerTextInputElement.value = text;
     }
 
     addTagDefinition(key)
