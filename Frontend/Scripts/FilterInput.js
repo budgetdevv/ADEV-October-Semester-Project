@@ -1,4 +1,4 @@
-import { elementHide, elementHideScrollBar, elementUnhide, pxToNumber } from "../../Common/Helpers.js";
+import { elementHide, elementHideAsync, elementHideScrollBar, elementUnhide, elementUnhideAsync, pxToNumber } from "../../Common/Helpers.js";
 
 export class FilterInput
 {
@@ -60,6 +60,7 @@ export class FilterInput
             tagElementClassList.add("tag");
             tagElementClassList.add("is-warning");
             tagElementClassList.add("is-medium");
+            tagElementClassList.add(FilterInput.SEARCH_BAR_TAG_CLASS);
 
             let textElement = this.textElement = document.createElement("span");
             tagElement.append(textElement);
@@ -423,9 +424,10 @@ export class FilterInput
         #onSelectionTagCrossed(event, selectionTag)
         {
             const DEFAULT_SELECTION_TAG = this.#defaultSelectionTag;
-            selectionTag.text = DEFAULT_SELECTION_TAG.text;
             // This hides it
             selectionTag.value = DEFAULT_SELECTION_TAG.value;
+
+            selectionTag.text = DEFAULT_SELECTION_TAG.text;
 
             this.#selectedAutocompleteTag.unhide();
             this.#selectedAutocompleteTag = null;
@@ -523,6 +525,11 @@ export class FilterInput
         return "search-bar-inner-text-input";
     }
 
+    static get SEARCH_BAR_TAG_CLASS()
+    {
+        return "search-bar-tag";
+    }
+
     static get SEARCH_BAR_DROPDOWN_WRAPPER_CLASS()
     {
         return "search-bar-dropdown-wrapper";
@@ -604,7 +611,7 @@ export class FilterInput
             event.preventDefault();
         });
 
-        this.#hideDropdown();
+        this.#hideDropdown(true);
     }
 
     get text()
@@ -694,15 +701,22 @@ export class FilterInput
         }
     }
 
-    #showDropdown()
+    static get #DROPDOWN_TRANSITION_STYLE()
     {
-        this.#backgroundTextInputElement.classList.add(FilterInput.DROPDOWN_VISIBLE_CLASS);
-        elementUnhide(this.#dropdownElement);
+        return "visibility 0s, opacity 0.2s linear";
     }
 
-    #hideDropdown()
+    #showDropdown(instant = false)
     {
+        const TRANSITION_STYLE = !instant ? FilterInput.#DROPDOWN_TRANSITION_STYLE: null;
+        this.#backgroundTextInputElement.classList.add(FilterInput.DROPDOWN_VISIBLE_CLASS);
+        const _ = elementUnhideAsync(this.#dropdownElement, TRANSITION_STYLE);
+    }
+
+    #hideDropdown(instant = false)
+    {
+        const TRANSITION_STYLE = !instant ? FilterInput.#DROPDOWN_TRANSITION_STYLE: null;
         this.#backgroundTextInputElement.classList.remove(FilterInput.DROPDOWN_VISIBLE_CLASS);
-        elementHide(this.#dropdownElement);
+        const _ = elementHideAsync(this.#dropdownElement, TRANSITION_STYLE);
     }
 }
