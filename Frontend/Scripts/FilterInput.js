@@ -2,6 +2,7 @@ import { elementHide, elementUnhide, elementHideScrollBar, pxToNumber } from "..
 
 export class FilterInput
 {
+    //#region Tag
     static Tag = class
     {
         /**
@@ -194,7 +195,9 @@ export class FilterInput
             FilterInput.Tag.#tagElementToTagMap.delete(tagElement);
         }
     };
+    //#endregion
 
+    //#region TagDefinition
     static TagDefinition = class
     {
         /**
@@ -301,7 +304,9 @@ export class FilterInput
             return this.#key;
         }
     };
+    //#endregion
 
+    //#region Fields
     /**
      * @type { HTMLElement }
      * @private
@@ -369,7 +374,9 @@ export class FilterInput
     onTagDeselected;
 
     tags = [];
+    //#endregion
 
+    //#region CSS_CLASS_CONSTANTS
     static get SEARCH_BAR_CLASS()
     {
         return "search-bar";
@@ -409,6 +416,7 @@ export class FilterInput
     {
         return "dropdown-visible";
     }
+    //#endregion
 
     constructor(parentID)
     {
