@@ -32,7 +32,7 @@ export class FilterInput
         }
 
         /**
-         * @param { FilterInput.TagDefinition.TagElementWrapper } tag
+         * @param { FilterInput.TagElementWrapper } tag
          */
         writeToAutocompleteTag(tag)
         {
@@ -41,7 +41,7 @@ export class FilterInput
         }
 
         /**
-         * @param { FilterInput.TagDefinition.TagElementWrapper } tag
+         * @param { FilterInput.TagElementWrapper } tag
          */
         writeToSelectedTag(tag)
         {
@@ -49,94 +49,94 @@ export class FilterInput
         }
     }
 
+    static TagElementWrapper = class
+    {
+        tagElement;
+        textElement;
+        crossButtonElement;
+
+        constructor()
+        {
+            let tagElement = this.tagElement = document.createElement("span");
+
+            let tagElementClassList = tagElement.classList;
+            tagElementClassList.add("tag");
+            tagElementClassList.add("is-warning");
+            tagElementClassList.add("is-medium");
+
+            let textElement = this.textElement = document.createElement("span");
+            tagElement.append(textElement);
+
+            let crossButtonElement = this.crossButtonElement = document.createElement("button");
+            let crossButtonClassList = crossButtonElement.classList;
+            crossButtonClassList.add("delete");
+            crossButtonClassList.add("is-small");
+        }
+
+        get crossButtonEnabled()
+        {
+            return this.tagElement.children.length !== 0;
+        }
+
+        set crossButtonEnabled(enabled)
+        {
+            let tagElement = this.tagElement;
+            let crossButtonElement = this.crossButtonElement;
+
+            if (enabled)
+            {
+                tagElement.append(crossButtonElement);
+            }
+
+            else
+            {
+                tagElement.remove(crossButtonElement)
+            }
+        }
+
+        get text()
+        {
+            return this.textElement.innerText;
+        }
+
+        set text(text)
+        {
+            this.textElement.innerText = text;
+        }
+
+        get key()
+        {
+            return this.tagElement.dataset["key"];
+        }
+
+        set key(key)
+        {
+            this.tagElement.dataset["key"] = key;
+        }
+
+        get value()
+        {
+            return this.tagElement.dataset["value"];
+        }
+
+        set value(value)
+        {
+            this.tagElement.dataset["value"] = value;
+        }
+
+        hide()
+        {
+            elementHide(this.tagElement);
+        }
+
+        unhide()
+        {
+            elementUnhide(this.tagElement);
+        }
+    };
+
     static TagDefinition = class
     {
-        static TagElementWrapper = class
-        {
-            tagElement;
-            textElement;
-            crossButtonElement;
-
-            constructor()
-            {
-                let tagElement = this.tagElement = document.createElement("span");
-
-                let tagElementClassList = tagElement.classList;
-                tagElementClassList.add("tag");
-                tagElementClassList.add("is-warning");
-                tagElementClassList.add("is-medium");
-
-                let textElement = this.textElement = document.createElement("span");
-                tagElement.append(textElement);
-
-                let crossButtonElement = this.crossButtonElement = document.createElement("button");
-                let crossButtonClassList = crossButtonElement.classList;
-                crossButtonClassList.add("delete");
-                crossButtonClassList.add("is-small");
-            }
-
-            get crossButtonEnabled()
-            {
-                return this.tagElement.children.length !== 0;
-            }
-
-            set crossButtonEnabled(enabled)
-            {
-                let tagElement = this.tagElement;
-                let crossButtonElement = this.crossButtonElement;
-
-                if (enabled)
-                {
-                    tagElement.append(crossButtonElement);
-                }
-
-                else
-                {
-                    tagElement.remove(crossButtonElement)
-                }
-            }
-
-            get text()
-            {
-                return this.textElement.innerText;
-            }
-
-            set text(text)
-            {
-                this.textElement.innerText = text;
-            }
-
-            get key()
-            {
-                return this.tagElement.dataset["key"];
-            }
-
-            set key(key)
-            {
-                this.tagElement.dataset["key"] = key;
-            }
-
-            get value()
-            {
-                return this.tagElement.dataset["value"];
-            }
-
-            set value(value)
-            {
-                this.tagElement.dataset["value"] = value;
-            }
-
-            hide()
-            {
-                elementHide(this.tagElement);
-            }
-
-            unhide()
-            {
-                elementUnhide(this.tagElement);
-            }
-        };
-
         /**
          * @type { FilterInput }
          * @private
@@ -150,7 +150,7 @@ export class FilterInput
         #key;
 
         /**
-         * @type { FilterInput.TagDefinition.TagElementWrapper }
+         * @type { FilterInput.TagElementWrapper }
          * @private
          */
         #selectedTagElementWrapper
@@ -218,7 +218,7 @@ export class FilterInput
 
         static #createTag()
         {
-            return new FilterInput.TagDefinition.TagElementWrapper();
+            return new FilterInput.TagElementWrapper();
         }
 
         /**
@@ -234,18 +234,16 @@ export class FilterInput
 
             this.#autocompleteDropdownItemElement.append(autocompleteTagElement);
 
-            autocompleteTagElement.addEventListener("click", event => this.#onTagAutocompleteSelected(event));
+            autocompleteTagElement.addEventListener("click", event => this.#selectAutocompleteTag(event.currentTarget));
         }
 
-        #onTagAutocompleteSelected(event)
+        #selectAutocompleteTag(autocompleteTagElement)
         {
-            const TAG_ELEMENT = event.currentTarget;
-
-            this.selectedTagData = FilterInput.TagData.fromTagElement(TAG_ELEMENT);
+            let tagData = this.selectedTagData = FilterInput.TagData.fromTagElement(autocompleteTagElement);
 
             let filterInputInstance = this.#filterInputInstance;
 
-            // alert(this.constructor.name);
+            alert(tagData.value);
 
             filterInputInstance.#innerTextInputElement.blur();
         }
@@ -363,9 +361,6 @@ export class FilterInput
      */
     onTagDeselected;
 
-    // // Technically possible to make it a set instead of "dictionary", but set in JS doesn't support custom equality comparison
-    // tags = {};
-
     tags = [];
 
     static get SEARCH_BAR_CLASS()
@@ -447,13 +442,13 @@ export class FilterInput
         let textInputParentElement = document.getElementById(parentID);
         textInputParentElement.append(wrapperElement);
 
-        let def = new FilterInput.TagDefinition("Category", this);
+        let def = this.addTagDefinition("Category");
         def.autoCompleteDropdownText = "Selected Category: ";
         def.addTagAutocomplete(new FilterInput.TagData("None", 1));
         def.addTagAutocomplete(new FilterInput.TagData("Food", 2));
         def.addTagAutocomplete(new FilterInput.TagData("Tech", 3));
 
-        def = new FilterInput.TagDefinition("Sort", this);
+        def = this.addTagDefinition("Sort");
         def.autoCompleteDropdownText = "Sort By: ";
         def.addTagAutocomplete(new FilterInput.TagData("ID", 1));
         def.addTagAutocomplete(new FilterInput.TagData("Name", 2));
@@ -467,17 +462,25 @@ export class FilterInput
             instance.#showDropdown();
         });
 
-        innerTextInputElement.addEventListener("blur", function (event)
+        innerTextInputElement.addEventListener("blur", function (_)
         {
             instance.#hideDropdown();
         });
 
         dropdownElement.addEventListener("mousedown", function (event)
         {
+            // Prevent onblur() should the dropdown be clicked.
             event.preventDefault();
         });
 
         this.#hideDropdown();
+    }
+
+    addTagDefinition(key)
+    {
+        let def = new FilterInput.TagDefinition(key, this);
+        this.tags.push(def);
+        return def;
     }
 
     /**
