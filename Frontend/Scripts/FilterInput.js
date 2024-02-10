@@ -268,8 +268,8 @@ export class FilterInput
         }
 
         /**
-         * @param { String } text;
-         * @param { String } value;
+         * @param { String } text
+         * @param { String } value
          */
         addTagAutocomplete(text, value)
         {
