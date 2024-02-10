@@ -1,11 +1,14 @@
 import { Product } from "/Common/DataStructures.js";
-import { PRODUCTS_ROUTE_NAME as ROUTE_NAME, PRODUCT_ID_PREFIX, RESET_ROUTE, JSON_HEADER } from "/Common/Constants.js"
+import { PRODUCT_ID_PREFIX, RESET_ROUTE, JSON_HEADER, CATEGORY_FILTER_TAG_KEY, SORT_FILTER_TAG_KEY, PRODUCTS_ROUTE_NAME as ROUTE_NAME } from "/Common/Constants.js"
 import { Modal } from "./Modal.js";
-import { populateCategorySelector, getCategoriesViaREST, constructProductFromDocument } from "./Shared.js";
+import { getProductsViaREST, populateCategorySelector, getCategoriesViaREST, constructProductFromDocument } from "./Shared.js";
 import { FilterInput } from "./FilterInput.js";
 
 const PRODUCT_LIST_ID = "product_list";
 
+/**
+ * @type { Product[] }
+ */
 let loadedProducts;
 
 /**
@@ -13,26 +16,24 @@ let loadedProducts;
  */
 let filterInput;
 
-let currentSortFunction = sortByID;
-
 document.addEventListener('DOMContentLoaded', async _ =>
 {
     filterInput = new FilterInput("header");
 
-    let def = filterInput.addTagDefinition("Category");
+    let def = filterInput.addTagDefinition(CATEGORY_FILTER_TAG_KEY);
     def.autoCompleteDropdownText = "Selected Category: ";
 
     for (const CATEGORY of await getCategoriesViaREST())
     {
-        def.addTagAutocomplete(CATEGORY.name, CATEGORY.id);
+        def.addAutocompleteTag(CATEGORY.name, CATEGORY.id);
     }
 
-    def = filterInput.addTagDefinition("Sort");
+    def = filterInput.addTagDefinition(SORT_FILTER_TAG_KEY);
     def.autoCompleteDropdownText = "Sort By: ";
-    def.addTagAutocomplete("ID", sortByID);
-    def.addTagAutocomplete("Name", sortByName);
-    def.addTagAutocomplete("Price", sortByPrice);
-    def.addTagAutocomplete("Category", sortByCategory);
+    def.addDefaultSelectionTag("ID", sortByID);
+    def.addAutocompleteTag("Name", sortByName);
+    def.addAutocompleteTag("Price", sortByPrice);
+    def.addAutocompleteTag("Category", sortByCategory);
 
     filterInput.onTextInputCallback = (event, _) =>
     {
@@ -136,8 +137,7 @@ function sortByCategory(left, right)
 
 /**
  * @param { boolean } useCached
- * @param { FilterInput } filterInput
- * @param { FilterInput.TagDefinition } selectionTag
+ * @param { FilterInput.FilterDefinition } selectionTag
  */
 async function renderProducts(useCached, selectionTag = null)
 {
@@ -145,21 +145,19 @@ async function renderProducts(useCached, selectionTag = null)
 
     if (!useCached)
     {
-        const RESPONSE = await fetch(ROUTE_NAME);
-
-        loadedProducts = JSON.parse(await RESPONSE.text());
+        loadedProducts = await getProductsViaREST();
     }
 
     // Data from DB are not ordered by the current sort type.
-    sortTypeChanged = !useCached;
+    sortTypeChanged = !useCached || selectionTag.key === CATEGORY_FILTER_TAG_KEY;
 
-    if (selectionTag != null)
-    {
-        switch (selectionTag.key)
-        {
-
-        }
-    }
+    // if (selectionTag != null)
+    // {
+    //     switch (selectionTag.key)
+    //     {
+    //
+    //     }
+    // }
 
     products = loadedProducts;
 
@@ -169,6 +167,11 @@ async function renderProducts(useCached, selectionTag = null)
 
         // Sort by ID first, so that we get consistent sort result regardless of current order.
         loadedProducts.sort(sortByID);
+
+        /**
+         * @type { function(Product, Product) }
+         */
+        let currentSortFunction = filterInput.getTagDefinition(SORT_FILTER_TAG_KEY).selectedValue;
 
         if (currentSortFunction !== sortByID)
         {
@@ -182,7 +185,7 @@ async function renderProducts(useCached, selectionTag = null)
 
     for (let i = 0; i < products.length; i++)
     {
-        const PRODUCT = new Product(products[i]);
+        const PRODUCT = products[i];
 
         // Filter by name for now. We will add more options in the future
         if (!PRODUCT.name.toUpperCase().includes(filterText))

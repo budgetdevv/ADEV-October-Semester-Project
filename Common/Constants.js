@@ -15,3 +15,6 @@ export const JSON_HEADER = { "Content-Type": "application/json" };
 export const PRODUCT_ID_PREFIX = "product_";
 
 export const IS_ACTIVE_CLASS = "is-active";
+
+export const CATEGORY_FILTER_TAG_KEY = "Category",
+             SORT_FILTER_TAG_KEY = "Sort";

@@ -1,5 +1,23 @@
-import { CATEGORIES_ROUTE_NAME, CATEGORY_ID } from "../../Common/Constants.js";
+import { PRODUCTS_ROUTE_NAME, CATEGORIES_ROUTE_NAME, CATEGORY_ID } from "../../Common/Constants.js";
 import { Product, Category } from "../../Common/DataStructures.js";
+
+/**
+ * @return { Promise<Product[]> }
+ */
+export async function getProductsViaREST()
+{
+    const RESPONSE = await fetch(PRODUCTS_ROUTE_NAME);
+    const RESPONSE_TEXT = await RESPONSE.text();
+
+    let products = JSON.parse(RESPONSE_TEXT);
+
+    for (let i = 0; i < products.length; i++)
+    {
+        products[i] = new Product(products[i]);
+    }
+
+    return products;
+}
 
 /**
  * @return { Promise<Category[]> }

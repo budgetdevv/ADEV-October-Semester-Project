@@ -1,4 +1,4 @@
-import { elementHide, elementUnhide, elementHideScrollBar, pxToNumber } from "../../Common/Helpers.js";
+import {elementHide, elementHideScrollBar, elementUnhide, pxToNumber} from "../../Common/Helpers.js";
 
 export class FilterInput
 {
@@ -71,7 +71,10 @@ export class FilterInput
 
             FilterInput.Tag.#tagElementToTagMap.set(tagElement, this);
 
-            parentElement.append(tagElement);
+            if (parentElement != null)
+            {
+                parentElement.append(tagElement);
+            } // Otherwise it exists only as an object, and is NOT rendered in HTML.
         }
 
         /**
@@ -223,8 +226,8 @@ export class FilterInput
     };
     //#endregion
 
-    //#region TagDefinition
-    static TagDefinition = class
+    //#region FilterDefinition
+    static FilterDefinition = class
     {
         /**
          * @type { FilterInput }
@@ -257,6 +260,12 @@ export class FilterInput
         #autocompleteDropdownItemElement;
 
         /**
+         * @type { FilterInput.Tag }
+         * @private
+         */
+        #defaultSelectionTag;
+
+        /**
          * @param { String } key
          * @param { FilterInput } filterInputInstance
          */
@@ -272,7 +281,9 @@ export class FilterInput
 
             let selectedTag = this.#selectionTag = new FilterInput.Tag(filterInputInstance.#innerTextWrapperElement);
             selectedTag.key = key;
-            selectedTag.value = null;
+            let defaultTagValue = selectedTag.value = null;
+            let defaultTagText = selectedTag.text = "";
+            selectedTag.crossButtonEnabled = true;
             selectedTag.crossButtonAddEventListener("click", (_, tag) => this.#onSelectionTagCrossed(tag));
 
             selectedTag.textFormatterCallback = (tag, text) =>
@@ -280,12 +291,35 @@ export class FilterInput
                 return `${tag.key}: ${text}`
             };
 
-            selectedTag.text = "";
-            selectedTag.value = null;
-            selectedTag.crossButtonEnabled = true;
+            selectedTag.shouldDisplaySelectedTagCallback = (tag, value) =>
+            {
+                return !this.#valueIsThatOfDefaultSelection(value);
+            }
 
             filterInputInstance.#dropdownElement.append(dropdownItemElement);
+
+            // Pre-initialize it with default values.
+            // This is so that we don't have to check if defaultSelectionTag is null and handle such cases separately...
+            let defaultSelectionTag = this.#defaultSelectionTag = new FilterInput.Tag(null);
+            defaultSelectionTag.text = defaultTagText;
+            defaultSelectionTag.value = defaultTagValue;
         }
+
+        get key()
+        {
+            return this.#key;
+        }
+
+        get selectedValue()
+        {
+            return this.#selectionTag.value;
+        }
+
+        // get defaultSelectionTagValue()
+        // {
+        //     const DEFAULT_SELECTION_TAG = this.#defaultSelectionTag;
+        //     return (DEFAULT_SELECTION_TAG != null) ? DEFAULT_SELECTION_TAG.value : null;
+        // }
 
         get autoCompleteDropdownText()
         {
@@ -298,17 +332,53 @@ export class FilterInput
         }
 
         /**
+         * @param { Object } value
+         * @return { boolean }
+         */
+        #valueIsThatOfDefaultSelection(value)
+        {
+            return this.#defaultSelectionTag.value === value;
+        }
+
+        /**
          * @param { String } text
          * @param { Object } value
+         * @return { FilterInput.Tag }
          */
-        addTagAutocomplete(text, value)
+        addDefaultSelectionTag(text, value)
+        {
+            let selectionTag = this.#selectionTag;
+            let selectionTagValueWasDefault = this.#valueIsThatOfDefaultSelection(selectionTag.value);
+
+            let tag = this.addAutocompleteTag(text, value);
+            this.#defaultSelectionTag = tag;
+            // TODO: Hide it for now, we do not handle default selection being an auto-complete tag yet.
+            tag.hide();
+
+            if (selectionTagValueWasDefault)
+            {
+                selectionTag.text = text;
+                selectionTag.value = value;
+            }
+
+            return tag;
+        }
+
+        /**
+         * @param { String } text
+         * @param { Object } value
+         * @return { FilterInput.Tag }
+         */
+        addAutocompleteTag(text, value)
         {
             let autocompleteTag = new FilterInput.Tag(this.#autocompleteDropdownItemElement);
+
             autocompleteTag.key = this.#key;
             autocompleteTag.text = text;
             autocompleteTag.value = value;
+            autocompleteTag.tagAddEventListener("click", (_, tag) => this.#onAutoCompleteTagSelected(tag));
 
-            autocompleteTag.tagAddEventListener("click", (_, tag) => this.#onAutoCompleteTagSelected(tag))
+            return autocompleteTag;
         }
 
         #onAutoCompleteTagSelected(autoCompleteTag)
@@ -333,18 +403,18 @@ export class FilterInput
             autoCompleteTag.hide();
         }
 
+        /**
+         * @param { FilterInput.Tag } selectionTag
+         */
         #onSelectionTagCrossed(selectionTag)
         {
+            const DEFAULT_SELECTION_TAG = this.#defaultSelectionTag;
+            selectionTag.text = DEFAULT_SELECTION_TAG.text;
             // This hides it
-            selectionTag.value = null;
+            selectionTag.value = DEFAULT_SELECTION_TAG.value;
 
             this.#selectedAutocompleteTag.unhide();
             this.#selectedAutocompleteTag = null;
-        }
-
-        get key()
-        {
-            return this.#key;
         }
     };
     //#endregion
@@ -404,7 +474,11 @@ export class FilterInput
      */
     onTagDeselectedCallback;
 
-    #tags = [];
+    /**
+     * @type { Map<string, FilterInput.FilterDefinition> }
+     * @public
+     */
+    #tagDefinitions = new Map();
     //#endregion
 
     //#region CSS_CLASS_CONSTANTS
@@ -522,11 +596,24 @@ export class FilterInput
         this.#innerTextInputElement.value = text;
     }
 
+    /**
+     * @param { String } key
+     * @return { FilterInput.FilterDefinition }
+     */
     addTagDefinition(key)
     {
-        let def = new FilterInput.TagDefinition(key, this);
-        this.#tags.push(def);
+        let def = new FilterInput.FilterDefinition(key, this);
+        this.#tagDefinitions.set(key, def);
         return def;
+    }
+
+    /**
+     * @param { String } key
+     * @return { FilterInput.FilterDefinition }
+     */
+    getTagDefinition(key)
+    {
+        return this.#tagDefinitions.get(key);
     }
 
     /**
