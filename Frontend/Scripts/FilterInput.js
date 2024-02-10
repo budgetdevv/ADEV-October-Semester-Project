@@ -568,7 +568,7 @@ export class FilterInput
             FilterInput.#autoSizeTextElement(textInput);
             textInput.addEventListener("input", function (event)
             {
-                FilterInput.#autoSizeTextElement(event.srcElement);
+                FilterInput.#autoSizeTextElement(lement);
             });
         }
 

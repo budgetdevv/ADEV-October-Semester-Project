@@ -262,7 +262,7 @@ export class Modal
      */
     handleEvent(event)
     {
-        const SOURCE_ELEMENT = event.target;
+        const SOURCE_ELEMENT = event.currentTarget;
 
         switch (event.type)
         {
