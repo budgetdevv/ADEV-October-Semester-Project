@@ -37,12 +37,12 @@ document.addEventListener('DOMContentLoaded', async _ =>
 
     filterInput.onTextInputCallback = (event, _) =>
     {
-        renderProducts(false, null);
+        renderProducts(true, null);
     }
 
     filterInput.onTagSelectedCallback = filterInput.onTagDeselectedCallback = (event, currentFilterDefinition) =>
     {
-        renderProducts(false, currentFilterDefinition);
+        renderProducts(true, currentFilterDefinition);
     }
 
     const PRODUCT_ID = new URLSearchParams(location.search).get("ID");
