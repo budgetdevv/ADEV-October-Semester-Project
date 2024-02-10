@@ -146,15 +146,16 @@ function sortByCategory(left, right)
  */
 async function renderProducts(useCached, currentFilterDefinition = null)
 {
-    let products, sortTypeChanged;
+    /**
+     * @type { Product[] }
+     */
+    let products
+    let sortTypeChanged;
 
     if (!useCached)
     {
         loadedProducts = await getProductsViaREST();
     }
-
-    // Data from DB are not ordered by the current sort type.
-    sortTypeChanged = !useCached || currentFilterDefinition.key === CATEGORY_FILTER_TAG_KEY;
 
     // if (selectionTag != null)
     // {
@@ -165,6 +166,9 @@ async function renderProducts(useCached, currentFilterDefinition = null)
     // }
 
     products = loadedProducts;
+
+    // Data from DB are not ordered by the current sort type.
+    sortTypeChanged = !useCached || currentFilterDefinition.key === CATEGORY_FILTER_TAG_KEY;
 
     if (sortTypeChanged)
     {
@@ -188,18 +192,16 @@ async function renderProducts(useCached, currentFilterDefinition = null)
 
     let cardBodies = "";
 
-    for (let i = 0; i < products.length; i++)
+    for (const PRODUCT of products)
     {
-        const PRODUCT = products[i];
-
         // Filter by name for now. We will add more options in the future
-        if (!PRODUCT.name.toUpperCase().includes(filterText))
+        if (!PRODUCT.shouldDisplay(filterText))
         {
             continue;
         }
 
         cardBodies +=
-        `
+            `
         <div class="column is-one-third">
             ${PRODUCT.getProductDisplayHTML()}
         </div>

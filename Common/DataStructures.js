@@ -16,6 +16,30 @@ export class Product
         Object.assign(this, jsonObject);
     }
 
+    /**
+     * @param { string } filterText
+     * @param { FilterInput } filterInput
+     */
+    shouldDisplay(filterText, filterInput)
+    {
+        for (let [fieldName, fieldValue] of Object.entries(this))
+        {
+            // alert(`${fieldName} | ${fieldValue}`);
+
+            if ((typeof fieldValue) !== "string")
+            {
+                fieldValue = `${fieldValue}`;
+            }
+
+            if (fieldValue.toUpperCase().includes(filterText))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     getProductDisplayHTML()
     {
         const ID = this.id;
