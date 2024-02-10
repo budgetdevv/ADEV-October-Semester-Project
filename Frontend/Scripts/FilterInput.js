@@ -570,7 +570,7 @@ export class FilterInput
         elementHideScrollBar(innerTextWrapperElement);
 
         let innerTextInputElement = this.#innerTextInputElement = FilterInput.#createInnerTextInput();
-        innerTextInputElement.setAttribute("placeholder", "Input search item");
+        innerTextInputElement.setAttribute("placeholder", "Input search terms!");
         innerTextInputElement.id = "filter";
         innerTextWrapperElement.append(innerTextInputElement);
 
