@@ -52,7 +52,11 @@ export class FilterInput
             return value != null;
         }
 
-        // #tagElementToTagMap = {};
+        /**
+         * @type { Map<HTMLElement, FilterInput.Tag> }
+         * @private
+         */
+        static #tagElementToTagMap = new Map();
 
         // #eventListeners;
 
@@ -73,7 +77,16 @@ export class FilterInput
             crossButtonClassList.add("delete");
             crossButtonClassList.add("is-small");
 
-            // Tag.#tagElementToTagMap[tagElement] = this;
+            FilterInput.Tag.#tagElementToTagMap.set(tagElement, this);
+        }
+
+        /**
+         * @param { HTMLElement } tagElement
+         * @return { FilterInput.Tag }
+         */
+        static getTagFromHTMLElement(tagElement)
+        {
+            return FilterInput.Tag.#tagElementToTagMap.get(tagElement);
         }
 
         get crossButtonEnabled()
@@ -177,6 +190,8 @@ export class FilterInput
             // }
 
             tagElement.remove();
+
+            FilterInput.Tag.#tagElementToTagMap.delete(tagElement);
         }
     };
 
@@ -273,7 +288,7 @@ export class FilterInput
             // let tagData = this.selectedTagData = FilterInput.TagData.fromTagElement(autocompleteTagElement);
             let filterInputInstance = this.#filterInputInstance;
 
-            alert(autocompleteTag.constructor.name);
+            alert(autocompleteTag.value);
 
             filterInputInstance.#innerTextInputElement.blur();
         }
@@ -434,8 +449,8 @@ export class FilterInput
         let def = this.addTagDefinition("Category");
         def.autoCompleteDropdownText = "Selected Category: ";
         def.addTagAutocomplete("None", 1);
-        def.addTagAutocomplete("Food", 1);
-        def.addTagAutocomplete("Tech", 1);
+        def.addTagAutocomplete("Food", 2);
+        def.addTagAutocomplete("Tech", 3);
 
         def = this.addTagDefinition("Sort");
         def.autoCompleteDropdownText = "Sort By: ";
