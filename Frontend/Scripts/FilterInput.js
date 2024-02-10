@@ -193,16 +193,6 @@ export class FilterInput
             DropdownItemClassList.add("dropdown-item");
             DropdownItemClassList.add(FilterInput.#SEARCH_BAR_DROPDOWN_ITEM_CLASS);
 
-            // dropdownItemElement.innerText = ``
-
-            // dropdownItemElement.append(FilterInput.#createTag("Test"));
-            // dropdownItemElement.append(FilterInput.#createTag("Test"));
-            // dropdownItemElement.append(FilterInput.#createTag("Test"));
-
-            // elementHide(dropdownItemElement);
-
-            // tag = FilterInput.FilterTagDefinition.#createTag(`${key}:`, key, null, true)
-
             let selectedTag = this.#selectedTagElementWrapper = FilterInput.TagDefinition.#createTag();
 
             this.selectedTagData = new FilterInput.TagData("", null);
@@ -226,36 +216,9 @@ export class FilterInput
             this.#autocompleteDropdownItemElement.innerText = text;
         }
 
-        // static #createTag(text, key, value, includeCross)
         static #createTag()
         {
             return new FilterInput.TagDefinition.TagElementWrapper();
-
-            // let tag = document.createElement("span");
-            // // tag.style.height = "auto";
-            //
-            // let tagClassList = tag.classList;
-            // tagClassList.add("tag");
-            // tagClassList.add("is-warning");
-            // tagClassList.add("is-medium");
-            //
-            // let dataset = tag.dataset;
-            // dataset["key"] = key;
-            // dataset["value"] = value;
-            //
-            // tag.textContent = text;
-            //
-            // if (includeCross)
-            // {
-            //     let crossButton = document.createElement("button");
-            //     let crossButtonClassList = crossButton.classList;
-            //     crossButtonClassList.add("delete");
-            //     crossButtonClassList.add("is-small");
-            //
-            //     tag.append(crossButton);
-            // }
-            //
-            // return tag;
         }
 
         /**
@@ -272,9 +235,6 @@ export class FilterInput
             this.#autocompleteDropdownItemElement.append(autocompleteTagElement);
 
             autocompleteTagElement.addEventListener("click", event => this.#onTagAutocompleteSelected(event));
-
-            // // mousedown event has higher priority than blur, unlike click
-            // autocompleteTagElement.addEventListener("mousedown", this.#onTagAutocompleteSelected);
         }
 
         #onTagAutocompleteSelected(event)
@@ -525,22 +485,13 @@ export class FilterInput
      */
     static #autoSizeTextElement(element)
     {
-        // let { borderLeftWidth, borderRightWidth } = window.getComputedStyle(element);
-
-        // // Get rid of "px"
-        // borderLeftWidth = borderLeftWidth.slice(0, -2);
-        // borderRightWidth = borderLeftWidth.slice(0, -2);
-
         let { borderLeftWidth, borderRightWidth } = window.getComputedStyle(element);
 
         // Remove "px"
         const BORDER_WIDTH = pxToNumber(borderLeftWidth) + pxToNumber(borderRightWidth);
 
         let style = element.style;
-        style.width = 0;
-
-        // console.log(`${borderLeftWidth.slice(0, -2)} | ${borderRightWidth.slice(0, -2)} | ${element.scrollWidth}`);
-
+        style.width = 0; // This line is necessary, to force element.scrollWidth to be the desired width.
         style.width = `${element.scrollWidth + BORDER_WIDTH}px`
     }
 
@@ -566,7 +517,7 @@ export class FilterInput
             FilterInput.#autoSizeTextElement(textInput);
             textInput.addEventListener("input", function (event)
             {
-                FilterInput.#autoSizeTextElement(lement);
+                FilterInput.#autoSizeTextElement(event.currentTarget);
             });
         }
 
@@ -584,10 +535,4 @@ export class FilterInput
         this.#backgroundTextInputElement.classList.remove(FilterInput.DROPDOWN_VISIBLE_CLASS);
         elementHide(this.#dropdownElement);
     }
-
-    // #toggleDropdown()
-    // {
-    //     this.#backgroundTextInputElement.classList.toggle(FilterInput.DROPDOWN_VISIBLE_CLASS);
-    //     this.#dropdownElement.toggleAttribute("hidden");
-    // }
 }
