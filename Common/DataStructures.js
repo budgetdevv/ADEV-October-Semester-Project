@@ -1,5 +1,5 @@
 import { isNullOrWhitespace } from "./Helpers.js";
-import { PRODUCT_ID_PREFIX } from "./Constants.js";
+import { CATEGORY_FILTER_TAG_KEY, PRODUCT_ID_PREFIX } from "./Constants.js";
 
 export class Product
 {
@@ -22,18 +22,23 @@ export class Product
      */
     shouldDisplay(filterText, filterInput)
     {
-        for (let [fieldName, fieldValue] of Object.entries(this))
+        let CATEGORY_FILTER = filterInput.getTagDefinition(CATEGORY_FILTER_TAG_KEY).selectedValue;
+
+        if (CATEGORY_FILTER == null || this.category_id === CATEGORY_FILTER)
         {
-            // alert(`${fieldName} | ${fieldValue}`);
-
-            if ((typeof fieldValue) !== "string")
+            for (let [fieldName, fieldValue] of Object.entries(this))
             {
-                fieldValue = `${fieldValue}`;
-            }
+                // alert(`${fieldName} | ${fieldValue}`);
 
-            if (fieldValue.toUpperCase().includes(filterText))
-            {
-                return true;
+                if ((typeof fieldValue) !== "string")
+                {
+                    fieldValue = `${fieldValue}`;
+                }
+
+                if (fieldValue.toUpperCase().includes(filterText))
+                {
+                    return true;
+                }
             }
         }
 

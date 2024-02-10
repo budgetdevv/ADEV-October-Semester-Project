@@ -195,7 +195,7 @@ async function renderProducts(useCached, currentFilterDefinition = null)
     for (const PRODUCT of products)
     {
         // Filter by name for now. We will add more options in the future
-        if (!PRODUCT.shouldDisplay(filterText))
+        if (!PRODUCT.shouldDisplay(filterText, filterInput))
         {
             continue;
         }
