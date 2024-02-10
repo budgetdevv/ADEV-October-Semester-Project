@@ -27,6 +27,8 @@
         def.addTagAutocomplete("Name", 2);
         def.addTagAutocomplete("Price", 3);
         def.addTagAutocomplete("Category", 4);
+
+        filterInput.onTextInputCallback = (event, _) => { alert(event.currentTarget.value) }
     </script>
 </head>
 

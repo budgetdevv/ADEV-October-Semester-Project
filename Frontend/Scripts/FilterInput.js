@@ -356,24 +356,24 @@ export class FilterInput
     #mutationObserver;
 
     /**
-     * @type { function }
-     * @private
+     * @type { function(Event, FilterInput) }
+     * @public
      */
-    onInput;
+    onTextInputCallback;
 
     /**
-     * @type { function }
-     * @private
+     * @type { function(Event, FilterInput.Tag) }
+     * @public
      */
-    onTagSelected;
+    onTagSelectedCallback;
 
     /**
-     * @type { function }
-     * @private
+     * @type { function(Event, FilterInput.Tag) }
+     * @public
      */
-    onTagDeselected;
+    onTagDeselectedCallback;
 
-    tags = [];
+    #tags = [];
     //#endregion
 
     //#region CSS_CLASS_CONSTANTS
@@ -457,19 +457,22 @@ export class FilterInput
         let textInputParentElement = document.getElementById(parentID);
         textInputParentElement.append(wrapperElement);
 
-        let instance = this;
-
-        innerTextInputElement.addEventListener("focus", function (_)
+        innerTextInputElement.addEventListener("focus", _ =>
         {
-            instance.#showDropdown();
+            this.#showDropdown();
         });
 
-        innerTextInputElement.addEventListener("blur", function (_)
+        innerTextInputElement.addEventListener("blur", _ =>
         {
-            instance.#hideDropdown();
+            this.#hideDropdown();
         });
 
-        dropdownElement.addEventListener("mousedown", function (event)
+        innerTextInputElement.addEventListener("input", event =>
+        {
+            this.#onTextInput(event);
+        });
+
+        dropdownElement.addEventListener("mousedown", event =>
         {
             // Prevent onblur() should the dropdown be clicked.
             event.preventDefault();
@@ -481,7 +484,7 @@ export class FilterInput
     addTagDefinition(key)
     {
         let def = new FilterInput.TagDefinition(key, this);
-        this.tags.push(def);
+        this.#tags.push(def);
         return def;
     }
 
@@ -527,6 +530,19 @@ export class FilterInput
         }
 
         return textInput;
+    }
+
+    /**
+     * @param { Event } event
+     */
+    #onTextInput(event)
+    {
+        const CALLBACK = this.onTextInputCallback;
+
+        if (CALLBACK != null)
+        {
+            CALLBACK(event, this);
+        }
     }
 
     #showDropdown()
