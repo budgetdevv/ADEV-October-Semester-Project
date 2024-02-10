@@ -5,6 +5,7 @@ export class FilterInput
     //#region Tag
     static Tag = class
     {
+        //#region Fields
         /**
          * @type { Object }
          * @private
@@ -42,32 +43,16 @@ export class FilterInput
         shouldDisplaySelectedTagCallback = null;
 
         /**
-         * @param { FilterInput.Tag } tagInstance
-         * @param { String } text
-         */
-        static #defaultSelectedTagTextFormatterCallback(tagInstance, text)
-        {
-            return text;
-        }
-
-        /**
-         * @param { FilterInput.Tag } tagInstance
-         * @param { Object } value
-         */
-        static #defaultShouldDisplaySelectedTagCallback(tagInstance, value)
-        {
-            return value != null;
-        }
-
-        /**
          * @type { Map<HTMLElement, FilterInput.Tag> }
          * @private
          */
         static #tagElementToTagMap = new Map();
+        //#endregion
 
-        // #eventListeners;
-
-        constructor()
+        /**
+         * @param { HTMLElement } parentElement
+         */
+        constructor(parentElement)
         {
             let tagElement = this.tagElement = document.createElement("span");
 
@@ -85,6 +70,8 @@ export class FilterInput
             crossButtonClassList.add("is-small");
 
             FilterInput.Tag.#tagElementToTagMap.set(tagElement, this);
+
+            parentElement.append(tagElement);
         }
 
         /**
@@ -174,7 +161,7 @@ export class FilterInput
          * @param { String } eventName
          * @param { function(Event, FilterInput.Tag):void } callback
          */
-        addEventListener(eventName, callback)
+        tagAddEventListener(eventName, callback)
         {
             let listener = event =>
             {
@@ -183,6 +170,39 @@ export class FilterInput
 
             // this.#eventListeners.append(listener);
             this.tagElement.addEventListener(eventName, listener)
+        }
+
+        /**
+         * @param { String } eventName
+         * @param { function(Event, FilterInput.Tag):void } callback
+         */
+        crossButtonAddEventListener(eventName, callback)
+        {
+            let listener = event =>
+            {
+                callback(event, this);
+            };
+
+            // this.#eventListeners.append(listener);
+            this.crossButtonElement.addEventListener(eventName, listener)
+        }
+
+        /**
+         * @param { FilterInput.Tag } tagInstance
+         * @param { String } text
+         */
+        static #defaultSelectedTagTextFormatterCallback(tagInstance, text)
+        {
+            return text;
+        }
+
+        /**
+         * @param { FilterInput.Tag } tagInstance
+         * @param { Object } value
+         */
+        static #defaultShouldDisplaySelectedTagCallback(tagInstance, value)
+        {
+            return value != null;
         }
 
         dispose()
@@ -250,9 +270,11 @@ export class FilterInput
             DropdownItemClassList.add("dropdown-item");
             DropdownItemClassList.add(FilterInput.#SEARCH_BAR_DROPDOWN_ITEM_CLASS);
 
-            let selectedTag = this.#selectionTag = new FilterInput.Tag();
+            let selectedTag = this.#selectionTag = new FilterInput.Tag(filterInputInstance.#innerTextWrapperElement);
             selectedTag.key = key;
             selectedTag.value = null;
+            selectedTag.crossButtonAddEventListener("click", (_, tag) => this.#onSelectionTagCrossed(tag));
+
             selectedTag.textFormatterCallback = (tag, text) =>
             {
                 return `${tag.key}: ${text}`
@@ -261,7 +283,6 @@ export class FilterInput
             selectedTag.text = "";
             selectedTag.value = null;
             selectedTag.crossButtonEnabled = true;
-            filterInputInstance.#innerTextWrapperElement.append(selectedTag.tagElement)
 
             filterInputInstance.#dropdownElement.append(dropdownItemElement);
         }
@@ -282,14 +303,12 @@ export class FilterInput
          */
         addTagAutocomplete(text, value)
         {
-            let autocompleteTag = new FilterInput.Tag();
+            let autocompleteTag = new FilterInput.Tag(this.#autocompleteDropdownItemElement);
             autocompleteTag.key = this.#key;
             autocompleteTag.text = text;
             autocompleteTag.value = value;
 
-            this.#autocompleteDropdownItemElement.append(autocompleteTag.tagElement);
-
-            autocompleteTag.addEventListener("click", (_, tag) => this.#onAutoCompleteTagSelected(tag))
+            autocompleteTag.tagAddEventListener("click", (_, tag) => this.#onAutoCompleteTagSelected(tag))
         }
 
         #onAutoCompleteTagSelected(autoCompleteTag)
@@ -302,7 +321,25 @@ export class FilterInput
             selectionTag.text = autoCompleteTag.text;
             selectionTag.value = autoCompleteTag.value;
 
+            let previousAutoCompleteTag = this.#selectedAutocompleteTag;
+
+            if (previousAutoCompleteTag != null)
+            {
+                // If there was an auto-complete tag selected previously, restore its visibility.
+                previousAutoCompleteTag.unhide();
+            }
+
             this.#selectedAutocompleteTag = autoCompleteTag;
+            autoCompleteTag.hide();
+        }
+
+        #onSelectionTagCrossed(selectionTag)
+        {
+            // This hides it
+            selectionTag.value = null;
+
+            this.#selectedAutocompleteTag.unhide();
+            this.#selectedAutocompleteTag = null;
         }
 
         get key()
