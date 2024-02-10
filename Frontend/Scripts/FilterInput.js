@@ -1,4 +1,4 @@
-import { pxToNumber, numberToPx, elementHideScrollBar, elementHide, elementUnhide } from "../../Common/Helpers.js";
+import {elementHide, elementHideScrollBar, elementUnhide, pxToNumber} from "../../Common/Helpers.js";
 
 export class FilterInput
 {
@@ -281,13 +281,18 @@ export class FilterInput
         {
             const TAG_ELEMENT = event.currentTarget;
 
-            let data = FilterInput.TagData.fromTagElement(TAG_ELEMENT);
+            this.selectedTagData = FilterInput.TagData.fromTagElement(TAG_ELEMENT);
 
-            this.selectedTagData = data;
+            let filterInputInstance = this.#filterInputInstance;
 
-            this.#filterInputInstance.#hideDropdown();
+            filterInputInstance.#hideDropdown();
 
             alert(this.constructor.name);
+
+            // Cheap hack to remove focus for now
+            let innerTextInputElement = filterInputInstance.#innerTextInputElement;
+            innerTextInputElement.setAttribute("disabled", "");
+            innerTextInputElement.removeAttribute("disabled");
 
             // this.#filterInputInstance.#innerTextInputElement.setAttribute("disabled", "");
         }
