@@ -2,58 +2,59 @@ import { elementHide, elementUnhide, elementHideScrollBar, pxToNumber } from "..
 
 export class FilterInput
 {
-    static TagData = class
+    static Tag = class
     {
         /**
-         * @type { String }
-         * @private
+         * @type { HTMLElement }
+         * @public
          */
-        text;
-
-        /**
-         * @type { String }
-         * @private
-         */
-        value;
-
-        constructor(text, value)
-        {
-            this.text = text;
-            this.value = value;
-        }
-
-        /**
-         * @param { HTMLElement } tagElement
-         * @return { FilterInput.TagData }
-         */
-        static fromTagElement(tagElement)
-        {
-            return new FilterInput.TagData(tagElement.children[0].innerText, tagElement.dataset["value"]);
-        }
-
-        /**
-         * @param { FilterInput.TagElementWrapper } tag
-         */
-        writeToAutocompleteTag(tag)
-        {
-            tag.text = this.text;
-            tag.value = this.value;
-        }
-
-        /**
-         * @param { FilterInput.TagElementWrapper } tag
-         */
-        writeToSelectedTag(tag)
-        {
-            tag.value = this.value;
-        }
-    }
-
-    static TagElementWrapper = class
-    {
         tagElement;
+
+        /**
+         * @type { HTMLElement }
+         * @public
+         */
         textElement;
+
+        /**
+         * @type { HTMLElement }
+         * @public
+         */
         crossButtonElement;
+
+        /**
+         * @type { function(FilterInput.Tag, String):String }
+         * @public
+         */
+        textFormatterCallback = null;
+
+        /**
+         * @type { function(FilterInput.Tag, String):boolean }
+         * @public
+         */
+        shouldDisplaySelectedTagCallback = null;
+
+        /**
+         * @param { FilterInput.Tag } tagInstance
+         * @param { String } text
+         */
+        static #defaultSelectedTagTextFormatterCallback(tagInstance, text)
+        {
+            return text;
+        }
+
+        /**
+         * @param { FilterInput.Tag } tagInstance
+         * @param { String } value
+         */
+        static #defaultShouldDisplaySelectedTagCallback(tagInstance, value)
+        {
+            return value != null;
+        }
+
+        // #tagElementToTagMap = {};
+
+        // #eventListeners;
 
         constructor()
         {
@@ -71,6 +72,8 @@ export class FilterInput
             let crossButtonClassList = crossButtonElement.classList;
             crossButtonClassList.add("delete");
             crossButtonClassList.add("is-small");
+
+            // Tag.#tagElementToTagMap[tagElement] = this;
         }
 
         get crossButtonEnabled()
@@ -101,7 +104,8 @@ export class FilterInput
 
         set text(text)
         {
-            this.textElement.innerText = text;
+            const SELECTED_TAG_TEXT_FORMATTER_CALLBACK = this.textFormatterCallback ?? FilterInput.Tag.#defaultSelectedTagTextFormatterCallback;
+            this.textElement.innerText = SELECTED_TAG_TEXT_FORMATTER_CALLBACK(this, text);
         }
 
         get key()
@@ -121,6 +125,18 @@ export class FilterInput
 
         set value(value)
         {
+            const SHOULD_DISPLAY_SELECTED_TAG_CALLBACK = this.shouldDisplaySelectedTagCallback ?? FilterInput.Tag.#defaultShouldDisplaySelectedTagCallback;
+
+            if (SHOULD_DISPLAY_SELECTED_TAG_CALLBACK(this, value))
+            {
+                this.unhide();
+            }
+
+            else
+            {
+                this.hide();
+            }
+
             this.tagElement.dataset["value"] = value;
         }
 
@@ -132,6 +148,35 @@ export class FilterInput
         unhide()
         {
             elementUnhide(this.tagElement);
+        }
+
+        /**
+         * @param { String } eventName
+         * @param { function(Event, FilterInput.Tag):void } callback
+         */
+        addEventListener(eventName, callback)
+        {
+            let listener = event =>
+            {
+                callback(event, this);
+            };
+
+            // this.#eventListeners.append(listener);
+            this.tagElement.addEventListener(eventName, listener)
+        }
+
+        dispose()
+        {
+            let tagElement = this.tagElement;
+
+            // Modern browsers clean up event listeners properly when the DOM element is destroyed.
+
+            // for (let listener of this.#eventListeners)
+            // {
+            //     tagElement.removeEventListener(listener);
+            // }
+
+            tagElement.remove();
         }
     };
 
@@ -150,34 +195,22 @@ export class FilterInput
         #key;
 
         /**
-         * @type { FilterInput.TagElementWrapper }
+         * @type { FilterInput.Tag }
          * @private
          */
-        #selectedTagElementWrapper
+        #selectionTag
+
+        /**
+         * @type { FilterInput.Tag }
+         * @private
+         */
+        #selectedAutocompleteTag
 
         /**
          * @type { HTMLElement }
          * @private
          */
         #autocompleteDropdownItemElement;
-
-        /**
-         * @type { FilterInput.TagData }
-         * @private
-         */
-        #selectedTagData;
-
-        /**
-         * @type { Function }
-         * @private
-         */
-        selectedTagTextFormatterCallback;
-
-        /**
-         * @type { Function }
-         * @private
-         */
-        shouldDisplaySelectedTagCallback;
 
         /**
          * @param { String } key
@@ -193,17 +226,20 @@ export class FilterInput
             DropdownItemClassList.add("dropdown-item");
             DropdownItemClassList.add(FilterInput.#SEARCH_BAR_DROPDOWN_ITEM_CLASS);
 
-            let selectedTag = this.#selectedTagElementWrapper = FilterInput.TagDefinition.#createTag();
+            let selectedTag = this.#selectionTag = new FilterInput.Tag();
 
-            this.selectedTagData = new FilterInput.TagData("", null);
+            selectedTag.textFormatterCallback = (tag, text) =>
+            {
+                return `${tag.key}: ${text}`
+            };
 
+            selectedTag.text = "";
+            selectedTag.value = null;
             selectedTag.crossButtonEnabled = true;
 
             filterInputInstance.#innerTextWrapperElement.append(selectedTag.tagElement)
 
             filterInputInstance.#dropdownElement.append(dropdownItemElement);
-
-            this.selectedTagTextFormatterCallback = this.shouldDisplaySelectedTagCallback = null;
         }
 
         get autoCompleteDropdownText()
@@ -216,34 +252,28 @@ export class FilterInput
             this.#autocompleteDropdownItemElement.innerText = text;
         }
 
-        static #createTag()
-        {
-            return new FilterInput.TagElementWrapper();
-        }
-
         /**
-         * @param { FilterInput.TagData } tagAutocompleteDef
+         * @param { String } text;
+         * @param { String } value;
          */
-        addTagAutocomplete(tagAutocompleteDef)
+        addTagAutocomplete(text, value)
         {
-            let autocompleteTag = FilterInput.TagDefinition.#createTag();
-            autocompleteTag.text = tagAutocompleteDef.text;
+            let autocompleteTag = new FilterInput.Tag();
             autocompleteTag.key = this.#key;
-            autocompleteTag.value = tagAutocompleteDef.value;
-            let autocompleteTagElement = autocompleteTag.tagElement;
+            autocompleteTag.text = text;
+            autocompleteTag.value = value;
 
-            this.#autocompleteDropdownItemElement.append(autocompleteTagElement);
+            this.#autocompleteDropdownItemElement.append(autocompleteTag.tagElement);
 
-            autocompleteTagElement.addEventListener("click", event => this.#selectAutocompleteTag(event.currentTarget));
+            autocompleteTag.addEventListener("click", (_, tag) => this.#selectAutocompleteTag(tag))
         }
 
-        #selectAutocompleteTag(autocompleteTagElement)
+        #selectAutocompleteTag(autocompleteTag)
         {
-            let tagData = this.selectedTagData = FilterInput.TagData.fromTagElement(autocompleteTagElement);
-
+            // let tagData = this.selectedTagData = FilterInput.TagData.fromTagElement(autocompleteTagElement);
             let filterInputInstance = this.#filterInputInstance;
 
-            alert(tagData.value);
+            alert(autocompleteTag.constructor.name);
 
             filterInputInstance.#innerTextInputElement.blur();
         }
@@ -251,47 +281,6 @@ export class FilterInput
         get key()
         {
             return this.#key;
-        }
-
-        get selectedTagData()
-        {
-            return this.#selectedTagData;
-        }
-
-        /**
-         * @param { FilterInput.TagData } tagData
-         */
-        set selectedTagData(tagData)
-        {
-            let selectedTag = this.#selectedTagElementWrapper;
-
-            this.#selectedTagData = tagData;
-            tagData.writeToSelectedTag(selectedTag);
-
-            const SELECTED_TAG_TEXT_FORMATTER_CALLBACK = this.selectedTagTextFormatterCallback ?? FilterInput.TagDefinition.#defaultSelectedTagTextFormatterCallback;
-            const SHOULD_DISPLAY_SELECTED_TAG_CALLBACK = this.shouldDisplaySelectedTagCallback ?? FilterInput.TagDefinition.#defaultShouldDisplaySelectedTagCallback;
-
-            selectedTag.text = SELECTED_TAG_TEXT_FORMATTER_CALLBACK(this);
-
-            if (SHOULD_DISPLAY_SELECTED_TAG_CALLBACK(this))
-            {
-                selectedTag.unhide();
-            }
-
-            else
-            {
-                selectedTag.hide();
-            }
-        }
-
-        static #defaultSelectedTagTextFormatterCallback(filterInputInstance)
-        {
-            return `${filterInputInstance.key}: ${filterInputInstance.selectedTagData.text}`;
-        }
-
-        static #defaultShouldDisplaySelectedTagCallback(filterInputInstance)
-        {
-            return filterInputInstance.selectedTagData.value != null;
         }
     };
 
@@ -444,16 +433,16 @@ export class FilterInput
 
         let def = this.addTagDefinition("Category");
         def.autoCompleteDropdownText = "Selected Category: ";
-        def.addTagAutocomplete(new FilterInput.TagData("None", 1));
-        def.addTagAutocomplete(new FilterInput.TagData("Food", 2));
-        def.addTagAutocomplete(new FilterInput.TagData("Tech", 3));
+        def.addTagAutocomplete("None", 1);
+        def.addTagAutocomplete("Food", 1);
+        def.addTagAutocomplete("Tech", 1);
 
         def = this.addTagDefinition("Sort");
         def.autoCompleteDropdownText = "Sort By: ";
-        def.addTagAutocomplete(new FilterInput.TagData("ID", 1));
-        def.addTagAutocomplete(new FilterInput.TagData("Name", 2));
-        def.addTagAutocomplete(new FilterInput.TagData("Price", 3));
-        def.addTagAutocomplete(new FilterInput.TagData("Category", 4));
+        def.addTagAutocomplete("ID", 1);
+        def.addTagAutocomplete("Name", 2);
+        def.addTagAutocomplete("Price", 3);
+        def.addTagAutocomplete("Category", 4);
 
         let instance = this;
 
