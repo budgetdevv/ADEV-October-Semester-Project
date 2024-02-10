@@ -13,7 +13,20 @@
     <script type="module">
         import { FilterInput } from "../Scripts/FilterInput.js";
 
-        new FilterInput("header");
+        let filterInput = new FilterInput("header");
+
+        let def = filterInput.addTagDefinition("Category");
+        def.autoCompleteDropdownText = "Selected Category: ";
+        def.addTagAutocomplete("None", 1);
+        def.addTagAutocomplete("Food", 2);
+        def.addTagAutocomplete("Tech", 3);
+
+        def = filterInput.addTagDefinition("Sort");
+        def.autoCompleteDropdownText = "Sort By: ";
+        def.addTagAutocomplete("ID", 1);
+        def.addTagAutocomplete("Name", 2);
+        def.addTagAutocomplete("Price", 3);
+        def.addTagAutocomplete("Category", 4);
     </script>
 </head>
 

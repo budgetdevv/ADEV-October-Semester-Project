@@ -254,7 +254,7 @@ export class FilterInput
 
             selectedTag.text = "";
             selectedTag.value = null;
-            selectedTag.crossButtonEnabled = true;s
+            selectedTag.crossButtonEnabled = true;
             filterInputInstance.#innerTextWrapperElement.append(selectedTag.tagElement)
 
             filterInputInstance.#dropdownElement.append(dropdownItemElement);
@@ -456,19 +456,6 @@ export class FilterInput
 
         let textInputParentElement = document.getElementById(parentID);
         textInputParentElement.append(wrapperElement);
-
-        let def = this.addTagDefinition("Category");
-        def.autoCompleteDropdownText = "Selected Category: ";
-        def.addTagAutocomplete("None", 1);
-        def.addTagAutocomplete("Food", 2);
-        def.addTagAutocomplete("Tech", 3);
-
-        def = this.addTagDefinition("Sort");
-        def.autoCompleteDropdownText = "Sort By: ";
-        def.addTagAutocomplete("ID", 1);
-        def.addTagAutocomplete("Name", 2);
-        def.addTagAutocomplete("Price", 3);
-        def.addTagAutocomplete("Category", 4);
 
         let instance = this;
 
