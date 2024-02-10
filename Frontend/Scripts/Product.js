@@ -45,11 +45,9 @@ document.addEventListener('DOMContentLoaded', async _ =>
         renderProducts(false, currentFilterDefinition);
     }
 
-    await renderProducts(false, null);
-
     const PRODUCT_ID = new URLSearchParams(location.search).get("ID");
 
-    scrollToProduct(PRODUCT_ID);
+    renderProducts(false, null).then(() => scrollToProduct(PRODUCT_ID));
 });
 
 /**
@@ -221,7 +219,7 @@ async function renderProducts(useCached, currentFilterDefinition = null)
 
     else
     {
-        if (filterText === "")
+        if (products.length === 0)
         {
             html =
             `
