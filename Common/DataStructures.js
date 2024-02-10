@@ -1,5 +1,5 @@
-import { isNullOrWhitespace } from "../Helpers.js";
-import { PRODUCT_ID_PREFIX } from "../Constants.js";
+import { isNullOrWhitespace } from "./Helpers.js";
+import { PRODUCT_ID_PREFIX } from "./Constants.js";
 
 export class Product
 {
@@ -72,5 +72,25 @@ export class Product
         }
 
         return errors;
+    }
+}
+
+export class Category
+{
+    /**
+     * @type { number }
+     * @public
+     */
+    id;
+
+    /**
+     * @type { string }
+     * @public
+     */
+    name;
+
+    constructor(jsonObject)
+    {
+        Object.assign(this, jsonObject);
     }
 }

@@ -1,4 +1,4 @@
-import { Product } from "../../Common/Data_Structures/Product.js";
+import { Product } from "../../Common/DataStructures.js";
 import { PRODUCTS_ROUTE_NAME, PRODUCT_PAGE_ROUTE, CATEGORY_ID, JSON_HEADER } from "/Common/Constants.js";
 import { populateCategorySelector, constructProductFromDocument } from "./Shared.js";
 

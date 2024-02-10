@@ -13,7 +13,7 @@ export { express };
 import { Database } from "./Database.js";
 import { promises as file } from "fs";
 export { file };
-import { Product } from "../Common/Data_Structures/Product.js";
+import { Product } from "../Common/DataStructures.js";
 export { Product };
 import { PRODUCTS_ROUTE_NAME, CATEGORIES_ROUTE_NAME, RESET_ROUTE } from "../Common/Constants.js";
 

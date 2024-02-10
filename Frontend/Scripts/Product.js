@@ -1,16 +1,45 @@
-import { Product } from "/Common/Data_Structures/Product.js";
+import { Product } from "/Common/DataStructures.js";
 import { PRODUCTS_ROUTE_NAME as ROUTE_NAME, PRODUCT_ID_PREFIX, RESET_ROUTE, JSON_HEADER } from "/Common/Constants.js"
 import { Modal } from "./Modal.js";
-import { populateCategorySelector, constructProductFromDocument } from "./Shared.js";
+import { populateCategorySelector, getCategoriesViaREST, constructProductFromDocument } from "./Shared.js";
+import { FilterInput } from "./FilterInput.js";
 
 const PRODUCT_LIST_ID = "product_list";
 
 let loadedProducts;
-let currentSortFunction = defaultSort;
 
-document.addEventListener('DOMContentLoaded', async function()
+/**
+ * @type { FilterInput }
+ */
+let filterInput;
+
+let currentSortFunction = sortByID;
+
+document.addEventListener('DOMContentLoaded', async _ =>
 {
-    await renderProducts(false);
+    filterInput = new FilterInput("header");
+
+    let def = filterInput.addTagDefinition("Category");
+    def.autoCompleteDropdownText = "Selected Category: ";
+
+    for (const CATEGORY of await getCategoriesViaREST())
+    {
+        def.addTagAutocomplete(CATEGORY.name, CATEGORY.id);
+    }
+
+    def = filterInput.addTagDefinition("Sort");
+    def.autoCompleteDropdownText = "Sort By: ";
+    def.addTagAutocomplete("ID", sortByID);
+    def.addTagAutocomplete("Name", sortByName);
+    def.addTagAutocomplete("Price", sortByPrice);
+    def.addTagAutocomplete("Category", sortByCategory);
+
+    filterInput.onTextInputCallback = (event, _) =>
+    {
+        renderProducts(false, null);
+    }
+
+    await renderProducts(false, filterInput, null);
 
     const PRODUCT_ID = new URLSearchParams(location.search).get("ID");
 
@@ -60,7 +89,7 @@ function scrollToProduct(productID)
  * @param { Product } left
  * @param { Product } right
  */
-function defaultSort(left, right)
+function sortByID(left, right)
 {
     return left.id - right.id;
 }
@@ -106,46 +135,30 @@ function sortByCategory(left, right)
 }
 
 /**
- * @param {number} sortType
- * */
-function setSortType(sortType)
+ * @param { boolean } useCached
+ * @param { FilterInput } filterInput
+ * @param { FilterInput.TagDefinition } selectionTag
+ */
+async function renderProducts(useCached, selectionTag = null)
 {
-    switch (sortType)
-    {
-        case 0:
-            currentSortFunction = defaultSort;
-            break;
-        case 1:
-            currentSortFunction = sortByName;
-            break;
-        case 2:
-            currentSortFunction = sortByPrice;
-            break;
-        case 3:
-            currentSortFunction = sortByCategory;
-            break;
-    }
-
-    const _ = renderProducts(true, true);
-
-    alert("Sort complete!");
-}
-
-// Export function(s). This is required if we treat this .js as a module.
-window.setSortType = setSortType;
-
-async function renderProducts(useCached, sortTypeChanged = false)
-{
-    let products;
+    let products, sortTypeChanged;
 
     if (!useCached)
     {
         const RESPONSE = await fetch(ROUTE_NAME);
 
         loadedProducts = JSON.parse(await RESPONSE.text());
+    }
 
-        // Data from DB are not ordered by the current sort type.
-        sortTypeChanged = true;
+    // Data from DB are not ordered by the current sort type.
+    sortTypeChanged = !useCached;
+
+    if (selectionTag != null)
+    {
+        switch (selectionTag.key)
+        {
+
+        }
     }
 
     products = loadedProducts;
@@ -155,15 +168,15 @@ async function renderProducts(useCached, sortTypeChanged = false)
         // sort() sorts in-place, so it doesn't create a new array.
 
         // Sort by ID first, so that we get consistent sort result regardless of current order.
-        loadedProducts.sort(defaultSort);
+        loadedProducts.sort(sortByID);
 
-        if (currentSortFunction !== defaultSort)
+        if (currentSortFunction !== sortByID)
         {
             loadedProducts.sort(currentSortFunction);
         }
     }
 
-    const FILTER_TEXT = document.getElementById("filter").value.toUpperCase();
+    let filterText = filterInput.text.toUpperCase();
 
     let cardBodies = "";
 
@@ -172,7 +185,7 @@ async function renderProducts(useCached, sortTypeChanged = false)
         const PRODUCT = new Product(products[i]);
 
         // Filter by name for now. We will add more options in the future
-        if (!PRODUCT.name.toUpperCase().includes(FILTER_TEXT))
+        if (!PRODUCT.name.toUpperCase().includes(filterText))
         {
             continue;
         }
@@ -198,7 +211,7 @@ async function renderProducts(useCached, sortTypeChanged = false)
 
     else
     {
-        if (FILTER_TEXT === "")
+        if (filterText === "")
         {
             html =
             `

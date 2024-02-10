@@ -1,14 +1,29 @@
 import { CATEGORIES_ROUTE_NAME, CATEGORY_ID } from "../../Common/Constants.js";
-import {Product} from "../../Common/Data_Structures/Product.js";
+import { Product, Category } from "../../Common/DataStructures.js";
+
+/**
+ * @return { Promise<Category[]> }
+ */
+export async function getCategoriesViaREST()
+{
+    const RESPONSE = await fetch(CATEGORIES_ROUTE_NAME);
+    const RESPONSE_TEXT = await RESPONSE.text();
+
+    let categories = JSON.parse(RESPONSE_TEXT);
+
+    for (let i = 0; i < categories.length; i++)
+    {
+        categories[i] = new Category(categories[i]);
+    }
+
+    return categories;
+}
 
 export async function populateCategorySelector(categorySelector = null)
 {
     categorySelector ??= document.getElementById(CATEGORY_ID);
 
-    const RESPONSE = await fetch(CATEGORIES_ROUTE_NAME);
-    const RESPONSE_TEXT = await RESPONSE.text();
-
-    const CATEGORIES = JSON.parse(RESPONSE_TEXT);
+    const CATEGORIES = await getCategoriesViaREST();
 
     let categorySelectorHTML = "";
 

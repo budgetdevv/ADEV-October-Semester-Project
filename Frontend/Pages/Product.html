@@ -10,26 +10,6 @@
 <!--    <link rel="icon" href="/favicon.ico?v=2" />-->
     <script src="https://kit.fontawesome.com/10b93f2174.js" crossorigin="anonymous"></script>
     <script type="module" src="../Scripts/Product.js"></script>
-    <script type="module">
-        import { FilterInput } from "../Scripts/FilterInput.js";
-
-        let filterInput = new FilterInput("header");
-
-        let def = filterInput.addTagDefinition("Category");
-        def.autoCompleteDropdownText = "Selected Category: ";
-        def.addTagAutocomplete("None", 1);
-        def.addTagAutocomplete("Food", 2);
-        def.addTagAutocomplete("Tech", 3);
-
-        def = filterInput.addTagDefinition("Sort");
-        def.autoCompleteDropdownText = "Sort By: ";
-        def.addTagAutocomplete("ID", 1);
-        def.addTagAutocomplete("Name", 2);
-        def.addTagAutocomplete("Price", 3);
-        def.addTagAutocomplete("Category", 4);
-
-        filterInput.onTextInputCallback = (event, _) => { alert(event.currentTarget.value) }
-    </script>
 </head>
 
 <body>
