@@ -285,16 +285,9 @@ export class FilterInput
 
             let filterInputInstance = this.#filterInputInstance;
 
-            filterInputInstance.#hideDropdown();
+            // alert(this.constructor.name);
 
-            alert(this.constructor.name);
-
-            // Cheap hack to remove focus for now
-            let innerTextInputElement = filterInputInstance.#innerTextInputElement;
-            innerTextInputElement.setAttribute("disabled", "");
-            innerTextInputElement.removeAttribute("disabled");
-
-            // this.#filterInputInstance.#innerTextInputElement.setAttribute("disabled", "");
+            filterInputInstance.#innerTextInputElement.blur();
         }
 
         get key()
@@ -464,8 +457,8 @@ export class FilterInput
         let backgroundTextInputElementClassList = backgroundTextInputElement.classList;
         backgroundTextInputElementClassList.add("input");
         backgroundTextInputElementClassList.add("is-black");
-        backgroundTextInputElementClassList.add(FilterInput.SEARCH_BAR_BACKGROUND_TEXT_INPUT_CLASS)
-        backgroundTextInputElement.id = "filter";
+        backgroundTextInputElementClassList.add(FilterInput.SEARCH_BAR_BACKGROUND_TEXT_INPUT_CLASS);
+        backgroundTextInputElement.setAttribute("readonly", "");
 
         let innerTextWrapperElement = this.#innerTextWrapperElement = document.createElement("div");
         innerTextWrapperElement.classList.add(FilterInput.SEARCH_BAR_INNER_WRAPPER_CLASS);
@@ -474,10 +467,8 @@ export class FilterInput
 
          let innerTextInputElement = this.#innerTextInputElement = FilterInput.#createInnerTextInput();
         innerTextWrapperElement.append(innerTextInputElement);
+        // innerTextInputElement.id = "filter";
 
-        // innerTextWrapperElement.append(FilterInput.#createTag("Name: Chicken"));
-        // innerTextWrapperElement.append(FilterInput.#createTag("Price >= $5"));
-        //
         let dropdownWrapperElement = this.#dropdownWrapperElement = document.createElement("div");
         dropdownWrapperElement.classList.add(FilterInput.SEARCH_BAR_DROPDOWN_WRAPPER_CLASS);
 
