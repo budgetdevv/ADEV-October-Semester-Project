@@ -156,7 +156,7 @@ export class Modal
         <div>
             <header class="modal-card-head" style="background-color: hsl(48, 100%, 67%)" id="${HEADER_ID}">
                 <p class="modal-card-title">Placeholder Title</p>
-                <button class="delete" aria-label="close" id="${CROSS_BUTTON_ID}"></button>
+                <button class="delete" type="button" aria-label="close" id="${CROSS_BUTTON_ID}"></button>
             </header>
         </div>`;
 
