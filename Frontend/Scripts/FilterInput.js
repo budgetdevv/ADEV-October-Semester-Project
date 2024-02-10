@@ -28,7 +28,7 @@ export class FilterInput
          */
         static fromTagElement(tagElement)
         {
-            return new TagData(tagElement.innerText, tagElement.dataset["value"]);
+            return new FilterInput.TagData(tagElement.children[0].innerText, tagElement.dataset["value"]);
         }
 
         /**
@@ -185,7 +185,7 @@ export class FilterInput
          */
         constructor(key, filterInputInstance)
         {
-            this.filterInputInstance = filterInputInstance;
+            this.#filterInputInstance = filterInputInstance;
             this.#key = key;
 
             let dropdownItemElement = this.#autocompleteDropdownItemElement = document.createElement("a");
@@ -271,19 +271,25 @@ export class FilterInput
 
             this.#autocompleteDropdownItemElement.append(autocompleteTagElement);
 
-            // autocompleteTagElement.addEventListener("click", this.#onTagAutocompleteSelected);
+            autocompleteTagElement.addEventListener("click", event => this.#onTagAutocompleteSelected(event));
 
-            // mousedown event has higher priority than blur, unlike click
-            autocompleteTagElement.addEventListener("mousedown", this.#onTagAutocompleteSelected);
+            // // mousedown event has higher priority than blur, unlike click
+            // autocompleteTagElement.addEventListener("mousedown", this.#onTagAutocompleteSelected);
         }
 
         #onTagAutocompleteSelected(event)
         {
-            const DATASET = event.srcElement.dataset;
-            const VALUE = DATASET["value"];
-            alert(VALUE);
+            const TAG_ELEMENT = event.currentTarget;
 
-            this.selectedTagData = VALUE;
+            let data = FilterInput.TagData.fromTagElement(TAG_ELEMENT);
+
+            this.selectedTagData = data;
+
+            this.#filterInputInstance.#hideDropdown();
+
+            alert(this.constructor.name);
+
+            // this.#filterInputInstance.#innerTextInputElement.setAttribute("disabled", "");
         }
 
         get key()
@@ -474,43 +480,15 @@ export class FilterInput
         let dropdownElementClassList = dropdownElement.classList;
         dropdownElementClassList.add(FilterInput.SEARCH_BAR_DROPDOWN_CLASS);
         dropdownElementClassList.add("dropdown-content");
-        dropdownElement.setAttribute("hidden", "");
         dropdownWrapperElement.append(dropdownElement);
 
         wrapperElement.append(innerTextWrapperElement);
         wrapperElement.append(backgroundTextInputElement);
         wrapperElement.append(dropdownWrapperElement);
 
-        // let testDropdownItem = document.createElement("a");
-        // let testDropdownItemClassList = testDropdownItem.classList;
-        // testDropdownItemClassList.add("dropdown-item");
-        // testDropdownItemClassList.add(FilterInput.SEARCH_BAR_DROPDOWN_ITEM_CLASS);
-        // testDropdownItem.innerText = "Hi";
-        // // let testSpan = document.createElement("span");
-        // // testSpan.innerText = "Hi";
-        // // testDropdownItem.append(testSpan);
-        // testDropdownItem.append(FilterInput.#createTag("Test"));
-        // testDropdownItem.append(FilterInput.#createTag("Test"));
-        // testDropdownItem.append(FilterInput.#createTag("Test"));
-        // dropdownElement.append(testDropdownItem);
-        //
-        // let testDropdownItem2 = document.createElement("a");
-        // let testDropdownItemClassList2 = testDropdownItem2.classList;
-        // testDropdownItemClassList2.add("dropdown-item");
-        // testDropdownItemClassList2.add(FilterInput.SEARCH_BAR_DROPDOWN_ITEM_CLASS);
-        // testDropdownItem2.innerText = "Hi";
-        // // let testSpan = document.createElement("span");
-        // // testSpan.innerText = "Hi";
-        // // testDropdownItem.append(testSpan);
-        // testDropdownItem2.append(FilterInput.#createTag("Test"));
-        // testDropdownItem2.append(FilterInput.#createTag("Test"));
-        // testDropdownItem2.append(FilterInput.#createTag("Test"));
-        // dropdownElement.append(testDropdownItem2);
-
         let textInputParentElement = document.getElementById(parentID);
         textInputParentElement.append(wrapperElement);
 
-        // this.#toggleDropdown();
         let def = new FilterInput.TagDefinition("Category", this);
         def.autoCompleteDropdownText = "Selected Category: ";
         def.addTagAutocomplete(new FilterInput.TagData("None", 1));
@@ -528,18 +506,20 @@ export class FilterInput
 
         innerTextInputElement.addEventListener("focus", function (_)
         {
-            instance.#toggleDropdown();
+            instance.#showDropdown();
         });
 
         innerTextInputElement.addEventListener("blur", function (event)
         {
-            instance.#toggleDropdown();
+            instance.#hideDropdown();
         });
 
-        // dropdownWrapperElement.addEventListener("mousedown", function (event)
-        // {
-        //     event.preventDefault();
-        // });
+        dropdownElement.addEventListener("mousedown", function (event)
+        {
+            event.preventDefault();
+        });
+
+        this.#hideDropdown();
     }
 
     /**
@@ -595,9 +575,21 @@ export class FilterInput
         return textInput;
     }
 
-    #toggleDropdown()
+    #showDropdown()
     {
-        this.#backgroundTextInputElement.classList.toggle(FilterInput.DROPDOWN_VISIBLE_CLASS);
-        this.#dropdownElement.toggleAttribute("hidden");
+        this.#backgroundTextInputElement.classList.add(FilterInput.DROPDOWN_VISIBLE_CLASS);
+        elementUnhide(this.#dropdownElement);
     }
+
+    #hideDropdown()
+    {
+        this.#backgroundTextInputElement.classList.remove(FilterInput.DROPDOWN_VISIBLE_CLASS);
+        elementHide(this.#dropdownElement);
+    }
+
+    // #toggleDropdown()
+    // {
+    //     this.#backgroundTextInputElement.classList.toggle(FilterInput.DROPDOWN_VISIBLE_CLASS);
+    //     this.#dropdownElement.toggleAttribute("hidden");
+    // }
 }
