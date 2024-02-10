@@ -1,4 +1,4 @@
-import {elementHide, elementHideScrollBar, elementUnhide, pxToNumber} from "../../Common/Helpers.js";
+import { elementHide, elementUnhide, elementHideScrollBar, pxToNumber } from "../../Common/Helpers.js";
 
 export class FilterInput
 {
