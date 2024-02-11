@@ -168,7 +168,7 @@ async function renderProducts(useCached, currentFilterDefinition = null)
     products = loadedProducts;
 
     // Data from DB are not ordered by the current sort type.
-    sortTypeChanged = !useCached || currentFilterDefinition.key === SORT_FILTER_TAG_KEY;
+    sortTypeChanged = !useCached || currentFilterDefinition?.key === SORT_FILTER_TAG_KEY;
 
     if (sortTypeChanged)
     {
