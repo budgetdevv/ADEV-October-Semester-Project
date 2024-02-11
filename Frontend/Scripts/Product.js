@@ -201,7 +201,7 @@ async function renderProducts(useCached, currentFilterDefinition = null)
         }
 
         cardBodies +=
-            `
+        `
         <div class="column is-one-third">
             ${PRODUCT.getProductDisplayHTML()}
         </div>
@@ -216,7 +216,8 @@ async function renderProducts(useCached, currentFilterDefinition = null)
         `
         <div class="columns is-multiline">
             ${cardBodies}
-        </div>`;
+        </div>
+        `;
     }
 
     else
