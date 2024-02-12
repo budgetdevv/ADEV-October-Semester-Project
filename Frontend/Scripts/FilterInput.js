@@ -1,5 +1,8 @@
 import { elementHide, elementHideAsync, elementHideScrollBar, elementUnhide, elementUnhideAsync, pxToNumber } from "../../Common/Helpers.js";
 
+// We not only avoid an allocation, but we now can check to see if a click is real via reference equality.
+const FAKE_CLICK_EVENT = new Event("click");
+
 export class FilterInput
 {
     //#region Tag
@@ -407,20 +410,17 @@ export class FilterInput
          */
         #onAutoCompleteTagSelected(event, autoCompleteTag)
         {
-            let filterInputInstance = this.#filterInputInstance;
-            filterInputInstance.#innerTextInputElement.blur();
-
             // This method also un-hides the previous auto-complete selection, if any.
-            this.setSelectionTagData(autoCompleteTag.text, autoCompleteTag.value);
+            this.#setSelectionTagData(autoCompleteTag.text, autoCompleteTag.value, event);
 
-            autoCompleteTag.hide();
+            // Do not reorder this, as #setSelectionTagData() have a dependency on this.#selectedAutocompleteTag.
+            // It uses it to access the old value of this.#selectedAutocompleteTag prior to this.
             this.#selectedAutocompleteTag = autoCompleteTag;
-
-            this.#onSelectionTagUpdated(event);
+            autoCompleteTag.hide();
         }
 
         // This method also un-hides the previous auto-complete selection, if any.
-        setSelectionTagData(text, value)
+        #setSelectionTagData(text, value, event)
         {
             let selectionTag = this.#selectionTag;
             selectionTag.text = text;
@@ -433,6 +433,8 @@ export class FilterInput
                 // If there was an auto-complete tag selected previously, restore its visibility.
                 previousAutoCompleteTag.unhide();
             }
+
+            this.#onSelectionTagUpdated(event);
         }
 
         /**
@@ -473,6 +475,36 @@ export class FilterInput
             if (TAG_DESELECTED_CALLBACK != null)
             {
                 TAG_DESELECTED_CALLBACK(event, this);
+            }
+        }
+
+        handleEnterInput(input, VALUE)
+        {
+            const ORIGINAL_TEXT = input.value;
+
+            // Clear the input. Do this before sending event, as we want the callback to register that the input is empty.
+            input.value = "";
+
+            let TAG = this.tryGetAutoCompleteTag(VALUE);
+
+            if (TAG !== undefined)
+            {
+                this.#onAutoCompleteTagSelected(FAKE_CLICK_EVENT, TAG);
+
+                // // alert(TAG.value);
+                //
+                // TAG.tagElement.dispatchEvent(FAKE_CLICK_EVENT);
+            }
+
+            else if (this.allowCustomInput)
+            {
+                this.#setSelectionTagData(VALUE, VALUE);
+                this.#onSelectionTagUpdated(FAKE_CLICK_EVENT);
+            }
+
+            else
+            {
+                input.value = ORIGINAL_TEXT;
             }
         }
     };
@@ -654,10 +686,21 @@ export class FilterInput
             }
         });
 
-        dropdownElement.addEventListener("mousedown", event =>
+        // dropdownElement.addEventListener("mousedown", event =>
+        // {
+        //     // Prevent onblur() should the dropdown be clicked.
+        //     event.preventDefault();
+        // });
+
+        wrapperElement.addEventListener("mousedown", event =>
         {
-            // Prevent onblur() should the dropdown be clicked.
-            event.preventDefault();
+            if (event.target !== innerTextInputElement)
+            {
+                // Prevent onblur() should any part of the filter input be clicked,
+                // with the notable exception of the inner input itself
+                // ( Otherwise user won't be able to input anything )
+                event.preventDefault();
+            }
         });
 
         this.#hideDropdown(true);
@@ -757,18 +800,18 @@ export class FilterInput
     {
         let input = this.#innerTextInputElement;
 
-        let text = input.value;
+        const TEXT = input.value;
 
-        let indexOfSeparator = text.indexOf(this.#separator);
+        let indexOfSeparator = TEXT.indexOf(this.#separator);
 
         if (indexOfSeparator === -1)
         {
             return;
         }
 
-        let KEY = text.slice(0, indexOfSeparator).trim();
+        let KEY = TEXT.slice(0, indexOfSeparator).trim();
         // + 1 because we want to take contents after the separator
-        let VALUE = text.slice(indexOfSeparator + 1).trim();
+        let VALUE = TEXT.slice(indexOfSeparator + 1).trim();
 
         if (KEY.length === 0 || VALUE.length === 0)
         {
@@ -784,29 +827,7 @@ export class FilterInput
             return;
         }
 
-        let TAG = foundDefinition.tryGetAutoCompleteTag(VALUE);
-
-        if (TAG !== undefined)
-        {
-            // alert(TAG.value);
-
-            event = new Event("click");
-
-            TAG.tagElement.dispatchEvent(event);
-        }
-
-        else if (foundDefinition.allowCustomInput)
-        {
-            foundDefinition.setSelectionTagData(VALUE, VALUE);
-        }
-
-        else
-        {
-            return;
-        }
-
-        // Clear the input
-        input.value = "";
+        foundDefinition.handleEnterInput(input, VALUE);
     }
 
     get separator()
@@ -831,5 +852,13 @@ export class FilterInput
         const TRANSITION_STYLE = !instant ? FilterInput.#DROPDOWN_TRANSITION_STYLE: null;
         this.#backgroundTextInputElement.classList.remove(FilterInput.DROPDOWN_VISIBLE_CLASS);
         const _ = elementHideAsync(this.#dropdownElement, TRANSITION_STYLE);
+    }
+
+    /**
+     * @param { Event } event
+     */
+    static TagIsUpdatedByUserClick(event)
+    {
+        return event !== FAKE_CLICK_EVENT;
     }
 }
