@@ -22,7 +22,7 @@ export class Product
      */
     shouldDisplay(filterText, filterInput)
     {
-        let CATEGORY_FILTER = filterInput.getTagDefinition(CATEGORY_FILTER_TAG_KEY).selectedValue;
+        let CATEGORY_FILTER = filterInput.tryGetTagDefinition(CATEGORY_FILTER_TAG_KEY).selectedValue;
 
         if (CATEGORY_FILTER == null || this.category_id === CATEGORY_FILTER)
         {

@@ -389,7 +389,7 @@ export class FilterInput
             autocompleteTag.value = value;
             autocompleteTag.tagAddEventListener("click", (event, tag) => this.#onAutoCompleteTagSelected(event, tag));
 
-            this.#autoCompleteTextMap.set(text, autocompleteTag);
+            this.#autoCompleteTextMap.set(text.toUpperCase(), autocompleteTag);
 
             return autocompleteTag;
         }
@@ -400,7 +400,7 @@ export class FilterInput
          */
         tryGetAutoCompleteTag(text)
         {
-            return this.#autoCompleteTextMap.get(text);
+            return this.#autoCompleteTextMap.get(text.toUpperCase());
         }
 
         /**
@@ -716,23 +716,22 @@ export class FilterInput
     }
 
     /**
-     * @param { String } key
+     * @param { string } key
      * @return { FilterInput.FilterDefinition }
      */
     addTagDefinition(key)
     {
         let def = new FilterInput.FilterDefinition(key, this);
-        this.#tagDefinitions.set(key, def);
+        this.#tagDefinitions.set(key.toUpperCase(), def);
         return def;
     }
-
     /**
      * @param { String } key
      * @return { FilterInput.FilterDefinition }
      */
-    getTagDefinition(key)
+    tryGetTagDefinition(key)
     {
-        return this.#tagDefinitions.get(key);
+        return this.#tagDefinitions.get(key.toUpperCase());
     }
 
     /**
@@ -819,7 +818,7 @@ export class FilterInput
 
         // alert(`${KEY} | ${VALUE}`);
 
-        let foundDefinition = this.#tagDefinitions.get(KEY);
+        let foundDefinition = this.tryGetTagDefinition(KEY);
 
         if (foundDefinition === undefined)
         {

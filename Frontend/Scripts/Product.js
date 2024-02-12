@@ -180,7 +180,7 @@ async function renderProducts(useCached, currentFilterDefinition = null)
         /**
          * @type { function(Product, Product) }
          */
-        let currentSortFunction = filterInput.getTagDefinition(SORT_FILTER_TAG_KEY).selectedValue;
+        let currentSortFunction = filterInput.tryGetTagDefinition(SORT_FILTER_TAG_KEY).selectedValue;
 
         if (currentSortFunction !== sortByID)
         {
