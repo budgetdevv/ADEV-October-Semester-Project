@@ -270,7 +270,6 @@ export class FilterInput
          */
         #defaultSelectionTag;
 
-
         /**
          * @type { Map<string, FilterInput.Tag> }
          * @private
