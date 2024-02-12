@@ -80,7 +80,7 @@ export function transitionEndAsync(element)
 /**
  * @param { HTMLElement } element
  */
-export async function elementHide(element)
+export function elementHide(element)
 {
     const _ = elementHideAsync(element);
 }
@@ -118,7 +118,7 @@ export async function elementHideAsync(element, transitionStyle = null)
 /**
  * @param { HTMLElement } element
  */
-export async function elementUnhide(element)
+export function elementUnhide(element)
 {
     const _ = elementUnhideAsync(element);
 }
