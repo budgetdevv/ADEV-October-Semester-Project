@@ -42,6 +42,7 @@ export class FilterInput
          */
         shouldDisplaySelectedTagCallback = null;
 
+        // noinspection ES6ClassMemberInitializationOrder
         /**
          * @type { Map<HTMLElement, FilterInput.Tag> }
          * @private
@@ -266,6 +267,19 @@ export class FilterInput
          */
         #defaultSelectionTag;
 
+
+        /**
+         * @type { Map<string, FilterInput.Tag> }
+         * @private
+         */
+        #autoCompleteTextMap = new Map();
+
+        /**
+         * @type { boolean}
+         * @public
+         */
+        allowCustomInput = false;
+
         /**
          * @param { String } key
          * @param { FilterInput } filterInputInstance
@@ -289,7 +303,7 @@ export class FilterInput
 
             selectedTag.textFormatterCallback = (tag, text) =>
             {
-                return `${tag.key}: ${text}`
+                return `${tag.key}${filterInputInstance.separator} ${text}`
             };
 
             selectedTag.shouldDisplaySelectedTagCallback = (tag, value) =>
@@ -345,7 +359,7 @@ export class FilterInput
             let selectionTag = this.#selectionTag;
             let selectionTagValueWasDefault = this.#valueIsThatOfDefaultSelection(selectionTag.value);
 
-            let tag = this.addAutocompleteTag(text, value);
+            let tag = this.addAutoCompleteTag(text, value);
             this.#defaultSelectionTag = tag;
             // TODO: Hide it for now, we do not handle default selection being an auto-complete tag yet.
             tag.hide();
@@ -360,11 +374,11 @@ export class FilterInput
         }
 
         /**
-         * @param { String } text
+         * @param { string } text
          * @param { Object } value
          * @return { FilterInput.Tag }
          */
-        addAutocompleteTag(text, value)
+        addAutoCompleteTag(text, value)
         {
             let autocompleteTag = new FilterInput.Tag(this.#autocompleteDropdownItemElement);
 
@@ -373,7 +387,18 @@ export class FilterInput
             autocompleteTag.value = value;
             autocompleteTag.tagAddEventListener("click", (event, tag) => this.#onAutoCompleteTagSelected(event, tag));
 
+            this.#autoCompleteTextMap.set(text, autocompleteTag);
+
             return autocompleteTag;
+        }
+
+        /**
+         * @param { string } text
+         * @return { FilterInput.Tag }
+         */
+        tryGetAutoCompleteTag(text)
+        {
+            return this.#autoCompleteTextMap.get(text);
         }
 
         /**
@@ -385,10 +410,21 @@ export class FilterInput
             let filterInputInstance = this.#filterInputInstance;
             filterInputInstance.#innerTextInputElement.blur();
 
-            // Perhaps consider making selectedAutocompleteTag a setter property...
+            // This method also un-hides the previous auto-complete selection, if any.
+            this.setSelectionTagData(autoCompleteTag.text, autoCompleteTag.value);
+
+            autoCompleteTag.hide();
+            this.#selectedAutocompleteTag = autoCompleteTag;
+
+            this.#onSelectionTagUpdated(event);
+        }
+
+        // This method also un-hides the previous auto-complete selection, if any.
+        setSelectionTagData(text, value)
+        {
             let selectionTag = this.#selectionTag;
-            selectionTag.text = autoCompleteTag.text;
-            selectionTag.value = autoCompleteTag.value;
+            selectionTag.text = text;
+            selectionTag.value = value;
 
             let previousAutoCompleteTag = this.#selectedAutocompleteTag;
 
@@ -397,11 +433,6 @@ export class FilterInput
                 // If there was an auto-complete tag selected previously, restore its visibility.
                 previousAutoCompleteTag.unhide();
             }
-
-            this.#selectedAutocompleteTag = autoCompleteTag;
-            autoCompleteTag.hide();
-
-            this.#onSelectionTagUpdated(event);
         }
 
         /**
@@ -426,11 +457,16 @@ export class FilterInput
             const DEFAULT_SELECTION_TAG = this.#defaultSelectionTag;
             // This hides it
             selectionTag.value = DEFAULT_SELECTION_TAG.value;
-
             selectionTag.text = DEFAULT_SELECTION_TAG.text;
 
-            this.#selectedAutocompleteTag.unhide();
-            this.#selectedAutocompleteTag = null;
+            let SELECTED_AUTOCOMPLETE_TAG = this.#selectedAutocompleteTag;
+
+            // It may be null if we allow custom input for FilterDefinition
+            if (SELECTED_AUTOCOMPLETE_TAG != null)
+            {
+                SELECTED_AUTOCOMPLETE_TAG.unhide();
+                this.#selectedAutocompleteTag = null;
+            }
 
             const TAG_DESELECTED_CALLBACK = this.#filterInputInstance.onTagDeselectedCallback;
 
@@ -502,6 +538,9 @@ export class FilterInput
      * @public
      */
     #tagDefinitions = new Map();
+
+    // For now, it is readonly
+    #separator;
     //#endregion
 
     //#region CSS_CLASS_CONSTANTS
@@ -551,8 +590,10 @@ export class FilterInput
     }
     //#endregion
 
-    constructor(parentID)
+    constructor(parentID, separator = ":")
     {
+        this.#separator = separator;
+
         let wrapperElement = this.#wrapperElement = document.createElement("div");
         wrapperElement.classList.add(FilterInput.SEARCH_BAR_CLASS);
 
@@ -603,6 +644,14 @@ export class FilterInput
         innerTextInputElement.addEventListener("input", event =>
         {
             this.#onTextInput(event);
+        });
+
+        innerTextInputElement.addEventListener("keydown", event =>
+        {
+            if (event.key === "Enter")
+            {
+                this.#onEnterKeyPressed(event);
+            }
         });
 
         dropdownElement.addEventListener("mousedown", event =>
@@ -699,6 +748,70 @@ export class FilterInput
         {
             CALLBACK(event, this);
         }
+    }
+
+    /**
+     * @param { Event } event
+     */
+    #onEnterKeyPressed(event)
+    {
+        let input = this.#innerTextInputElement;
+
+        let text = input.value;
+
+        let indexOfSeparator = text.indexOf(this.#separator);
+
+        if (indexOfSeparator === -1)
+        {
+            return;
+        }
+
+        let KEY = text.slice(0, indexOfSeparator).trim();
+        // + 1 because we want to take contents after the separator
+        let VALUE = text.slice(indexOfSeparator + 1).trim();
+
+        if (KEY.length === 0 || VALUE.length === 0)
+        {
+            return;
+        }
+
+        // alert(`${KEY} | ${VALUE}`);
+
+        let foundDefinition = this.#tagDefinitions.get(KEY);
+
+        if (foundDefinition === undefined)
+        {
+            return;
+        }
+
+        let TAG = foundDefinition.tryGetAutoCompleteTag(VALUE);
+
+        if (TAG !== undefined)
+        {
+            // alert(TAG.value);
+
+            event = new Event("click");
+
+            TAG.tagElement.dispatchEvent(event);
+        }
+
+        else if (foundDefinition.allowCustomInput)
+        {
+            foundDefinition.setSelectionTagData(VALUE, VALUE);
+        }
+
+        else
+        {
+            return;
+        }
+
+        // Clear the input
+        input.value = "";
+    }
+
+    get separator()
+    {
+        return this.#separator;
     }
 
     static get #DROPDOWN_TRANSITION_STYLE()

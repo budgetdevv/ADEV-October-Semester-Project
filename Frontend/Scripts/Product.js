@@ -25,15 +25,15 @@ document.addEventListener('DOMContentLoaded', async _ =>
 
     for (const CATEGORY of await getCategoriesViaREST())
     {
-        def.addAutocompleteTag(CATEGORY.name, CATEGORY.id);
+        def.addAutoCompleteTag(CATEGORY.name, CATEGORY.id);
     }
 
     def = filterInput.addTagDefinition(SORT_FILTER_TAG_KEY);
     def.autoCompleteDropdownText = "Sort By: ";
     def.addDefaultSelectionTag("ID", sortByID);
-    def.addAutocompleteTag("Name", sortByName);
-    def.addAutocompleteTag("Price", sortByPrice);
-    def.addAutocompleteTag("Category", sortByCategory);
+    def.addAutoCompleteTag("Name", sortByName);
+    def.addAutoCompleteTag("Price", sortByPrice);
+    def.addAutoCompleteTag("Category", sortByCategory);
 
     filterInput.onTextInputCallback = (event, _) =>
     {
