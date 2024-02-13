@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async _ =>
     filterInput = new FilterInput("header");
 
     let def = filterInput.addTagDefinition(CATEGORY_FILTER_TAG_KEY);
-    def.autoCompleteDropdownText = "Selected Category: ";
+    def.autoCompleteDropdownText = "Category: ";
 
     for (const CATEGORY of await getCategoriesViaREST())
     {

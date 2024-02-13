@@ -503,6 +503,16 @@ export class FilterInput
                 input.value = ORIGINAL_TEXT;
             }
         }
+
+        hideAutoCompleteDropdown()
+        {
+            elementHide(this.#autocompleteDropdownItemElement);
+        }
+
+        showAutoCompleteDropdown()
+        {
+            elementUnhide(this.#autocompleteDropdownItemElement);
+        }
     };
     //#endregion
 
@@ -773,11 +783,37 @@ export class FilterInput
      */
     #onTextInput(event)
     {
+        this.#updateFilterDefinitionsVisibility(this.#innerTextInputElement.value);
+
         const CALLBACK = this.onTextInputCallback;
 
         if (CALLBACK != null)
         {
             CALLBACK(event, this);
+        }
+    }
+
+    #updateFilterDefinitionsVisibility(text)
+    {
+        let indexOfSeparator = text.indexOf(this.#separator);
+
+        const KEY = ((indexOfSeparator !== -1) ? text.slice(0, indexOfSeparator).trim() : text).toUpperCase();
+
+        const KEY_LENGTH = KEY.length;
+
+        for (let [currentKey, currentValue] of this.#tagDefinitions)
+        {
+            // const CURRENT_KEY_LENGTH = currentKey.length;
+
+            if (KEY_LENGTH <= currentKey.length && currentKey.slice(0, KEY_LENGTH) === KEY)
+            {
+                currentValue.showAutoCompleteDropdown();
+            }
+
+            else
+            {
+                currentValue.hideAutoCompleteDropdown();
+            }
         }
     }
 
@@ -797,9 +833,9 @@ export class FilterInput
             return;
         }
 
-        let KEY = TEXT.slice(0, indexOfSeparator).trim();
+        const KEY = TEXT.slice(0, indexOfSeparator).trim();
         // + 1 because we want to take contents after the separator
-        let VALUE = TEXT.slice(indexOfSeparator + 1).trim();
+        const VALUE = TEXT.slice(indexOfSeparator + 1).trim();
 
         if (KEY.length === 0 || VALUE.length === 0)
         {
@@ -840,6 +876,8 @@ export class FilterInput
         {
             TAG_SELECTED_CALLBACK(event, filterDefinition);
         }
+
+        this.#updateFilterDefinitionsVisibility(this.#innerTextInputElement.value);
 
         this.#innerTextInputElement.focus();
     }
