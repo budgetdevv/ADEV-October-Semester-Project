@@ -672,7 +672,12 @@ export class FilterInput
             {
                 this.#hideDropdown();
             }
-        })
+        });
+
+        innerTextInputElement.addEventListener("focus", _ =>
+        {
+            this.#showDropdown();
+        });
 
         innerTextInputElement.addEventListener("input", event =>
         {
