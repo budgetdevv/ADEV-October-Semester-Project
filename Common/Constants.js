@@ -18,4 +18,6 @@ export const IS_ACTIVE_CLASS = "is-active",
              HIDDEN_CLASS = "hidden";
 
 export const CATEGORY_FILTER_TAG_KEY = "Category",
-             SORT_FILTER_TAG_KEY = "Sort";
+             SORT_FILTER_TAG_KEY = "Sort",
+             NAME_FILTER_TAG_KEY = "Name",
+             DESCRIPTION_FILTER_TAG_KEY = "Description";

@@ -1,5 +1,5 @@
 import { Product } from "/Common/DataStructures.js";
-import { PRODUCT_ID_PREFIX, RESET_ROUTE, JSON_HEADER, CATEGORY_FILTER_TAG_KEY, SORT_FILTER_TAG_KEY, PRODUCTS_ROUTE_NAME as ROUTE_NAME } from "/Common/Constants.js"
+import { PRODUCT_ID_PREFIX, RESET_ROUTE, JSON_HEADER, CATEGORY_FILTER_TAG_KEY, SORT_FILTER_TAG_KEY, NAME_FILTER_TAG_KEY, DESCRIPTION_FILTER_TAG_KEY, PRODUCTS_ROUTE_NAME as ROUTE_NAME } from "/Common/Constants.js"
 import { Modal } from "./Modal.js";
 import { getProductsViaREST, populateCategorySelector, getCategoriesViaREST, constructProductFromDocument } from "./Shared.js";
 import { FilterInput } from "./FilterInput.js";
@@ -34,6 +34,14 @@ document.addEventListener('DOMContentLoaded', async _ =>
     def.addAutoCompleteTag("Name", sortByName);
     def.addAutoCompleteTag("Price", sortByPrice);
     def.addAutoCompleteTag("Category", sortByCategory);
+
+    def = filterInput.addTagDefinition(NAME_FILTER_TAG_KEY);
+    def.allowCustomInput = true;
+    def.autoCompleteDropdownText = `${NAME_FILTER_TAG_KEY}: `
+
+    def = filterInput.addTagDefinition(DESCRIPTION_FILTER_TAG_KEY);
+    def.allowCustomInput = true;
+    def.autoCompleteDropdownText = `${DESCRIPTION_FILTER_TAG_KEY}: `
 
     filterInput.onTextInputCallback = (event, _) =>
     {

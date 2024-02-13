@@ -234,6 +234,7 @@ export class FilterInput
     //#region FilterDefinition
     static FilterDefinition = class
     {
+        //#region Fields
         /**
          * @type { FilterInput }
          * @private
@@ -281,6 +282,7 @@ export class FilterInput
          * @public
          */
         allowCustomInput = false;
+        //#endregion
 
         /**
          * @param { String } key
@@ -312,6 +314,17 @@ export class FilterInput
             {
                 return !this.#valueIsThatOfDefaultSelection(value);
             }
+
+            dropdownItemElement.addEventListener("click", event =>
+            {
+                // Only respond if the clicked element is the dropdown item itself
+                // ( event.target may point to its child, such as the tags )
+                if (event.target === event.currentTarget)
+                {
+                    let filterInputInstance = this.#filterInputInstance;
+                    filterInputInstance.#innerTextInputElement.value = `${this.key}${filterInputInstance.separator} `;
+                }
+            });
 
             filterInputInstance.#dropdownElement.append(dropdownItemElement);
 
