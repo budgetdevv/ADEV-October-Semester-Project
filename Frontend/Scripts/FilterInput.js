@@ -495,7 +495,7 @@ export class FilterInput
             else if (this.allowCustomInput)
             {
                 this.#setSelectionTagData(VALUE, VALUE);
-                this.#onSelectionTagUpdated(FAKE_CLICK_EVENT);
+                this.#filterInputInstance.#onSelectionTagUpdated(FAKE_CLICK_EVENT, this);
             }
 
             else
@@ -879,7 +879,9 @@ export class FilterInput
 
         this.#updateFilterDefinitionsVisibility(this.#innerTextInputElement.value);
 
-        this.#innerTextInputElement.focus();
+        let textInput = this.#innerTextInputElement;
+        textInput.value = "";
+        textInput.focus();
     }
 
     /**
