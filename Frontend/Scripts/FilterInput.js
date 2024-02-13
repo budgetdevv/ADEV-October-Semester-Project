@@ -659,16 +659,6 @@ export class FilterInput
         let textInputParentElement = document.getElementById(parentID);
         textInputParentElement.append(wrapperElement);
 
-        // innerTextInputElement.addEventListener("focus", _ =>
-        // {
-        //     this.#showDropdown();
-        // });
-        //
-        // innerTextInputElement.addEventListener("blur", _ =>
-        // {
-        //     this.#hideDropdown();
-        // });
-
         // Global event handler that enables dropdown if any of its regions are clicked,
         // or disables the dropdown otherwise.
         document.addEventListener("click", event =>
@@ -696,23 +686,6 @@ export class FilterInput
                 this.#onEnterKeyPressed(event);
             }
         });
-
-        // dropdownElement.addEventListener("mousedown", event =>
-        // {
-        //     // Prevent onblur() should the dropdown be clicked.
-        //     event.preventDefault();
-        // });
-
-        // wrapperElement.addEventListener("mousedown", event =>
-        // {
-        //     if (event.target !== innerTextInputElement)
-        //     {
-        //         // Prevent onblur() should any part of the filter input be clicked,
-        //         // with the notable exception of the inner input itself
-        //         // ( Otherwise user won't be able to input anything )
-        //         event.preventDefault();
-        //     }
-        // });
 
         this.#hideDropdown(true);
     }
