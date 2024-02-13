@@ -322,7 +322,9 @@ export class FilterInput
                 if (event.target === event.currentTarget)
                 {
                     let filterInputInstance = this.#filterInputInstance;
-                    filterInputInstance.#innerTextInputElement.value = `${this.key}${filterInputInstance.separator} `;
+                    let textInputElement = filterInputInstance.#innerTextInputElement;
+                    textInputElement.value = `${this.key}${filterInputInstance.separator} `;
+                    textInputElement.focus();
                 }
             });
 
@@ -446,20 +448,7 @@ export class FilterInput
                 previousAutoCompleteTag.unhide();
             }
 
-            this.#onSelectionTagUpdated(event);
-        }
-
-        /**
-         * @param { Event } event
-         */
-        #onSelectionTagUpdated(event)
-        {
-            const TAG_SELECTED_CALLBACK = this.#filterInputInstance.onTagSelectedCallback;
-
-            if (TAG_SELECTED_CALLBACK != null)
-            {
-                TAG_SELECTED_CALLBACK(event, this);
-            }
+            this.#filterInputInstance.#onSelectionTagUpdated(event, this);
         }
 
         /**
@@ -482,12 +471,7 @@ export class FilterInput
                 this.#selectedAutocompleteTag = null;
             }
 
-            const TAG_DESELECTED_CALLBACK = this.#filterInputInstance.onTagDeselectedCallback;
-
-            if (TAG_DESELECTED_CALLBACK != null)
-            {
-                TAG_DESELECTED_CALLBACK(event, this);
-            }
+            this.#filterInputInstance.#onSelectionTagDeselected(event, this);
         }
 
         handleEnterInput(input, VALUE)
@@ -675,15 +659,30 @@ export class FilterInput
         let textInputParentElement = document.getElementById(parentID);
         textInputParentElement.append(wrapperElement);
 
-        innerTextInputElement.addEventListener("focus", _ =>
-        {
-            this.#showDropdown();
-        });
+        // innerTextInputElement.addEventListener("focus", _ =>
+        // {
+        //     this.#showDropdown();
+        // });
+        //
+        // innerTextInputElement.addEventListener("blur", _ =>
+        // {
+        //     this.#hideDropdown();
+        // });
 
-        innerTextInputElement.addEventListener("blur", _ =>
+        // Global event handler that enables dropdown if any of its regions are clicked,
+        // or disables the dropdown otherwise.
+        document.addEventListener("click", event =>
         {
-            this.#hideDropdown();
-        });
+            if (wrapperElement.contains(event.target))
+            {
+                this.#showDropdown();
+            }
+
+            else
+            {
+                this.#hideDropdown();
+            }
+        })
 
         innerTextInputElement.addEventListener("input", event =>
         {
@@ -704,16 +703,16 @@ export class FilterInput
         //     event.preventDefault();
         // });
 
-        wrapperElement.addEventListener("mousedown", event =>
-        {
-            if (event.target !== innerTextInputElement)
-            {
-                // Prevent onblur() should any part of the filter input be clicked,
-                // with the notable exception of the inner input itself
-                // ( Otherwise user won't be able to input anything )
-                event.preventDefault();
-            }
-        });
+        // wrapperElement.addEventListener("mousedown", event =>
+        // {
+        //     if (event.target !== innerTextInputElement)
+        //     {
+        //         // Prevent onblur() should any part of the filter input be clicked,
+        //         // with the notable exception of the inner input itself
+        //         // ( Otherwise user won't be able to input anything )
+        //         event.preventDefault();
+        //     }
+        // });
 
         this.#hideDropdown(true);
     }
@@ -849,6 +848,38 @@ export class FilterInput
     static get #DROPDOWN_TRANSITION_STYLE()
     {
         return "visibility 0s, opacity 0.2s linear";
+    }
+
+    /**
+     * @param { Event } event
+     * @param { FilterInput.FilterDefinition } filterDefinition
+     */
+    #onSelectionTagUpdated(event, filterDefinition)
+    {
+        const TAG_SELECTED_CALLBACK = this.onTagSelectedCallback;
+
+        if (TAG_SELECTED_CALLBACK != null)
+        {
+            TAG_SELECTED_CALLBACK(event, filterDefinition);
+        }
+
+        this.#innerTextInputElement.focus();
+    }
+
+    /**
+     * @param { Event } event
+     * @param { FilterInput.FilterDefinition } filterDefinition
+     */
+    #onSelectionTagDeselected(event, filterDefinition)
+    {
+        const TAG_DESELECTED_CALLBACK = this.onTagDeselectedCallback;
+
+        if (TAG_DESELECTED_CALLBACK != null)
+        {
+            TAG_DESELECTED_CALLBACK(event, filterDefinition);
+        }
+
+        this.#innerTextInputElement.focus();
     }
 
     #showDropdown(instant = false)
