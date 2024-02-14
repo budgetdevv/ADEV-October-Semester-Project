@@ -725,6 +725,7 @@ export class FilterInput
         this.#tagDefinitions.set(key.toUpperCase(), def);
         return def;
     }
+
     /**
      * @param { String } key
      * @return { FilterInput.FilterDefinition }
