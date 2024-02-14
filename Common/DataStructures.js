@@ -17,12 +17,14 @@ export class Product
     }
 
     /**
-     * @param { string } filterText
+     * @param { string } filterTextUpperCased
      * @param { FilterInput } filterInput
      */
-    shouldDisplay(filterText, filterInput)
+    shouldDisplay(filterTextUpperCased, filterInput)
     {
         let CATEGORY_FILTER = filterInput.tryGetTagDefinition(CATEGORY_FILTER_TAG_KEY).selectedValue;
+
+        let filterTextMatches = 0;
 
         if (CATEGORY_FILTER == null || this.category_id === CATEGORY_FILTER)
         {
@@ -35,10 +37,40 @@ export class Product
                     fieldValue = `${fieldValue}`;
                 }
 
-                if (fieldValue.toUpperCase().includes(filterText))
+                fieldValue = fieldValue.toUpperCase();
+
+                let FILTER_DEFINITION = filterInput.tryGetTagDefinition(fieldName);
+
+                if (FILTER_DEFINITION !== undefined)
                 {
-                    return true;
+                    /**
+                     * @type { String }
+                     */
+                    const SELECTED_VALUE = FILTER_DEFINITION.selectedValue;
+
+                    // alert(`${fieldName} | ${SELECTED_VALUE}`)
+
+                    if (!fieldValue.includes(SELECTED_VALUE.toUpperCase()))
+                    {
+                        // alert(`${fieldName} | ${fieldValue} | ${SELECTED_VALUE} | ${filterTextUpperCased}`)
+
+                        return false;
+                    }
+
+                    // alert(`${fieldName} | ${SELECTED_VALUE}`)
                 }
+
+                if (fieldValue.includes(filterTextUpperCased))
+                {
+                    // alert(`${fieldName} | ${FILTER_DEFINITION?.selectedValue} | ${fieldValue} | ${filterTextUpperCased}`)
+
+                    filterTextMatches++;
+                }
+            }
+
+            if (filterTextMatches > 0)
+            {
+                return true;
             }
         }
 

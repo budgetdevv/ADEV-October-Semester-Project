@@ -38,10 +38,12 @@ document.addEventListener('DOMContentLoaded', async _ =>
     def = filterInput.addTagDefinition(NAME_FILTER_TAG_KEY);
     def.allowCustomInput = true;
     def.autoCompleteDropdownText = `${NAME_FILTER_TAG_KEY}: `
+    def.addDefaultSelectionTag("Empty", "");
 
     def = filterInput.addTagDefinition(DESCRIPTION_FILTER_TAG_KEY);
     def.allowCustomInput = true;
     def.autoCompleteDropdownText = `${DESCRIPTION_FILTER_TAG_KEY}: `
+    def.addDefaultSelectionTag("Empty", "");
 
     filterInput.onTextInputCallback = (event, _) =>
     {
