@@ -10,6 +10,21 @@
     overflow-wrap: break-word !important;
 }
 
+.hide_scrollbar
+{
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    ::-webkit-scrollbar
+    {
+        display: none;
+    }
+
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none;
+
+    /* Hide scrollbar for IE and Edge */
+    -ms-overflow-style: none;
+}
+
 .navbar-item.has-dropdown.is-hoverable .navbar-link::after
 {
     border-color: #beaa56;
@@ -97,6 +112,7 @@
 {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 @media screen and (min-width: 1025px)

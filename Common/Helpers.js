@@ -33,16 +33,7 @@ export function numberToPx(number)
  */
 export function elementHideScrollBar(element)
 {
-    let style = element.style;
-
-    // Hide scrollbar for Chrome, Safari and Opera
-    style['::-webkit-scrollbar'] = 'display: none';
-
-    // Hide scrollbar for Firefox
-    style['scrollbar-width'] = 'none';
-
-    // Hide scrollbar for IE and Edge
-    style['-ms-overflow-style'] = 'none';
+    element.classList.add('hide_scrollbar');
 }
 
 /**
