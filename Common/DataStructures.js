@@ -1,5 +1,5 @@
 import { isNullOrWhitespace } from "./Helpers.js";
-import { CATEGORY_FILTER_TAG_KEY, PRODUCT_ID_PREFIX } from "./Constants.js";
+import { CATEGORY_FILTER_TAG_KEY, MIN_PRICE_FILTER_TAG_KEY, MAX_PRICE_FILTER_TAG_KEY, PRODUCT_ID_PREFIX } from "./Constants.js";
 
 export class Product
 {
@@ -30,41 +30,53 @@ export class Product
         {
             for (let [fieldName, fieldValue] of Object.entries(this))
             {
-                // alert(`${fieldName} | ${fieldValue}`);
-
-                if ((typeof fieldValue) !== "string")
+                if (fieldName !== "price")
                 {
-                    fieldValue = `${fieldValue}`;
-                }
-
-                fieldValue = fieldValue.toUpperCase();
-
-                let FILTER_DEFINITION = filterInput.tryGetTagDefinition(fieldName);
-
-                if (FILTER_DEFINITION !== undefined)
-                {
-                    /**
-                     * @type { String }
-                     */
-                    const SELECTED_VALUE = FILTER_DEFINITION.selectedValue;
-
-                    // alert(`${fieldName} | ${SELECTED_VALUE}`)
-
-                    if (!fieldValue.includes(SELECTED_VALUE.toUpperCase()))
+                    if ((typeof fieldValue) !== "string")
                     {
-                        // alert(`${fieldName} | ${fieldValue} | ${SELECTED_VALUE} | ${filterTextUpperCased}`)
-
-                        return false;
+                        fieldValue = `${fieldValue}`;
                     }
 
-                    // alert(`${fieldName} | ${SELECTED_VALUE}`)
+                    fieldValue = fieldValue.toUpperCase();
+
+                    let FILTER_DEFINITION = filterInput.tryGetTagDefinition(fieldName);
+
+                    if (FILTER_DEFINITION !== undefined)
+                    {
+                        /**
+                         * @type { String }
+                         */
+                        const SELECTED_VALUE = FILTER_DEFINITION.selectedValue;
+
+                        // alert(`${fieldName} | ${SELECTED_VALUE}`)
+
+                        if (!fieldValue.includes(SELECTED_VALUE.toUpperCase()))
+                        {
+                            return false;
+                        }
+                    }
+
+                    if (fieldValue.includes(filterTextUpperCased))
+                    {
+                        // alert(`${fieldName} | ${FILTER_DEFINITION?.selectedValue} | ${fieldValue} | ${filterTextUpperCased}`)
+
+                        filterTextMatches++;
+                    }
                 }
 
-                if (fieldValue.includes(filterTextUpperCased))
+                else
                 {
-                    // alert(`${fieldName} | ${FILTER_DEFINITION?.selectedValue} | ${fieldValue} | ${filterTextUpperCased}`)
+                    const CURRENT_MIN_PRICE = filterInput.tryGetTagDefinition(MIN_PRICE_FILTER_TAG_KEY).selectedValue;
+                    const CURRENT_MAX_PRICE = filterInput.tryGetTagDefinition(MAX_PRICE_FILTER_TAG_KEY).selectedValue;
 
-                    filterTextMatches++;
+                    fieldValue = Number(fieldValue);
+
+                    // alert(`${CURRENT_MIN_PRICE} | ${CURRENT_MAX_PRICE} | ${typeof fieldValue}`);
+
+                    if (isNaN(fieldValue) || isNaN(CURRENT_MIN_PRICE)  || isNaN(CURRENT_MAX_PRICE)  || CURRENT_MIN_PRICE > fieldValue || fieldValue > CURRENT_MAX_PRICE)
+                    {
+                        return false;
+                    }
                 }
             }
 

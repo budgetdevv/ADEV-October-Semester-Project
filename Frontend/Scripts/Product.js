@@ -1,7 +1,19 @@
 import { Product } from "/Common/DataStructures.js";
 import {
-    PRODUCT_ID_PREFIX, RESET_ROUTE, JSON_HEADER, CATEGORY_FILTER_TAG_KEY, SORT_FILTER_TAG_KEY, NAME_FILTER_TAG_KEY,
-    DESCRIPTION_FILTER_TAG_KEY, PRODUCTS_ROUTE_NAME as ROUTE_NAME, NAVBAR_BURGER_ID, NAVBAR_MENU_ID, CSSClassConstants
+    PRODUCT_ID_PREFIX,
+    RESET_ROUTE,
+    JSON_HEADER,
+    CATEGORY_FILTER_TAG_KEY,
+    SORT_FILTER_TAG_KEY,
+    NAME_FILTER_TAG_KEY,
+    DESCRIPTION_FILTER_TAG_KEY,
+    PRODUCTS_ROUTE_NAME as ROUTE_NAME,
+    NAVBAR_BURGER_ID,
+    NAVBAR_MENU_ID,
+    CSSClassConstants,
+    ID_FILTER_TAG_KEY,
+    MIN_PRICE_FILTER_TAG_KEY,
+    MAX_PRICE_FILTER_TAG_KEY
 }
     from "/Common/Constants.js"
 import { Modal } from "./Modal.js";
@@ -59,6 +71,12 @@ document.addEventListener('DOMContentLoaded', async _ =>
     def.addAutoCompleteTag("Price ( Descending )", sortByPriceDescending);
     def.addAutoCompleteTag("Category ( Descending )", sortByCategoryDescending);
 
+    def = filterInput.addTagDefinition(ID_FILTER_TAG_KEY);
+    def.autoCompleteDropdownLabel = ID_FILTER_TAG_KEY;
+    def.autoCompleteDropdownDescription = "Search a product via its ID";
+    def.addDefaultSelectionTag("Empty", "");
+    def.allowCustomInput = true;
+
     def = filterInput.addTagDefinition(NAME_FILTER_TAG_KEY);
     def.autoCompleteDropdownLabel = NAME_FILTER_TAG_KEY;
     def.autoCompleteDropdownDescription = "Name to filter products by";
@@ -69,6 +87,18 @@ document.addEventListener('DOMContentLoaded', async _ =>
     def.autoCompleteDropdownLabel = DESCRIPTION_FILTER_TAG_KEY;
     def.autoCompleteDropdownDescription = "Description to filter products by";
     def.addDefaultSelectionTag("Empty", "");
+    def.allowCustomInput = true;
+
+    def = filterInput.addTagDefinition(MIN_PRICE_FILTER_TAG_KEY);
+    def.autoCompleteDropdownLabel = MIN_PRICE_FILTER_TAG_KEY;
+    def.autoCompleteDropdownDescription = "Minimum price for filtered product";
+    def.addDefaultSelectionTag("Empty", 0);
+    def.allowCustomInput = true;
+
+    def = filterInput.addTagDefinition(MAX_PRICE_FILTER_TAG_KEY);
+    def.autoCompleteDropdownLabel = MAX_PRICE_FILTER_TAG_KEY;
+    def.autoCompleteDropdownDescription = "Maximum price for filtered product";
+    def.addDefaultSelectionTag("Empty", Number.MAX_VALUE);
     def.allowCustomInput = true;
 
     filterInput.onTextInputCallback = (event, _) =>
@@ -225,8 +255,6 @@ function sortByCategoryDescending(left, right)
  */
 async function renderProducts(useCached, currentFilterDefinition = null)
 {
-    // alert(currentFilterDefinition?.key)
-
     /**
      * @type { Product[] }
      */

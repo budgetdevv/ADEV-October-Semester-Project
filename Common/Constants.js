@@ -19,8 +19,13 @@ export const PRODUCT_ID_PREFIX = "product_";
 
 export const CATEGORY_FILTER_TAG_KEY = "Category",
              SORT_FILTER_TAG_KEY = "Sort",
+             ID_FILTER_TAG_KEY = "ID",
              NAME_FILTER_TAG_KEY = "Name",
-             DESCRIPTION_FILTER_TAG_KEY = "Description";
+             DESCRIPTION_FILTER_TAG_KEY = "Description",
+             MIN_PRICE_FILTER_TAG_KEY = "Price ( Min )",
+             MAX_PRICE_FILTER_TAG_KEY = "Price ( Max )";
+
+export const MAX_PRICE = 9_999_999.99;
 
 export class CSSClassConstants
 {
