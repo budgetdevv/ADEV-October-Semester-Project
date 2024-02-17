@@ -30,12 +30,16 @@ document.addEventListener('DOMContentLoaded', async _ =>
     }
 
     def = filterInput.addTagDefinition(SORT_FILTER_TAG_KEY);
-    def.autoCompleteDropdownLabel = "Sort By";
-    def.autoCompleteDropdownDescription = "Sorting type for sorting products";
+    def.autoCompleteDropdownLabel = "Sort";
+    def.autoCompleteDropdownDescription = "Method to sort products by";
     def.addDefaultSelectionTag("ID", sortByID);
     def.addAutoCompleteTag("Name", sortByName);
     def.addAutoCompleteTag("Price", sortByPrice);
     def.addAutoCompleteTag("Category", sortByCategory);
+    def.addAutoCompleteTag("ID ( Descending )", sortByIDDescending);
+    def.addAutoCompleteTag("Name ( Descending )", sortByNameDescending);
+    def.addAutoCompleteTag("Price ( Descending )", sortByPriceDescending);
+    def.addAutoCompleteTag("Category ( Descending )", sortByCategoryDescending);
 
     def = filterInput.addTagDefinition(NAME_FILTER_TAG_KEY);
     def.autoCompleteDropdownLabel = NAME_FILTER_TAG_KEY;
@@ -112,6 +116,11 @@ function sortByID(left, right)
     return left.id - right.id;
 }
 
+function sortByIDDescending(left, right)
+{
+    return right.id - left.id;
+}
+
 /**
  * @param { Product } left
  * @param { Product } right
@@ -138,6 +147,28 @@ function sortByName(left, right)
  * @param { Product } left
  * @param { Product } right
  */
+function sortByNameDescending(left, right)
+{
+    const L_NAME = left.name;
+    const R_NAME = right.name;
+
+    if (L_NAME < R_NAME)
+    {
+        return 1;
+    }
+
+    else if (L_NAME > R_NAME)
+    {
+        return -1;
+    }
+
+    return 0;
+}
+
+/**
+ * @param { Product } left
+ * @param { Product } right
+ */
 function sortByPrice(left, right)
 {
     return left.price - right.price;
@@ -147,9 +178,27 @@ function sortByPrice(left, right)
  * @param { Product } left
  * @param { Product } right
  */
+function sortByPriceDescending(left, right)
+{
+    return right.price - left.price;
+}
+
+/**
+ * @param { Product } left
+ * @param { Product } right
+ */
 function sortByCategory(left, right)
 {
     return left.category_id - right.category_id;
+}
+
+/**
+ * @param { Product } left
+ * @param { Product } right
+ */
+function sortByCategoryDescending(left, right)
+{
+    return right.category_id - left.category_id;
 }
 
 /**
@@ -171,14 +220,6 @@ async function renderProducts(useCached, currentFilterDefinition = null)
         loadedProducts = await getProductsViaREST();
     }
 
-    // if (selectionTag != null)
-    // {
-    //     switch (selectionTag.key)
-    //     {
-    //
-    //     }
-    // }
-
     products = loadedProducts;
 
     // Data from DB are not ordered by the current sort type.
@@ -188,13 +229,16 @@ async function renderProducts(useCached, currentFilterDefinition = null)
     {
         // sort() sorts in-place, so it doesn't create a new array.
 
-        // Sort by ID first, so that we get consistent sort result regardless of current order.
-        loadedProducts.sort(sortByID);
-
         /**
          * @type { function(Product, Product) }
          */
         let currentSortFunction = filterInput.tryGetTagDefinition(SORT_FILTER_TAG_KEY).selectedValue;
+
+        if (currentSortFunction !== sortByIDDescending)
+        {
+            // Sort by ID first, so that we get consistent sort result regardless of current order.
+            loadedProducts.sort(sortByID);
+        }
 
         if (currentSortFunction !== sortByID)
         {
