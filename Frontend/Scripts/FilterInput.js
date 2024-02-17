@@ -368,6 +368,8 @@ export class FilterInput
                     let filterInputInstance = this.#filterInputInstance;
                     let textInputElement = filterInputInstance.#innerTextInputElement;
                     textInputElement.value = `${this.key}${filterInputInstance.separator} `;
+                    // Do not move this up, as #recomputeTextInputSize() has a dependency on textInputElement.value
+                    filterInputInstance.#recomputeTextInputSize();
                     textInputElement.focus();
                 }
             });
