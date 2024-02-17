@@ -23,17 +23,28 @@
     </div>
 
     <div class="hero-body">
-        <p class="title">
-            Details & Edit
-        </p>
-        <p class="subtitle">
-            View and / or Edit details of product!
-        </p>
+        <div class="columns">
+            <div class="column is-two-thirds">
+                <p class="title">
+                    Details & Edit
+                </p>
+                <p class="subtitle">
+                    View and / or Edit details of product!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div style="position: relative;">
+        <figure class="image" style="position: absolute; bottom: -100px; left: 50%; transform: translateX(-50%);">
+            <img class="is-rounded" src="/Frontend/Assets/YannisSuited.jpeg" style="width: 200px; height: 200px;">
+        </figure>
     </div>
 </section>
 
 <form id="product_details_form"> <!--Form's onsubmit attribute will be patched-->
     <div class="container px-6 py-6">
+        <br><br><br><br>
         <div class="field">
             <label class="label" for="name">Name</label>
             <div class="control has-icons-left">
