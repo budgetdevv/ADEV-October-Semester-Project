@@ -10,6 +10,9 @@ export const PRODUCT_PAGE_ROUTE = "/Product.html";
 export const PRICE_ID = "price",
              CATEGORY_ID = "category_id";
 
+export const NAVBAR_BURGER_ID = "navbar_burger",
+             NAVBAR_MENU_ID = "navbar_menu";
+
 export const JSON_HEADER = { "Content-Type": "application/json" };
 
 export const PRODUCT_ID_PREFIX = "product_";

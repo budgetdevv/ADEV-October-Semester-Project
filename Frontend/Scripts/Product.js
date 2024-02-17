@@ -1,5 +1,9 @@
 import { Product } from "/Common/DataStructures.js";
-import { PRODUCT_ID_PREFIX, RESET_ROUTE, JSON_HEADER, CATEGORY_FILTER_TAG_KEY, SORT_FILTER_TAG_KEY, NAME_FILTER_TAG_KEY, DESCRIPTION_FILTER_TAG_KEY, PRODUCTS_ROUTE_NAME as ROUTE_NAME } from "/Common/Constants.js"
+import {
+    PRODUCT_ID_PREFIX, RESET_ROUTE, JSON_HEADER, CATEGORY_FILTER_TAG_KEY, SORT_FILTER_TAG_KEY, NAME_FILTER_TAG_KEY,
+    DESCRIPTION_FILTER_TAG_KEY, PRODUCTS_ROUTE_NAME as ROUTE_NAME, NAVBAR_BURGER_ID, NAVBAR_MENU_ID, CSSClassConstants
+}
+    from "/Common/Constants.js"
 import { Modal } from "./Modal.js";
 import { getProductsViaREST, populateCategorySelector, getCategoriesViaREST, constructProductFromDocument } from "./Shared.js";
 import { FilterInput } from "./FilterInput.js";
@@ -18,6 +22,20 @@ let filterInput;
 
 document.addEventListener('DOMContentLoaded', async _ =>
 {
+    // Make navbar burger interactive
+
+    const NAVBAR_MENU = document.getElementById(NAVBAR_MENU_ID);
+
+    document.getElementById(NAVBAR_BURGER_ID).addEventListener("click", event =>
+    {
+        const IS_ACTIVE_CLASS = CSSClassConstants.IS_ACTIVE;
+
+        const NAVBAR_BURGER = event.currentTarget;
+
+        NAVBAR_BURGER.classList.toggle(IS_ACTIVE_CLASS);
+        NAVBAR_MENU.classList.toggle(IS_ACTIVE_CLASS);
+    });
+
     filterInput = new FilterInput("header");
 
     let def = filterInput.addTagDefinition(CATEGORY_FILTER_TAG_KEY);
