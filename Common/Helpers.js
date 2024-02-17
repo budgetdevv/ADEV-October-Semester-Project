@@ -162,3 +162,13 @@ function delay(ms)
 {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+/**
+ * @param { HTMLElement } element
+ * @return { boolean }
+ */
+export function elementIsOverflowing(element)
+{
+    // return element.scrollWidth > element.offsetWidth;
+    return (element.scrollWidth - element.offsetWidth) > 1;
+}

@@ -1,4 +1,4 @@
-import { elementHide, elementHideAsync, elementHideScrollBar, elementShow, elementShowAsync, pxToNumber } from "../../Common/Helpers.js";
+import { elementHide, elementHideAsync, elementHideScrollBar, elementIsOverflowing, elementShow, elementShowAsync, pxToNumber, numberToPx } from "../../Common/Helpers.js";
 import { CSSClassConstants } from "../../Common/Constants.js";
 
 // We not only avoid an allocation, but we now can check to see if a click is real via reference equality.
@@ -648,8 +648,19 @@ export class FilterInput
      */
     #tagDefinitions = new Map();
 
+    /**
+     * @type { string }
+     * @public
+     */
     // For now, it is readonly
     #separator;
+
+    /**
+     * @type { ResizeObserver }
+     * @public
+     */
+    #wrapperResizeObserver;
+
     //#endregion
 
     constructor(parentID, separator = ":")
@@ -672,7 +683,6 @@ export class FilterInput
         elementHideScrollBar(innerTextWrapperElement);
 
         let innerTextInputElement = this.#innerTextInputElement = FilterInput.#createInnerTextInput();
-        innerTextInputElement.setAttribute("placeholder", "Input search terms!");
         innerTextInputElement.id = "filter";
         innerTextWrapperElement.append(innerTextInputElement);
 
@@ -692,6 +702,11 @@ export class FilterInput
 
         let textInputParentElement = document.getElementById(parentID);
         textInputParentElement.append(wrapperElement);
+
+        let wrapperResizeObserver = this.#wrapperResizeObserver = new ResizeObserver((entries, observer) => this.#recomputeTextInputSize());
+        wrapperResizeObserver.observe(wrapperElement);
+
+        this.placeholderText = "Input search terms!";
 
         // Global event handler that enables dropdown if any of its regions are clicked,
         // or disables the dropdown otherwise.
@@ -737,6 +752,47 @@ export class FilterInput
     set text(text)
     {
         this.#innerTextInputElement.value = text;
+    }
+
+    get placeholderText()
+    {
+        return this.#innerTextInputElement.getAttribute("placeholder");
+    }
+
+    /**
+     * @param { HTMLInputElement } textInput
+     * @param { string } text
+     * @return { number }
+     */
+    static #calculateInputTextWidth(textInput, text)
+    {
+        let oldVal = textInput.value;
+        textInput.value = text;
+
+        let { borderLeftWidth, borderRightWidth } = window.getComputedStyle(textInput);
+
+        // Remove "px"
+        const BORDER_WIDTH = pxToNumber(borderLeftWidth) + pxToNumber(borderRightWidth);
+
+        let style = textInput.style;
+        style.overflowX = "scroll";
+        let oldFlexGrow = style.flexGrow;
+        style.flexGrow = 0; // This is necessary so that the input isn't forced to grow its width.
+        let oldWidth = style.width;
+        style.width = 0; // This is necessary to force element.scrollWidth to be the desired width.
+        let computedWidth = textInput.scrollWidth + BORDER_WIDTH;
+
+        textInput.value = oldVal;
+        style.width = oldWidth;
+        style.flexGrow = oldFlexGrow;
+
+        return computedWidth;
+    }
+
+    set placeholderText(text)
+    {
+        let textInput = this.#innerTextInputElement;
+        textInput.setAttribute("placeholder", text);
     }
 
     /**
@@ -808,6 +864,8 @@ export class FilterInput
      */
     #onTextInput(event)
     {
+        this.#recomputeTextInputSize();
+
         this.#updateFilterDefinitionsVisibility(this.#innerTextInputElement.value);
 
         const CALLBACK = this.onTextInputCallback;
@@ -815,6 +873,60 @@ export class FilterInput
         if (CALLBACK != null)
         {
             CALLBACK(event, this);
+        }
+    }
+
+    #recomputeTextInputSize()
+    {
+        // console.log(this.#innerTextPlaceholderComputedWidth);
+        // console.log(elementIsOverflowing(this.#innerTextInputElement));
+
+        let textInput = this.#innerTextInputElement;
+        let textInputStyle = textInput.style;
+
+        // Remove explicit width and force the input to take up as much space as possible
+
+        textInputStyle.flexGrow = 1;
+        textInputStyle.flexShrink = 1;
+        textInputStyle.width = undefined;
+
+        // let innerTextPlaceholderComputedWidth = this.#innerTextPlaceholderComputedWidth;
+
+        // let shouldForceResize = textInput.offsetWidth < innerTextPlaceholderComputedWidth || elementIsOverflowing(textInput);
+        //
+        // console.log(`${shouldForceResize} | ${textInput.offsetWidth} | ${innerTextPlaceholderComputedWidth} | ${elementIsOverflowing(textInput)} | ${textInput.scrollWidth} | ${textInput.offsetWidth}} | ${textInput.value} | ${textInput.value.length}`);
+
+        const ORIGINAL_TEXT_VALUE = textInput.value;
+
+        const IS_EMPTY_INPUT = ORIGINAL_TEXT_VALUE.length === 0;
+
+        let modifiedTextValue;
+
+        if (IS_EMPTY_INPUT)
+        {
+            modifiedTextValue = textInput.value = textInput.placeholder;
+        }
+
+        else
+        {
+            modifiedTextValue = ORIGINAL_TEXT_VALUE;
+        }
+
+        let shouldForceResize = elementIsOverflowing(textInput);
+
+        if (IS_EMPTY_INPUT)
+        {
+            textInput.value = ORIGINAL_TEXT_VALUE;
+        }
+
+        console.log(shouldForceResize);
+
+        if (shouldForceResize)
+        {
+            textInputStyle.flexGrow = 0;
+            textInputStyle.flexShrink = 0;
+            // textInputStyle.width = numberToPx(Math.max(FilterInput.#calculateInputTextWidth(textInput, textInput.value), innerTextPlaceholderComputedWidth));
+            textInputStyle.width = numberToPx(FilterInput.#calculateInputTextWidth(textInput, modifiedTextValue));
         }
     }
 
@@ -895,6 +1007,8 @@ export class FilterInput
      */
     #onSelectionTagUpdated(event, filterDefinition)
     {
+        this.#recomputeTextInputSize();
+
         let textInput = this.#innerTextInputElement;
         textInput.value = "";
         textInput.focus();
@@ -915,6 +1029,8 @@ export class FilterInput
      */
     #onSelectionTagDeselected(event, filterDefinition)
     {
+        this.#recomputeTextInputSize();
+
         const TAG_DESELECTED_CALLBACK = this.onTagDeselectedCallback;
 
         if (TAG_DESELECTED_CALLBACK != null)
