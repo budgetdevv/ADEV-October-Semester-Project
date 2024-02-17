@@ -170,5 +170,9 @@ function delay(ms)
 export function elementIsOverflowing(element)
 {
     // return element.scrollWidth > element.offsetWidth;
+
+    // When selecting Sort: Name from the dropdown auto-complete, there seems to be a noise of 1px.
+    // As in, element.scrollWidth - element.offsetWidth is exactly 1px. So we tolerate up to 1px difference here.
+    // TODO: Find out why this happens
     return (element.scrollWidth - element.offsetWidth) > 1;
 }
