@@ -1,4 +1,4 @@
-import { HIDDEN_CLASS } from "./Constants.js";
+import { CSSClassConstants } from "./Constants.js";
 export { delay };
 
 /**
@@ -85,7 +85,7 @@ export async function elementHideAsync(element, transitionStyle = null)
 {
     let classList = element.classList;
 
-    if (!classList.contains(HIDDEN_CLASS))
+    if (!classList.contains(CSSClassConstants.HIDDEN))
     {
         if (transitionStyle != null)
         {
@@ -102,16 +102,16 @@ export async function elementHideAsync(element, transitionStyle = null)
             elementStyle.transition = elementStyle.opacity = undefined;
         }
 
-        classList.add(HIDDEN_CLASS);
+        classList.add(CSSClassConstants.HIDDEN);
     }
 }
 
 /**
  * @param { HTMLElement } element
  */
-export function elementUnhide(element)
+export function elementShow(element)
 {
-    const _ = elementUnhideAsync(element);
+    const _ = elementShowAsync(element);
 }
 
 /**
@@ -119,13 +119,13 @@ export function elementUnhide(element)
  * @param { string } transitionStyle
  * @return { Promise }
  */
-export async function elementUnhideAsync(element, transitionStyle = null)
+export async function elementShowAsync(element, transitionStyle = null)
 {
     let classList = element.classList;
 
     let classListOldLength = classList.length;
 
-    classList.remove(HIDDEN_CLASS);
+    classList.remove(CSSClassConstants.HIDDEN);
 
     if (classList.length !== classListOldLength && transitionStyle != null)
     {

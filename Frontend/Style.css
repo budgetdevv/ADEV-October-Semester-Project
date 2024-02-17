@@ -81,7 +81,6 @@
 
 .search-bar-tag
 {
-    /*transition: all 1s;*/
     opacity: 1;
     transition: opacity 2s linear;
 }
@@ -105,7 +104,8 @@
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     width: 100%;
-    background-color: #c99a0b;
+    background-color: #C99A0B;
+    overflow-x: scroll;
 }
 
 .search-bar-dropdown-item
@@ -113,6 +113,26 @@
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+}
+
+.search-bar-dropdown-item-label-wrapper
+{
+    /*It will take 100% of the width in "search-bar-dropdown-item", causing other elements to be pushed to the next line*/
+    flex-basis: 100%;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.search-bar-dropdown-item-label
+{
+    background-color: #E7BA40 !important;
+}
+
+.search-bar-dropdown-item-description
+{
+    background-color: #E7BA40 !important;
+    /*opacity: 0.75;*/
 }
 
 @media screen and (min-width: 1025px)
@@ -126,8 +146,6 @@
     {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
-        /*font-size: 16px;*/
-        /*height: 50px;*/
     }
 
     .search-bar-background-text-input.dropdown-visible

@@ -1,4 +1,5 @@
-import { elementHide, elementHideAsync, elementHideScrollBar, elementUnhide, elementUnhideAsync, pxToNumber } from "../../Common/Helpers.js";
+import { elementHide, elementHideAsync, elementHideScrollBar, elementShow, elementShowAsync, pxToNumber } from "../../Common/Helpers.js";
+import { CSSClassConstants } from "../../Common/Constants.js";
 
 // We not only avoid an allocation, but we now can check to see if a click is real via reference equality.
 const FAKE_CLICK_EVENT = new Event("click");
@@ -64,7 +65,7 @@ export class FilterInput
             tagElementClassList.add("tag");
             tagElementClassList.add("is-warning");
             tagElementClassList.add("is-medium");
-            tagElementClassList.add(FilterInput.SEARCH_BAR_TAG_CLASS);
+            tagElementClassList.add(CSSClassConstants.SEARCH_BAR_TAG);
 
             let textElement = this.textElement = document.createElement("span");
             tagElement.append(textElement);
@@ -162,7 +163,7 @@ export class FilterInput
 
         unhide()
         {
-            elementUnhide(this.tagElement);
+            elementShow(this.tagElement);
         }
 
         /**
@@ -266,6 +267,24 @@ export class FilterInput
         #autocompleteDropdownItemElement;
 
         /**
+         * @type { HTMLElement }
+         * @private
+         */
+        #autocompleteDropdownItemLabelWrapperElement;
+
+        /**
+         * @type { HTMLElement }
+         * @private
+         */
+        #autocompleteDropdownItemLabelElement;
+
+        /**
+         * @type { HTMLElement }
+         * @private
+         */
+        #autocompleteDropdownItemDescriptionElement;
+
+        /**
          * @type { FilterInput.Tag }
          * @private
          */
@@ -296,7 +315,32 @@ export class FilterInput
             let dropdownItemElement = this.#autocompleteDropdownItemElement = document.createElement("a");
             let DropdownItemClassList = dropdownItemElement.classList;
             DropdownItemClassList.add("dropdown-item");
-            DropdownItemClassList.add(FilterInput.#SEARCH_BAR_DROPDOWN_ITEM_CLASS);
+            DropdownItemClassList.add(CSSClassConstants.SEARCH_BAR_DROPDOWN_ITEM);
+
+            let dropdownItemLabelWrapperElement = this.#autocompleteDropdownItemLabelWrapperElement = document.createElement("div");
+            dropdownItemLabelWrapperElement.classList.add(CSSClassConstants.SEARCH_BAR_DROPDOWN_ITEM_LABEL_WRAPPER);
+            dropdownItemElement.append(dropdownItemLabelWrapperElement);
+
+            let dropdownItemLabelElement = this.#autocompleteDropdownItemLabelElement = document.createElement("span");
+            let dropdownItemLabelElementClassList = dropdownItemLabelElement.classList;
+            dropdownItemLabelElementClassList.add("tag");
+            dropdownItemLabelElementClassList.add("is-rounded");
+            dropdownItemLabelElementClassList.add(CSSClassConstants.SEARCH_BAR_DROPDOWN_ITEM_LABEL);
+            dropdownItemLabelWrapperElement.append(dropdownItemLabelElement);
+
+            let dropdownItemDescriptionElement = this.#autocompleteDropdownItemDescriptionElement = document.createElement("span");
+            let dropdownItemDescriptionElementClassList = dropdownItemDescriptionElement.classList;
+            dropdownItemDescriptionElementClassList.add("tag");
+            dropdownItemDescriptionElementClassList.add("is-rounded");
+            dropdownItemDescriptionElementClassList.add(CSSClassConstants.SEARCH_BAR_DROPDOWN_ITEM_DESCRIPTION);
+            // let dropdownItemDescriptionIconElement = document.createElement("i");
+            // let dropdownItemDescriptionIconElementClassList = dropdownItemDescriptionIconElement.classList;
+            // dropdownItemDescriptionIconElementClassList.add("fa");
+            // dropdownItemDescriptionIconElementClassList.add("fa-info-circle");
+            // dropdownItemDescriptionElement.append(dropdownItemDescriptionIconElement);
+            dropdownItemLabelWrapperElement.append(dropdownItemDescriptionElement);
+
+            this.autoCompleteDropdownDescription = null;
 
             let selectedTag = this.#selectionTag = new FilterInput.Tag(filterInputInstance.#innerTextWrapperElement);
             selectedTag.key = key;
@@ -347,14 +391,41 @@ export class FilterInput
             return this.#selectionTag.value;
         }
 
-        get autoCompleteDropdownText()
+        get autoCompleteDropdownLabel()
         {
-            return this.#autocompleteDropdownItemElement.innerText;
+            return this.#autocompleteDropdownItemLabelElement.innerText;
         }
 
-        set autoCompleteDropdownText(text)
+        set autoCompleteDropdownLabel(text)
         {
-            this.#autocompleteDropdownItemElement.innerText = text;
+            this.#autocompleteDropdownItemLabelElement.innerText = text;
+        }
+
+        get autoCompleteDropdownDescription()
+        {
+            return this.#autocompleteDropdownItemDescriptionElement.innerText;
+        }
+
+        set autoCompleteDropdownDescription(text)
+        {
+            let descriptionElement = this.#autocompleteDropdownItemDescriptionElement;
+
+            if (text != null)
+            {
+                // Too lazy to make another new element via code...
+                this.#autocompleteDropdownItemDescriptionElement.innerHTML =
+                `
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                &nbsp
+                ${text}
+                `;
+                elementShow(descriptionElement);
+            }
+
+            else
+            {
+                elementHide(descriptionElement);
+            }
         }
 
         /**
@@ -511,7 +582,7 @@ export class FilterInput
 
         showAutoCompleteDropdown()
         {
-            elementUnhide(this.#autocompleteDropdownItemElement);
+            elementShow(this.#autocompleteDropdownItemElement);
         }
     };
     //#endregion
@@ -581,59 +652,12 @@ export class FilterInput
     #separator;
     //#endregion
 
-    //#region CSS_CLASS_CONSTANTS
-    static get SEARCH_BAR_CLASS()
-    {
-        return "search-bar";
-    }
-
-    static get SEARCH_BAR_BACKGROUND_TEXT_INPUT_CLASS()
-    {
-        return "search-bar-background-text-input";
-    }
-
-    static get SEARCH_BAR_INNER_WRAPPER_CLASS()
-    {
-        return "search-bar-inner-wrapper";
-    }
-
-    static get SEARCH_BAR_INNER_TEXT_INPUT_CLASS()
-    {
-        return "search-bar-inner-text-input";
-    }
-
-    static get SEARCH_BAR_TAG_CLASS()
-    {
-        return "search-bar-tag";
-    }
-
-    static get SEARCH_BAR_DROPDOWN_WRAPPER_CLASS()
-    {
-        return "search-bar-dropdown-wrapper";
-    }
-
-    static get SEARCH_BAR_DROPDOWN_CLASS()
-    {
-        return "search-bar-dropdown";
-    }
-
-    static get #SEARCH_BAR_DROPDOWN_ITEM_CLASS()
-    {
-        return "search-bar-dropdown-item";
-    }
-
-    static get DROPDOWN_VISIBLE_CLASS()
-    {
-        return "dropdown-visible";
-    }
-    //#endregion
-
     constructor(parentID, separator = ":")
     {
         this.#separator = separator;
 
         let wrapperElement = this.#wrapperElement = document.createElement("div");
-        wrapperElement.classList.add(FilterInput.SEARCH_BAR_CLASS);
+        wrapperElement.classList.add(CSSClassConstants.SEARCH_BAR);
 
         let backgroundTextInputElement = this.#backgroundTextInputElement = document.createElement("input")
         backgroundTextInputElement.setAttribute("readonly", "");
@@ -641,11 +665,10 @@ export class FilterInput
         let backgroundTextInputElementClassList = backgroundTextInputElement.classList;
         backgroundTextInputElementClassList.add("input");
         backgroundTextInputElementClassList.add("is-black");
-        backgroundTextInputElementClassList.add(FilterInput.SEARCH_BAR_BACKGROUND_TEXT_INPUT_CLASS);
+        backgroundTextInputElementClassList.add(CSSClassConstants.SEARCH_BAR_BACKGROUND_TEXT_INPUT);
 
         let innerTextWrapperElement = this.#innerTextWrapperElement = document.createElement("div");
-        innerTextWrapperElement.classList.add(FilterInput.SEARCH_BAR_INNER_WRAPPER_CLASS);
-
+        innerTextWrapperElement.classList.add(CSSClassConstants.SEARCH_BAR_INNER_WRAPPER);
         elementHideScrollBar(innerTextWrapperElement);
 
         let innerTextInputElement = this.#innerTextInputElement = FilterInput.#createInnerTextInput();
@@ -654,12 +677,13 @@ export class FilterInput
         innerTextWrapperElement.append(innerTextInputElement);
 
         let dropdownWrapperElement = this.#dropdownWrapperElement = document.createElement("div");
-        dropdownWrapperElement.classList.add(FilterInput.SEARCH_BAR_DROPDOWN_WRAPPER_CLASS);
+        dropdownWrapperElement.classList.add(CSSClassConstants.SEARCH_BAR_DROPDOWN_WRAPPER);
 
         let dropdownElement = this.#dropdownElement = document.createElement("div");
         let dropdownElementClassList = dropdownElement.classList;
-        dropdownElementClassList.add(FilterInput.SEARCH_BAR_DROPDOWN_CLASS);
+        dropdownElementClassList.add(CSSClassConstants.SEARCH_BAR_DROPDOWN);
         dropdownElementClassList.add("dropdown-content");
+        elementHideScrollBar(dropdownElement);
         dropdownWrapperElement.append(dropdownElement);
 
         wrapperElement.append(innerTextWrapperElement);
@@ -758,7 +782,7 @@ export class FilterInput
 
         classList.add("input");
         classList.add("is-black");
-        classList.add(FilterInput.SEARCH_BAR_INNER_TEXT_INPUT_CLASS);
+        classList.add(CSSClassConstants.SEARCH_BAR_INNER_TEXT_INPUT);
 
         let style = textInput.style;
 
@@ -904,14 +928,14 @@ export class FilterInput
     #showDropdown(instant = false)
     {
         const TRANSITION_STYLE = !instant ? FilterInput.#DROPDOWN_TRANSITION_STYLE: null;
-        this.#backgroundTextInputElement.classList.add(FilterInput.DROPDOWN_VISIBLE_CLASS);
-        const _ = elementUnhideAsync(this.#dropdownElement, TRANSITION_STYLE);
+        this.#backgroundTextInputElement.classList.add(CSSClassConstants.DROPDOWN_VISIBLE);
+        const _ = elementShowAsync(this.#dropdownElement, TRANSITION_STYLE);
     }
 
     #hideDropdown(instant = false)
     {
         const TRANSITION_STYLE = !instant ? FilterInput.#DROPDOWN_TRANSITION_STYLE: null;
-        this.#backgroundTextInputElement.classList.remove(FilterInput.DROPDOWN_VISIBLE_CLASS);
+        this.#backgroundTextInputElement.classList.remove(CSSClassConstants.DROPDOWN_VISIBLE);
         const _ = elementHideAsync(this.#dropdownElement, TRANSITION_STYLE);
     }
 

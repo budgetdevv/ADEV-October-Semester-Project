@@ -1,4 +1,4 @@
-import { IS_ACTIVE_CLASS } from "/Common/Constants.js";
+import { CSSClassConstants } from "/Common/Constants.js";
 
 export class Color
 {
@@ -365,7 +365,7 @@ export class Modal
 
     enable()
     {
-        this.modalElement.classList.add(IS_ACTIVE_CLASS);
+        this.modalElement.classList.add(CSSClassConstants.IS_ACTIVE);
     }
 
     static #disableCallback(modal)
@@ -375,7 +375,7 @@ export class Modal
 
     disable()
     {
-        this.modalElement.classList.remove(IS_ACTIVE_CLASS);
+        this.modalElement.classList.remove(CSSClassConstants.IS_ACTIVE);
     }
 
     /**

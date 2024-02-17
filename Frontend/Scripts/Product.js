@@ -21,7 +21,8 @@ document.addEventListener('DOMContentLoaded', async _ =>
     filterInput = new FilterInput("header");
 
     let def = filterInput.addTagDefinition(CATEGORY_FILTER_TAG_KEY);
-    def.autoCompleteDropdownText = "Category: ";
+    def.autoCompleteDropdownLabel = "Category";
+    def.autoCompleteDropdownDescription = "Type of category to filter products by";
 
     for (const CATEGORY of await getCategoriesViaREST())
     {
@@ -29,21 +30,24 @@ document.addEventListener('DOMContentLoaded', async _ =>
     }
 
     def = filterInput.addTagDefinition(SORT_FILTER_TAG_KEY);
-    def.autoCompleteDropdownText = "Sort By: ";
+    def.autoCompleteDropdownLabel = "Sort By";
+    def.autoCompleteDropdownDescription = "Sorting type for sorting products";
     def.addDefaultSelectionTag("ID", sortByID);
     def.addAutoCompleteTag("Name", sortByName);
     def.addAutoCompleteTag("Price", sortByPrice);
     def.addAutoCompleteTag("Category", sortByCategory);
 
     def = filterInput.addTagDefinition(NAME_FILTER_TAG_KEY);
-    def.allowCustomInput = true;
-    def.autoCompleteDropdownText = `${NAME_FILTER_TAG_KEY}: `
+    def.autoCompleteDropdownLabel = NAME_FILTER_TAG_KEY;
+    def.autoCompleteDropdownDescription = "Name to filter products by";
     def.addDefaultSelectionTag("Empty", "");
+    def.allowCustomInput = true;
 
     def = filterInput.addTagDefinition(DESCRIPTION_FILTER_TAG_KEY);
-    def.allowCustomInput = true;
-    def.autoCompleteDropdownText = `${DESCRIPTION_FILTER_TAG_KEY}: `
+    def.autoCompleteDropdownLabel = DESCRIPTION_FILTER_TAG_KEY;
+    def.autoCompleteDropdownDescription = "Description to filter products by";
     def.addDefaultSelectionTag("Empty", "");
+    def.allowCustomInput = true;
 
     filterInput.onTextInputCallback = (event, _) =>
     {
