@@ -878,9 +878,6 @@ export class FilterInput
 
     #recomputeTextInputSize()
     {
-        // console.log(this.#innerTextPlaceholderComputedWidth);
-        // console.log(elementIsOverflowing(this.#innerTextInputElement));
-
         let textInput = this.#innerTextInputElement;
         let textInputStyle = textInput.style;
 
@@ -889,12 +886,6 @@ export class FilterInput
         textInputStyle.flexGrow = 1;
         textInputStyle.flexShrink = 1;
         textInputStyle.width = undefined;
-
-        // let innerTextPlaceholderComputedWidth = this.#innerTextPlaceholderComputedWidth;
-
-        // let shouldForceResize = textInput.offsetWidth < innerTextPlaceholderComputedWidth || elementIsOverflowing(textInput);
-        //
-        // console.log(`${shouldForceResize} | ${textInput.offsetWidth} | ${innerTextPlaceholderComputedWidth} | ${elementIsOverflowing(textInput)} | ${textInput.scrollWidth} | ${textInput.offsetWidth}} | ${textInput.value} | ${textInput.value.length}`);
 
         const ORIGINAL_TEXT_VALUE = textInput.value;
 
@@ -919,13 +910,10 @@ export class FilterInput
             textInput.value = ORIGINAL_TEXT_VALUE;
         }
 
-        console.log(shouldForceResize);
-
         if (shouldForceResize)
         {
             textInputStyle.flexGrow = 0;
             textInputStyle.flexShrink = 0;
-            // textInputStyle.width = numberToPx(Math.max(FilterInput.#calculateInputTextWidth(textInput, textInput.value), innerTextPlaceholderComputedWidth));
             textInputStyle.width = numberToPx(FilterInput.#calculateInputTextWidth(textInput, modifiedTextValue));
         }
     }
@@ -978,8 +966,6 @@ export class FilterInput
         {
             return;
         }
-
-        // alert(`${KEY} | ${VALUE}`);
 
         let foundDefinition = this.tryGetTagDefinition(KEY);
 
