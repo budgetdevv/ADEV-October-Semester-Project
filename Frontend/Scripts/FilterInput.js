@@ -895,6 +895,10 @@ export class FilterInput
      */
     #onSelectionTagUpdated(event, filterDefinition)
     {
+        let textInput = this.#innerTextInputElement;
+        textInput.value = "";
+        textInput.focus();
+
         const TAG_SELECTED_CALLBACK = this.onTagSelectedCallback;
 
         if (TAG_SELECTED_CALLBACK != null)
@@ -903,10 +907,6 @@ export class FilterInput
         }
 
         this.#updateFilterDefinitionsVisibility(this.#innerTextInputElement.value);
-
-        let textInput = this.#innerTextInputElement;
-        textInput.value = "";
-        textInput.focus();
     }
 
     /**

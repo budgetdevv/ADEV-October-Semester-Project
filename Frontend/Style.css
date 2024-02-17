@@ -122,6 +122,7 @@
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    pointer-events: none;
 }
 
 .search-bar-dropdown-item-label
