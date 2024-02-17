@@ -529,8 +529,13 @@ function onProductImageLoadFailure(productImage)
     }
 }
 
-async function onDelete(productID)
+async function onDelete(productID, productName)
 {
+    if (!confirm(`Do you really wish to delete product ${productName}? ( ID: ${productID} )`))
+    {
+        return;
+    }
+
     const RESPONSE = await fetch(`${ROUTE_NAME}/${productID}`,
     {
         method: "DELETE"
@@ -547,10 +552,15 @@ async function onDelete(productID)
 
 async function onReset()
 {
+    if (!confirm("Do you wish to reset the database? It will be restored to stock configuration!"))
+    {
+        return;
+    }
+
     const RESPONSE = await fetch(RESET_ROUTE,
-        {
-            method: "POST"
-        });
+    {
+        method: "POST"
+    });
 
     alert(`Database has been reset! \n\n${await RESPONSE.text()}`);
     const _ = renderProducts(false);

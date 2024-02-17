@@ -123,7 +123,7 @@ export class Product
         
         <div class="buttons has-addons"">
             <button class="button is-half is-success" style="width: 50%" onClick="location.href = '/ProductDetails.html?ID=${ID}'">Details & Edit</button>
-            <button class="button is-half is-danger" style="width: 50%" onclick="onDelete(${ID})">Delete!!!</button>
+            <button class="button is-half is-danger" style="width: 50%" onclick="onDelete(${ID}, '${productName}');">Delete!!!</button>
         </div>
         `;
 
