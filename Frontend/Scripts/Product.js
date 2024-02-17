@@ -486,7 +486,19 @@ window.onToggleFullDescription = function(descriptionElement)
  */
 function onProductImageLoadFailure(productImage)
 {
-    productImage.src = "/Frontend/Assets/PRODUCT_MISSING.png";
+    const LOAD_FAILURE_IMAGE = "/Frontend/Assets/PRODUCT_MISSING.png";
+
+    // productImage.src includes localhost -_-
+    if (new URL(productImage.src).pathname !== LOAD_FAILURE_IMAGE)
+    {
+        productImage.src = LOAD_FAILURE_IMAGE;
+    }
+
+    else
+    {
+        // If source link is already replaced by LOAD_FAILURE_IMAGE, then don't retry as that will cause an infinite loop.
+        productImage.alt = "Load failed!";
+    }
 }
 
 async function onDelete(productID)
