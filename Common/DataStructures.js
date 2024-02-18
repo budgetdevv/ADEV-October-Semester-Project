@@ -89,7 +89,10 @@ export class Product
         return false;
     }
 
-    getProductDisplayHTML()
+    /**
+     * @param { Category[] } categories
+     */
+    getProductDisplayHTML(categories)
     {
         const ID = this.id;
 
@@ -99,14 +102,29 @@ export class Product
         let product_desc = this.description;
         product_desc = (product_desc !== "") ? product_desc : "<b>( No product description )</b>";
 
+        // Index are 0-based
+        const CATEGORY_NAME = categories[this.category_id - 1].name;
+
+        const PRICE = this.price;
+
+        // It is a float, so !== will fail. It is also awkward to use !=, so I opted to cast via parseInt()
+        const PRICE_TEXT = (parseInt(PRICE) !== 0) ? `${PRICE}` : "Free!";
+
+        const IMAGE_URL = this.picture;
+
         const HTML =
         `
         <div class="card" id="${PRODUCT_ID_PREFIX}${ID}">
             <div class="card-image">
-                <span class="tag product_image_tag">Hi</span>
-                <figure class="image is-4by3">
-                    <img src="${this.picture}" onclick="onShowModalForProductImage('${productName}', this)" onerror="onProductImageLoadFailure(this)" alt="Image missing" />
-                </figure>
+                <span class="tag is-medium product-image-tag">${CATEGORY_NAME}</span>
+                <span class="tag is-medium product-image-tag" style="right: 0"><i class="fa-solid fa-dollar-sign"></i>&nbsp${PRICE_TEXT}</span>
+              
+                <a class="product-image-wrapper" onclick="onShowModalForProductImage('${productName}', '${IMAGE_URL}');">
+                    <div class="product-image-hover-text">Click to preview</div>
+                    <figure class="image is-4by3 product-image">
+                        <img src="${IMAGE_URL}" onerror="onProductImageLoadFailure(this)" alt="Image missing" />
+                    </figure>
+                </a>
             </div>
             
             <header class="card-header has-background-warning">

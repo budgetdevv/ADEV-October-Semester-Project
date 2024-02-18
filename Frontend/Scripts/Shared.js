@@ -19,15 +19,22 @@ export async function getProductsViaREST()
     return products;
 }
 
+let categories = null; // As of today, categories will never change while the app is running, so we cache it
+
 /**
  * @return { Promise<Category[]> }
  */
-export async function getCategoriesViaREST()
+export async function getCategoriesViaCacheOrREST()
 {
+    if (categories != null)
+    {
+        return categories;
+    }
+
     const RESPONSE = await fetch(CATEGORIES_ROUTE_NAME);
     const RESPONSE_TEXT = await RESPONSE.text();
 
-    let categories = JSON.parse(RESPONSE_TEXT);
+    categories = JSON.parse(RESPONSE_TEXT);
 
     for (let i = 0; i < categories.length; i++)
     {
@@ -41,7 +48,7 @@ export async function populateCategorySelector(categorySelector = null)
 {
     categorySelector ??= document.getElementById(CATEGORY_ID);
 
-    const CATEGORIES = await getCategoriesViaREST();
+    const CATEGORIES = await getCategoriesViaCacheOrREST();
 
     let categorySelectorHTML = "";
 
@@ -56,7 +63,6 @@ export async function populateCategorySelector(categorySelector = null)
 
 export function constructProductFromDocument()
 {
-    // Construct the product object.
     let product = new Product();
 
     for (const fieldName of Object.keys(product))

@@ -17,7 +17,7 @@ import {
 }
     from "/Common/Constants.js"
 import { Modal } from "./Modal.js";
-import { getProductsViaREST, populateCategorySelector, getCategoriesViaREST, constructProductFromDocument } from "./Shared.js";
+import { getProductsViaREST, getCategoriesViaCacheOrREST, populateCategorySelector, constructProductFromDocument } from "./Shared.js";
 import { FilterInput } from "./FilterInput.js";
 import { onImageLoadFailure } from "../../Common/Helpers.js";
 
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async _ =>
     def.autoCompleteDropdownLabel = "Category";
     def.autoCompleteDropdownDescription = "Type of category to filter products by";
 
-    for (const CATEGORY of await getCategoriesViaREST())
+    for (const CATEGORY of await getCategoriesViaCacheOrREST())
     {
         def.addAutoCompleteTag(CATEGORY.name, CATEGORY.id);
     }
@@ -297,6 +297,8 @@ async function renderProducts(useCached, currentFilterDefinition = null)
 
     let cardBodies = "";
 
+    const CATEGORIES = await getCategoriesViaCacheOrREST();
+
     for (const PRODUCT of products)
     {
         if (!PRODUCT.shouldDisplay(filterText, filterInput))
@@ -307,7 +309,7 @@ async function renderProducts(useCached, currentFilterDefinition = null)
         cardBodies +=
         `
         <div class="column is-one-third">
-            ${PRODUCT.getProductDisplayHTML()}
+            ${PRODUCT.getProductDisplayHTML(CATEGORIES)}
         </div>
         `;
     }
@@ -457,11 +459,11 @@ VIEW_PRODUCT_IMAGE_MODAL.setTitle("Product Image Preview");
 VIEW_PRODUCT_IMAGE_MODAL.setBodyPadding(0, 0);
 VIEW_PRODUCT_IMAGE_MODAL.footerEnabled = false;
 
-window.onShowModalForProductImage = function(productName, imageElement)
+window.onShowModalForProductImage = function(productName, imageURL)
 {
     VIEW_PRODUCT_IMAGE_MODAL.setTitle(productName);
     VIEW_PRODUCT_IMAGE_MODAL.setBody(`<p class="image is-4by3">
-                                        <img src="${imageElement.src}" alt="">
+                                        <img src="${imageURL}" alt="Failed to load image" onerror="onProductImageLoadFailure(this)">
                                      </p>`);
 
     VIEW_PRODUCT_IMAGE_MODAL.enable();
