@@ -14,6 +14,8 @@ async function onLoad()
 
     let productID = queries.get("ID");
 
+    // We use a while loop to emulate jumps to a common path using break;
+    // noinspection LoopStatementThatDoesntLoopJS
     while (true)
     {
         if (isNullOrWhitespace(productID))
