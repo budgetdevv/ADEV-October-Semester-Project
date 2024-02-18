@@ -347,7 +347,8 @@ async function renderProducts(useCached, currentFilterDefinition = null)
             `
             <div class="container is-fullwidth px-0 py-0">
                 <h1 style="text-align: center">No matching products</h1>  
-            </div>`;
+            </div>
+            `;
         }
     }
 
