@@ -7,8 +7,9 @@ export const PRODUCTS_ROUTE_NAME = "/products",
 export const PRODUCT_PAGE_ROUTE = "/Product.html";
 
 // We make HTML elements' IDs the same as their class field representation, which in turn, is the same as field name in DB.
-export const PRICE_ID = "price",
-             CATEGORY_ID = "category_id";
+export const CATEGORY_ID = "category_id",
+             IMAGE_INPUT_ID = "picture",
+             IMAGE_PREVIEW_ID = "image_preview";
 
 export const NAVBAR_BURGER_ID = "navbar_burger",
              NAVBAR_MENU_ID = "navbar_menu";

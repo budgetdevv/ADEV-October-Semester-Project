@@ -176,3 +176,23 @@ export function elementIsOverflowing(element)
     // TODO: Find out why this happens
     return (element.scrollWidth - element.offsetWidth) > 1;
 }
+
+/**
+ * @param { HTMLImageElement } image
+ */
+export function onImageLoadFailure(image)
+{
+    const LOAD_FAILURE_IMAGE = "/Frontend/Assets/PRODUCT_MISSING.png";
+
+    // image.src includes localhost -_-
+    if (new URL(image.src).pathname !== LOAD_FAILURE_IMAGE)
+    {
+        image.src = LOAD_FAILURE_IMAGE;
+    }
+
+    else
+    {
+        // If source link is already replaced by LOAD_FAILURE_IMAGE, then don't retry as that will cause an infinite loop.
+        image.alt = "Load failed!";
+    }
+}

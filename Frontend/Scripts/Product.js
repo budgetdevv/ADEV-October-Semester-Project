@@ -19,6 +19,7 @@ import {
 import { Modal } from "./Modal.js";
 import { getProductsViaREST, populateCategorySelector, getCategoriesViaREST, constructProductFromDocument } from "./Shared.js";
 import { FilterInput } from "./FilterInput.js";
+import { onImageLoadFailure } from "../../Common/Helpers.js";
 
 const PRODUCT_LIST_ID = "product_list";
 
@@ -467,7 +468,7 @@ window.onShowModalForProductImage = function(productName, imageElement)
 
 window.onReset = onReset;
 window.onDelete = onDelete;
-window.onProductImageLoadFailure = onProductImageLoadFailure;
+window.onProductImageLoadFailure = onImageLoadFailure;
 
 const PROMPT_PRODUCT_CREATION_MODAL = new Modal();
 
@@ -506,26 +507,6 @@ window.onToggleFullDescription = function(descriptionElement)
     else
     {
         classList.remove(TRUNCATE_CLASS_NAME);
-    }
-}
-
-/**
- * @param { HTMLImageElement } productImage
- */
-function onProductImageLoadFailure(productImage)
-{
-    const LOAD_FAILURE_IMAGE = "/Frontend/Assets/PRODUCT_MISSING.png";
-
-    // productImage.src includes localhost -_-
-    if (new URL(productImage.src).pathname !== LOAD_FAILURE_IMAGE)
-    {
-        productImage.src = LOAD_FAILURE_IMAGE;
-    }
-
-    else
-    {
-        // If source link is already replaced by LOAD_FAILURE_IMAGE, then don't retry as that will cause an infinite loop.
-        productImage.alt = "Load failed!";
     }
 }
 
