@@ -299,7 +299,6 @@ async function renderProducts(useCached, currentFilterDefinition = null)
 
     for (const PRODUCT of products)
     {
-        // Filter by name for now. We will add more options in the future
         if (!PRODUCT.shouldDisplay(filterText, filterInput))
         {
             continue;
@@ -333,7 +332,8 @@ async function renderProducts(useCached, currentFilterDefinition = null)
             `
             <div class="container is-fullwidth px-0 py-0">
                 <image style="width: 100%" src="https://cdn.matthewjamestaylor.com/titles/empty-div.png"></image>
-            </div>`;
+            </div>
+            `;
 
             if (!useCached)
             {
