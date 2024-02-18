@@ -103,8 +103,9 @@ export class Product
         `
         <div class="card" id="${PRODUCT_ID_PREFIX}${ID}">
             <div class="card-image">
+                <span class="tag product_image_tag">Hi</span>
                 <figure class="image is-4by3">
-                    <img src="${this.picture}" onclick="onShowModalForProductImage('${productName}', this)" onerror="onProductImageLoadFailure(this)" alt="Image missing">
+                    <img src="${this.picture}" onclick="onShowModalForProductImage('${productName}', this)" onerror="onProductImageLoadFailure(this)" alt="Image missing" />
                 </figure>
             </div>
             

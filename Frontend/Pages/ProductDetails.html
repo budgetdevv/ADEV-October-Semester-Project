@@ -23,31 +23,43 @@
     </div>
 
     <div class="hero-body">
-        <p class="title">
-            Details & Edit
-        </p>
-        <p class="subtitle">
-            View and / or Edit details of product!
-        </p>
+        <div class="columns">
+            <div class="column is-two-thirds">
+                <p class="title">
+                    Details & Edit
+                </p>
+                <p class="subtitle">
+                    View and / or Edit details of product!
+                </p>
+            </div>
+        </div>
     </div>
 </section>
 
 <form id="product_details_form"> <!--Form's onsubmit attribute will be patched-->
     <div class="container px-6 py-6">
+        <div class="level">
+            <div class="level-item py-2">
+                <figure class="image">
+                    <img class="image-preview" id="image_preview" />
+                </figure>
+            </div>
+        </div>
+
         <div class="field">
             <label class="label" for="name">Name</label>
             <div class="control has-icons-left">
                 <span class="icon is-small is-left">
                     <i class="fa-solid fa-signature"></i>
                 </span>
-                <input class="input is-warning" type="TEXT" pattern="\S(.*\S)?" placeholder="Enter product's name" maxlength=100 id="name" required />
+                <input class="input is-warning" type="text" pattern="\S(.*\S)?" placeholder="Enter product's name" maxlength=100 id="name" required />
             </div>
         </div>
 
         <div class="field">
             <label class="label" for="description">Description</label>
             <div class="control">
-                <textarea class="textarea is-warning" type="TEXT" placeholder="Enter product's description" maxlength=200 id="description" ></textarea>
+                <textarea class="textarea is-warning" type="text" placeholder="Enter product's description" maxlength=200 id="description" ></textarea>
             </div>
         </div>
 
