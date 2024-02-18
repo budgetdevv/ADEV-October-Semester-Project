@@ -49,6 +49,12 @@
     border-radius: 5%;
 }
 
+.product_image_tag
+{
+    position: absolute;
+    z-index: 1;
+}
+
 .search-bar
 {
     position: absolute;
